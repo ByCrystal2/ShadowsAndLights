@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: f395332e5df70034d851cb573843a5c0
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Scripts - Shaders/URP/Resources/VolumeFogSRP_FORWARD_URP
+    Legacy1 Before added ifninite Lights NEW IMPOSTOR.shader
+  uploadId: 651289

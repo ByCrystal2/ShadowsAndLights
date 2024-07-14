@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 32449e5de8437d147ab9c38fc3035c1f
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Scripts - Shaders/URP/Resources/VolumeFogSRP_FORWARD_URP
+    Infinite Lights.shader
+  uploadId: 651289

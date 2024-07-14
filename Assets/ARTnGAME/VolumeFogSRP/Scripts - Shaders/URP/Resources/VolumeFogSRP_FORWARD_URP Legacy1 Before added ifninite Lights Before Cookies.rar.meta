@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7c392c3f4acf0a344993f9c306567d28
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Scripts - Shaders/URP/Resources/VolumeFogSRP_FORWARD_URP
+    Legacy1 Before added ifninite Lights Before Cookies.rar
+  uploadId: 651289
