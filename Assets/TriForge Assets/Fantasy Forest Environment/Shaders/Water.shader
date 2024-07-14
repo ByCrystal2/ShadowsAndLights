@@ -266,7 +266,7 @@ Shader "TriForge/Fantasy Forest/SimpleWater"
 			#endif
 
 			#if !defined( OUTPUT_SH4 )
-				#define OUTPUT_SH4 OUTPUT_SH
+				#define OUTPUT_SH(arg1, arg2, arg3, arg4, arg5) // implementation
 			#endif
 
 			#define ASE_NEEDS_FRAG_SCREEN_POSITION
@@ -419,7 +419,7 @@ Shader "TriForge/Fantasy Forest/SimpleWater"
 					o.dynamicLightmapUV.xy = v.texcoord2.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
 				#endif
 
-				OUTPUT_SH4( vertexInput.positionWS, normalInput.normalWS.xyz, GetWorldSpaceNormalizeViewDir( vertexInput.positionWS ), o.lightmapUVOrVertexSH.xyz );
+				OUTPUT_SH4(vertexInput.positionWS, normalInput.normalWS.xyz, GetWorldSpaceNormalizeViewDir(vertexInput.positionWS), o.lightmapUVOrVertexSH.xyz, additionalArg);
 
 				#if defined(ENABLE_TERRAIN_PERPIXEL_NORMAL)
 					o.lightmapUVOrVertexSH.zw = v.texcoord.xy;
@@ -2544,7 +2544,7 @@ Shader "TriForge/Fantasy Forest/SimpleWater"
 			#endif
 
 			#if !defined( OUTPUT_SH4 )
-				#define OUTPUT_SH4 OUTPUT_SH
+				#define OUTPUT_SH(arg1, arg2, arg3, arg4, arg5) // implementation
 			#endif
 
 			#define ASE_NEEDS_FRAG_SCREEN_POSITION
@@ -2699,7 +2699,7 @@ Shader "TriForge/Fantasy Forest/SimpleWater"
 					o.dynamicLightmapUV.xy = v.texcoord2.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
 				#endif
 
-				OUTPUT_SH4( vertexInput.positionWS, normalInput.normalWS.xyz, GetWorldSpaceNormalizeViewDir( vertexInput.positionWS ), o.lightmapUVOrVertexSH.xyz );
+				OUTPUT_SH4(vertexInput.positionWS, normalInput.normalWS.xyz, GetWorldSpaceNormalizeViewDir(vertexInput.positionWS), o.lightmapUVOrVertexSH.xyz, additionalArg);
 
 				#if defined(ENABLE_TERRAIN_PERPIXEL_NORMAL)
 					o.lightmapUVOrVertexSH.zw = v.texcoord.xy;
