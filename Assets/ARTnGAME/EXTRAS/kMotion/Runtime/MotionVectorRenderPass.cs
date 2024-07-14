@@ -20,7 +20,7 @@ namespace kTools.Motion
             "LightweightForward",
         };
 
-        RenderTargetHandle m_MotionVectorHandle;
+        //RenderTargetHandle m_MotionVectorHandle;
         Material m_CameraMaterial;
         Material m_ObjectMaterial;
         MotionData m_MotionData;
@@ -43,21 +43,21 @@ namespace kTools.Motion
             m_ObjectMaterial = new Material(Shader.Find(kObjectShader));
         }
 
-        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
-        {
-            // Configure Render Target
-            //cameraTextureDescriptor.colorFormat = RenderTextureFormat.RGFloat;
-            m_MotionVectorHandle.Init(kMotionVectorTexture);
-            cameraTextureDescriptor.colorFormat = RenderTextureFormat.RG16;
-            cmd.GetTemporaryRT(m_MotionVectorHandle.id, cameraTextureDescriptor, FilterMode.Point);
-            ConfigureTarget(m_MotionVectorHandle.Identifier(), m_MotionVectorHandle.Identifier());
-            cmd.SetRenderTarget(m_MotionVectorHandle.Identifier(), m_MotionVectorHandle.Identifier());
+        //public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
+        //{
+        //    // Configure Render Target
+        //    //cameraTextureDescriptor.colorFormat = RenderTextureFormat.RGFloat;
+        //    m_MotionVectorHandle.Init(kMotionVectorTexture);
+        //    cameraTextureDescriptor.colorFormat = RenderTextureFormat.RG16;
+        //    cmd.GetTemporaryRT(m_MotionVectorHandle.id, cameraTextureDescriptor, FilterMode.Point);
+        //    ConfigureTarget(m_MotionVectorHandle.Identifier(), m_MotionVectorHandle.Identifier());
+        //    cmd.SetRenderTarget(m_MotionVectorHandle.Identifier(), m_MotionVectorHandle.Identifier());
 
-            // TODO: Why do I have to clear here?
-            //cmd.ClearRenderTarget(true, true, Color.black, 1.0f);
-            // Clear with 0.5 because we packed vectors from clip into NDC space
-            cmd.ClearRenderTarget(true, true, Color.gray, 1.0f);
-        }
+        //    // TODO: Why do I have to clear here?
+        //    //cmd.ClearRenderTarget(true, true, Color.black, 1.0f);
+        //    // Clear with 0.5 because we packed vectors from clip into NDC space
+        //    cmd.ClearRenderTarget(true, true, Color.gray, 1.0f);
+        //}
 #endregion
 
 #region Execution
@@ -138,24 +138,24 @@ namespace kTools.Motion
             // Draw Renderers
             context.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings, ref renderStateBlock);
         }
-#endregion
+        #endregion
 
-#region Cleanup
-        public override void FrameCleanup(CommandBuffer cmd)
-        {
-            if (cmd == null)
-                throw new ArgumentNullException("cmd");
-            
-            // Reset Render Target
-            if (m_MotionVectorHandle != RenderTargetHandle.CameraTarget)
-            {
-                cmd.ReleaseTemporaryRT(m_MotionVectorHandle.id);
-                m_MotionVectorHandle = RenderTargetHandle.CameraTarget;
-            }
-        }
-#endregion
+        #region Cleanup
+        //public override void FrameCleanup(CommandBuffer cmd)
+        //{
+        //    if (cmd == null)
+        //        throw new ArgumentNullException("cmd");
 
-#region CommandBufer
+        //    Reset Render Target
+        //    if (m_MotionVectorHandle != RenderTargetHandle.CameraTarget)
+        //    {
+        //        cmd.ReleaseTemporaryRT(m_MotionVectorHandle.id);
+        //        m_MotionVectorHandle = RenderTargetHandle.CameraTarget;
+        //    }
+        //}
+        #endregion
+
+        #region CommandBufer
         void ExecuteCommand(ScriptableRenderContext context, CommandBuffer cmd)
         {
             context.ExecuteCommandBuffer(cmd);

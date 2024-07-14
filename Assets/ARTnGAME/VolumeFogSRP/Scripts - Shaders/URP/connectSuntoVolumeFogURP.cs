@@ -518,7 +518,7 @@ public class connectSuntoVolumeFogURP : MonoBehaviour
             //https://forum.unity.com/threads/access-renderer-feature-settings-at-runtime.770918/
             //https://forum.unity.com/threads/urp-adding-a-renderfeature-from-script.1117060/ // v1.1.9f
             //RenderPipeline pipeURP = RenderPipelineManager.currentPipeline;
-            UniversalRenderPipelineAsset pipeline = ((UniversalRenderPipelineAsset)GraphicsSettings.renderPipelineAsset);
+            UniversalRenderPipelineAsset pipeline = ((UniversalRenderPipelineAsset)GraphicsSettings.defaultRenderPipeline);
             //ScriptableRenderer rendererURP = pipeline.GetRenderer(0);
             // rendererURP.supportedRenderingFeatures
             //pipeline.GetRenderer(0);

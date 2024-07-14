@@ -39,40 +39,40 @@ namespace kTools.Motion
 #endregion
 
 #region Execution
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
-        {
-            // Get data
-            var camera = renderingData.cameraData.camera;
+        //public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        //{
+        //    // Get data
+        //    var camera = renderingData.cameraData.camera;
 
-            // Never draw in Preview
-            if(camera.cameraType == CameraType.Preview)
-                return;
+        //    // Never draw in Preview
+        //    if(camera.cameraType == CameraType.Preview)
+        //        return;
 
-            // Profiling command
-            CommandBuffer cmd = CommandBufferPool.Get(kProfilingTag);
-            //using (new ProfilingSample(cmd, kProfilingTag)) //v1.2.0
-            {
-                // Set Material properties from VolumeComponent
-                m_Material.SetFloat("_Intensity", m_MotionBlur.intensity.value);
+        //    // Profiling command
+        //    CommandBuffer cmd = CommandBufferPool.Get(kProfilingTag);
+        //    //using (new ProfilingSample(cmd, kProfilingTag)) //v1.2.0
+        //    {
+        //        // Set Material properties from VolumeComponent
+        //        m_Material.SetFloat("_Intensity", m_MotionBlur.intensity.value);
 
-                // TODO: Why doesnt RenderTargetHandle.CameraTarget work?
-                //var colorTextureIdentifier = new RenderTargetIdentifier("_CameraColorTexture");
-                var colorTextureIdentifier = renderingData.cameraData.renderer.cameraColorTarget; //v1.2.0
+        //        // TODO: Why doesnt RenderTargetHandle.CameraTarget work?
+        //        //var colorTextureIdentifier = new RenderTargetIdentifier("_CameraColorTexture");
+        //        var colorTextureIdentifier = renderingData.cameraData.renderer.cameraColorTarget; //v1.2.0
 
-                // RenderTexture
-                var descriptor = new RenderTextureDescriptor(camera.scaledPixelWidth, camera.scaledPixelHeight, RenderTextureFormat.DefaultHDR, 16);
-                var renderTexture = RenderTexture.GetTemporary(descriptor);
+        //        // RenderTexture
+        //        var descriptor = new RenderTextureDescriptor(camera.scaledPixelWidth, camera.scaledPixelHeight, RenderTextureFormat.DefaultHDR, 16);
+        //        var renderTexture = RenderTexture.GetTemporary(descriptor);
 
-                // Blits
-                var passIndex = (int)m_MotionBlur.quality.value;
-                cmd.Blit(colorTextureIdentifier, renderTexture, m_Material, passIndex);
-                cmd.Blit(renderTexture, colorTextureIdentifier, m_Material, passIndex);
-                ExecuteCommand(context, cmd);
+        //        // Blits
+        //        var passIndex = (int)m_MotionBlur.quality.value;
+        //        cmd.Blit(colorTextureIdentifier, renderTexture, m_Material, passIndex);
+        //        cmd.Blit(renderTexture, colorTextureIdentifier, m_Material, passIndex);
+        //        ExecuteCommand(context, cmd);
 
-                RenderTexture.ReleaseTemporary(renderTexture);
-            }
-            ExecuteCommand(context, cmd);
-        }
+        //        RenderTexture.ReleaseTemporary(renderTexture);
+        //    }
+        //    ExecuteCommand(context, cmd);
+        //}
 #endregion
 
 #region CommandBufer
