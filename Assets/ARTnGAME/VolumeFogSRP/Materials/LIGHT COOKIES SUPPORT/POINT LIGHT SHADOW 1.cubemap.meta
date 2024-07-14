@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2c9577b2dd140134fb68f303298a2f8c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8900000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Materials/LIGHT COOKIES SUPPORT/POINT LIGHT
+    SHADOW 1.cubemap
+  uploadId: 651289

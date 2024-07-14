@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b48a641a198884a4caf6c403e6446f92
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/DEMOS/Ethereal Tutorial v1.4.3 Local Lights
+    Attenuation Control.unity
+  uploadId: 651289

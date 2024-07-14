@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c96429306c07b2b48af2902b865ac000
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Scripts - Shaders/Per Area Fog Volume Control/Window
+    3.mat
+  uploadId: 651289

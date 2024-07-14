@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fa6e9ffa98fbcc24c90b98b4333b9ceb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Scripts - Shaders/3D Textures/PerlinA1.asset
+  uploadId: 651289

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e14a3ab107e346c46b5bff12969576b8
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Materials/NewLayer.terrainlayer
+  uploadId: 651289

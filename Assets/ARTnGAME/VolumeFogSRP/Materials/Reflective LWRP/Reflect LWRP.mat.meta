@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 159a123ed500bd042ab88c53825760fe
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Materials/Reflective LWRP/Reflect LWRP.mat
+  uploadId: 651289

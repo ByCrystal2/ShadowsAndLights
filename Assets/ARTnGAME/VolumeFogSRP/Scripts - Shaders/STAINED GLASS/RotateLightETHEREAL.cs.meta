@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 64f2789357ff454498b1560acd4bc5ec
+timeCreated: 1490339412
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Scripts - Shaders/STAINED GLASS/RotateLightETHEREAL.cs
+  uploadId: 651289

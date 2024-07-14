@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 777b88671ee5e9e4c96a6a7641522442
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Materials/STONE.mat
+  uploadId: 651289
