@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 8e5ac92bc18f545cc84cd886ece82b4d
+timeCreated: 1516864223
+licenseType: Store
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 79902
+  packageName: Horse Animset Pro (Riding System)
+  packageVersion: 4.4.4c
+  assetPath: Assets/Malbers Animations/Common/Scripts/Path Constraint/PathCreator/Core/Runtime/Objects/PathCreator.cs
+  uploadId: 667313

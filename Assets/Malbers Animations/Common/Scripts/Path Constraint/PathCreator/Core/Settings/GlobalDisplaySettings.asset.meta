@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 35fab21375bf12f4b96eba4dafa4ad30
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 79902
+  packageName: Horse Animset Pro (Riding System)
+  packageVersion: 4.4.4c
+  assetPath: Assets/Malbers Animations/Common/Scripts/Path Constraint/PathCreator/Core/Settings/GlobalDisplaySettings.asset
+  uploadId: 667313
