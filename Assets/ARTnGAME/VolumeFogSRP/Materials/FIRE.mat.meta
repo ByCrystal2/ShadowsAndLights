@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6fa446e54018dc84d970b8a938545f29
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Materials/FIRE.mat
+  uploadId: 651289

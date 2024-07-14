@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1d4fdb16e62c1364c9da0cccc24538f2
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/DEMOS/Ethereal Tutorial v1.5.0 Impostor
+    Lights Extended.unity
+  uploadId: 651289

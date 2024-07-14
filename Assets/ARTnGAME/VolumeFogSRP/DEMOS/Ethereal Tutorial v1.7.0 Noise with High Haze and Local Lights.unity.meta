@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cb211d33387b83c488a88896217a9a7f
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/DEMOS/Ethereal Tutorial v1.7.0 Noise with
+    High Haze and Local Lights.unity
+  uploadId: 651289

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2fc7ddf2fd3a9404d9382892c4463627
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/DEMOS/MULTI SCENE LOADING - DUAL CAMERAS
+    DEMOS/Terrain RADIOSITY.asset
+  uploadId: 651289

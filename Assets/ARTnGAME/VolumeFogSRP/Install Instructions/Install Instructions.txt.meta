@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cfd118c5c27225f4c828fee5572dab30
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/Install Instructions/Install Instructions.txt
+  uploadId: 651289

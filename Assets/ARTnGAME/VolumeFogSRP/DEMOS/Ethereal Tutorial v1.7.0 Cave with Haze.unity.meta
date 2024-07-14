@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: acebcfc4cb836fd46b1cab41de70f598
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/DEMOS/Ethereal Tutorial v1.7.0 Cave with
+    Haze.unity
+  uploadId: 651289
