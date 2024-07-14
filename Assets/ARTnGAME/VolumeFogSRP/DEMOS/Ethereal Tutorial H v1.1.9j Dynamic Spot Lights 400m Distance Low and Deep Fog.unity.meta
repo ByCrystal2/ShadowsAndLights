@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 14d6e757ea7b3174f83eccc77b4b9671
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/DEMOS/Ethereal Tutorial H v1.1.9j Dynamic
+    Spot Lights 400m Distance Low and Deep Fog.unity
+  uploadId: 651289

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: df4c8af87ce41f3438669c333aa2d7a3
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/EXTRAS/URP Custom Renderer/Settings ETHEREAL/Extra demo
+    profiles ETHEREAL/SampleSceneProfile 8 DUAL CAMERAS.asset
+  uploadId: 651289

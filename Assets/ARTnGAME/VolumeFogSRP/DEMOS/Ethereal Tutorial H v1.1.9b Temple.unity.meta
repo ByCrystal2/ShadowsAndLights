@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6983badd68e9a9949a6a755dee06309b
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/DEMOS/Ethereal Tutorial H v1.1.9b Temple.unity
+  uploadId: 651289

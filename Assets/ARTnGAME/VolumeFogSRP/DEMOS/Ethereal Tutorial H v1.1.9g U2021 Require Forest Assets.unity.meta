@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bdb8cf18c40b4584984b9dd772bca77c
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/VolumeFogSRP/DEMOS/Ethereal Tutorial H v1.1.9g U2021
+    Require Forest Assets.unity
+  uploadId: 651289
