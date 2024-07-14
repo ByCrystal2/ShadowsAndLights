@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: fb08aede8ca087e4492c934062528ceb
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/EXTRAS/PINE TREES/MainLight_Custom_Node_SM 1.hlsl
+  uploadId: 651289

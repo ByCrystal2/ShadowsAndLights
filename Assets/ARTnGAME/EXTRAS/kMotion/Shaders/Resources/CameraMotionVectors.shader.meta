@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3e0c524383572684580022b42ebf6a9d
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/EXTRAS/kMotion/Shaders/Resources/CameraMotionVectors.shader
+  uploadId: 651289

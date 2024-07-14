@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 4b72bf4dceed3b245a5a77ae0726363c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187323
+  packageName: Ethereal URP - Volumetric Lighting & Fog
+  packageVersion: 1.7.0b
+  assetPath: Assets/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/PreferenceDefinition/HandleOnEditorPersistedValueChange.cs
+  uploadId: 651289
