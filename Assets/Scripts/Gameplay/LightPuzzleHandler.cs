@@ -32,6 +32,25 @@ public class LightPuzzleHandler : MonoBehaviour
         }
 
         instance = this;
+
+        LightsParent = FindFirstObjectByType<LightsHolder>().transform;
+        DirectorsParent = FindFirstObjectByType<DirectorsHolder>().transform;
+        TrapsParent = FindFirstObjectByType<TrapsHolder>().transform;
+    }
+
+    public Transform GetLightsParent()
+    {
+        return LightsParent;
+    }
+
+    public Transform GetDirectorsParent()
+    {
+        return DirectorsParent;
+    }
+
+    public Transform GetTrapsParent()
+    {
+        return TrapsParent;
     }
 
     public static Gradient GetColorGradient(LightColor color)

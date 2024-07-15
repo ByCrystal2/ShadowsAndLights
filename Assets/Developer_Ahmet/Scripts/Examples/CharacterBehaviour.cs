@@ -215,7 +215,7 @@ public class CharacterBehaviour : MonoBehaviour
                 PickUpObject(interact);
             }
         }
-        else if (currentTouchTime >= targetTouchTime / 2)
+        else if (currentTouchTime >= 0.5f)
         {
             if (HandsFull())
             {

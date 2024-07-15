@@ -52,7 +52,7 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
         else if (_interactType == InteractType.Dropable)
         {
             //birakme islemleri...
-            transform.SetParent(null);
+            transform.SetParent(LightPuzzleHandler.instance.GetDirectorsParent());
             IsCollected = false;
             player.playerUI.CloseInteractUIS();
             Debug.Log(name + " adli obje birakildi..");
