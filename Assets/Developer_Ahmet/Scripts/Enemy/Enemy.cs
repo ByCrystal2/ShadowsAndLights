@@ -18,11 +18,13 @@ public abstract class Enemy
         StatesInit();
         ID = _id;
         Name = name;
-        Health = health;
-        Level = level;
-        DeathGold = deathGold;
+        var calculatedValues = EnemySpawner.instance.CalculateEnemyValues(health,level,deathGold);
+        Health = calculatedValues.health;
+        Level = calculatedValues.level;
+        DeathGold = calculatedValues.deathGold;
         EnemyType = enemyType;
     }
+    
     public abstract void StatesInit();
     //public void StatesInit()
     //{

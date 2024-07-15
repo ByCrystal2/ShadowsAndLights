@@ -226,6 +226,7 @@ public class PlayerSaveData
     [Header("Currencies")]
     public float Gold;
     public float Gem;
+    public int Level = 1;
 
     public void ResetSave()
     {
@@ -236,5 +237,6 @@ public class PlayerSaveData
         UniqueSaveFolderName = "";
         Gold = 0;
         Gem = 0;
+        Level = 1;
     }
 }
