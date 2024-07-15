@@ -210,6 +210,7 @@ public class GameManager : MonoBehaviour
     {
         return 10;
     }
+
 }
 
 [System.Serializable]
