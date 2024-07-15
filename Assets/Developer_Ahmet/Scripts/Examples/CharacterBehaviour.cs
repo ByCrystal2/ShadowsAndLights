@@ -263,7 +263,7 @@ public class CharacterBehaviour : MonoBehaviour
             Debug.Log(currentRotatingObject + " adli obje'nin " + currentRotatingObject.RotatableObject + " adli rotate objesi donduruluyor...");
             Vector2 deltaPosition = touch.position - lastTouchPosition;
             float rotationAmount = deltaPosition.x * 0.5f; // Dönme hýzýný ayarlamak için çarpan kullanabilirsiniz.
-            currentRotatingObject.RotatableObject.RotateY(rotationAmount);
+            currentRotatingObject.RotatableObject.RotateX(rotationAmount);
             lastTouchPosition = touch.position;
         }
     }
