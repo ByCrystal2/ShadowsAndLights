@@ -33,14 +33,7 @@ public class LightBehaviour : MonoBehaviour
     private float rotateInterval = 3;
     private Gradient originalGradient;
     public List<Color> segmentColors = new();
-
-//#if UNITY_EDITOR
-//    private void Update()
-//    {
-//        if (!Application.isPlaying)
-//            UpdateLight();
-//    }
-//#endif
+    private LightPuzzleHandler.LightColor OverridedColor;
 
     void FixedUpdate()
     {
@@ -73,7 +66,6 @@ public class LightBehaviour : MonoBehaviour
             rotateTimer = Time.time + rotateInterval;
         }
         UpdateGradient(Vector3.zero, Vector3.zero);
-        
     }
 
     void SetLengthOriginal()
@@ -99,14 +91,10 @@ public class LightBehaviour : MonoBehaviour
         colorKeys[1] = new GradientColorKey(endColor, originalGradient.colorKeys[1].time);
 
         newGradient.SetKeys(colorKeys, originalGradient.alphaKeys);
-
-        //lineRenderer.colorGradient = newGradient;
     }
 
     public void UpdateColor()
     {
-        //originalGradient = LightPuzzleHandler.GetColorGradient(TypeOfLights[0]);
-        //lineRenderer.colorGradient = originalGradient;
         PointLight.color = lineRenderer.colorGradient.colorKeys.First().color;
     }
 
@@ -122,6 +110,7 @@ public class LightBehaviour : MonoBehaviour
 
         segmentColors.Clear();
         segmentColors.Add(LightPuzzleHandler.GetColorByLight(TypeOfLights[0]));
+        OverridedColor = TypeOfLights[0];
         SendRay(PointLight.transform.position, direction, 1);
     }
 
@@ -130,7 +119,6 @@ public class LightBehaviour : MonoBehaviour
         if (_bounces >= 8)
         {
             segmentColors.Add(LightPuzzleHandler.GetColorByLight(TypeOfLights[0]));
-            //UpdateGradient(Vector3.zero, origin);
             return;
         }
 
@@ -140,16 +128,14 @@ public class LightBehaviour : MonoBehaviour
         lineRenderer.positionCount =_bounces + 1;
         if (Physics.Raycast(ray, out hit, LengthPerLight))
         {
-            // Draw the ray for visualization
             lineRenderer.SetPosition(_bounces, hit.point);
             if (hit.transform.gameObject.CompareTag("Reflect"))
             {
                 Vector3 newDirection = Vector3.Reflect(direction, hit.normal);
-                Color nextColor = hit.transform.GetComponentInParent<DirectorBehaviour>().ActivateReflectLight(TypeOfLights[0]);
-                segmentColors.Add(nextColor);
+                var nextColorHolder = hit.transform.GetComponentInParent<DirectorBehaviour>().ActivateReflectLight(OverridedColor);
+                segmentColors.Add(nextColorHolder._color);
+                OverridedColor = nextColorHolder._lightColor;
                 SendRay(hit.point, newDirection, _bounces + 1);
-
-                //UpdateGradient(hit.point, origin);
             }
             else
             {
@@ -159,8 +145,6 @@ public class LightBehaviour : MonoBehaviour
         else
         {
             lineRenderer.SetPosition(_bounces, origin + direction * LengthPerLight);
-            //segmentColors.Add(LightPuzzleHandler.GetColorByLight(TypeOfLights[0]));
-            //UpdateGradient(hit.point, origin);
         }
     }
 
@@ -199,8 +183,10 @@ public class LightBehaviour : MonoBehaviour
 
         Gradient newGradient = LightPuzzleHandler.GetColorGradient(TypeOfLights[0]);
 
-        GradientColorKey[] startColorKeys = lineRenderer.colorGradient.colorKeys;
+        GradientColorKey[] startColorKeys = originalGradient.colorKeys;
         GradientColorKey[] endColorKeys = newGradient.colorKeys;
+
+        SynchronizeGradientLengths(ref startColorKeys, ref endColorKeys);
 
         float elapsedTime = 0f;
         float duration = 0.75f;
@@ -217,7 +203,7 @@ public class LightBehaviour : MonoBehaviour
             }
 
             Gradient updatedGradient = new Gradient();
-            updatedGradient.SetKeys(interpolatedColorKeys, lineRenderer.colorGradient.alphaKeys);
+            updatedGradient.SetKeys(interpolatedColorKeys, originalGradient.alphaKeys);
             lineRenderer.colorGradient = updatedGradient;
 
             PointLight.color = interpolatedColorKeys[0].color;
@@ -231,7 +217,7 @@ public class LightBehaviour : MonoBehaviour
         lineRenderer.colorGradient = originalGradient;
 
         PointLight.color = endColorKeys[0].color;
-        UpdateGradient(Vector3.zero, Vector3.zero);
+        //UpdateGradient(Vector3.zero, Vector3.zero);
     }
 
     private IEnumerator SmoothRotate()
@@ -339,6 +325,32 @@ public class LightBehaviour : MonoBehaviour
         isActive = false;
     }
 
+    void SynchronizeGradientLengths(ref GradientColorKey[] startKeys, ref GradientColorKey[] endKeys)
+    {
+        int maxLength = Mathf.Max(startKeys.Length, endKeys.Length);
+
+        startKeys = ResizeAndCopyKeys(startKeys, maxLength);
+        endKeys = ResizeAndCopyKeys(endKeys, maxLength);
+    }
+
+    GradientColorKey[] ResizeAndCopyKeys(GradientColorKey[] keys, int newSize)
+    {
+        GradientColorKey[] newKeys = new GradientColorKey[newSize];
+        for (int i = 0; i < newSize; i++)
+        {
+            if (i < keys.Length)
+            {
+                newKeys[i] = keys[i];
+            }
+            else
+            {
+                // Set default color key if out of range
+                newKeys[i] = new GradientColorKey(Color.white, 1f);
+            }
+        }
+        return newKeys;
+    }
+
 #if UNITY_EDITOR
 
     private float timeAccumulator;
@@ -377,6 +389,10 @@ public class LightBehaviour : MonoBehaviour
 
     private void EditorUpdate()
     {
+        if (PlayOnEditor)
+            if (SourceType != LightSourceType.Switch_Each3)
+                isActive = true;
+        
         if (!Application.isPlaying && PlayOnEditor)
         {
             UpdateLine();

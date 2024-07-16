@@ -19,7 +19,7 @@ public class DirectorBehaviour : MonoBehaviour
 #if UNITY_EDITOR
     private EditorCoroutine currentEditorCoroutine;
 #endif
-    public Color ActivateReflectLight(LightPuzzleHandler.LightColor _HitColor)
+    public (Color _color, LightPuzzleHandler.LightColor _lightColor) ActivateReflectLight(LightPuzzleHandler.LightColor _HitColor)
     {
         float LightFadeSeconds = 0;
         if (Application.isPlaying)
@@ -55,7 +55,8 @@ public class DirectorBehaviour : MonoBehaviour
         List<LightPuzzleHandler.LightColor> mixes = new();
         foreach (var item in ColorsOnReflect)
             mixes.Add(item.ColorOnSurface);
-        return LightPuzzleHandler.GetMixedColor(mixes);
+        var reflect = LightPuzzleHandler.GetMixedColor(mixes);
+        return (reflect._hasMix ? reflect._target : LightPuzzleHandler.GetColorByLight(_HitColor), reflect._lightColor);
     }
 
 #if UNITY_EDITOR
@@ -98,7 +99,7 @@ public class DirectorBehaviour : MonoBehaviour
             List<LightPuzzleHandler.LightColor> mixes = new();
             foreach (var item in ColorsOnReflect)
                 mixes.Add(item.ColorOnSurface);
-            ReflectLight.color = LightPuzzleHandler.GetMixedColor(mixes);
+            ReflectLight.color = LightPuzzleHandler.GetMixedColor(mixes)._target;
         }
     }
 

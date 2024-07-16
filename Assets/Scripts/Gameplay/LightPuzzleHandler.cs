@@ -12,7 +12,7 @@ public class LightPuzzleHandler : MonoBehaviour
 
     public static List<LightData> LightsOfLevel = new() {
         new(){ lightType = LightColor.White ,ColorOfLight = new() { r = 1, b = 1, g = 1, a = 1} },
-        new(){ lightType = LightColor.Red ,ColorOfLight = new() { r = 1, b = 0.5f, g = 0.5f, a = 1} },
+        new(){ lightType = LightColor.Red ,ColorOfLight = new() { r = 1, b = 0.2f, g = 0.2f, a = 1} },
         new(){ lightType = LightColor.Blue ,ColorOfLight = new() { r = 0, b = 0.95f, g = 0.3f, a = 1} },
         new(){ lightType = LightColor.Yellow ,ColorOfLight = new() { r = 1, b = 0.1f, g = 0.7f, a = 1} },
         new(){ lightType = LightColor.Cyan ,ColorOfLight = new() { r = 0, b = 0.95f, g = 1, a = 1} },
@@ -95,7 +95,7 @@ public class LightPuzzleHandler : MonoBehaviour
         return Color.white;
     }
 
-    public static Color GetMixedColor(List<LightColor> _colors)
+    public static ( Color _target, bool _hasMix, LightColor _lightColor) GetMixedColor(List<LightColor> _colors)
     {
         bool containsBlue = _colors.Contains(LightColor.Blue);
         bool containsRed = _colors.Contains(LightColor.Red);
@@ -103,31 +103,31 @@ public class LightPuzzleHandler : MonoBehaviour
 
         if (containsBlue && containsRed && containsGreen)
         {
-            return Color.white;
+            return (Color.white, true, LightColor.White);
         }
         else if (containsBlue && containsRed)
         {
             foreach (var item in LightsOfLevel)
                 if (item.lightType == LightColor.Purple)
-                    return item.ColorOfLight;
+                    return (item.ColorOfLight, true, LightColor.Purple);
         }
         else if (containsBlue && containsGreen)
         {
             foreach (var item in LightsOfLevel)
                 if (item.lightType == LightColor.Cyan)
-                    return item.ColorOfLight;
+                    return (item.ColorOfLight, true, LightColor.Cyan);
         }
         else if (containsRed && containsGreen)
         {
             foreach (var item in LightsOfLevel)
                 if (item.lightType == LightColor.Yellow)
-                    return item.ColorOfLight;
+                    return (item.ColorOfLight, true, LightColor.Yellow);
         }
         foreach (var item in LightsOfLevel)
-            if (item.lightType == _colors[_colors.Count - 1])
-                return item.ColorOfLight;
+            if (item.lightType == _colors[0])
+                return (item.ColorOfLight, false, item.lightType);
 
-        return Color.white;
+        return (Color.white, false, LightColor.White);
     }
 
     public enum LightColor
