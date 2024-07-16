@@ -817,6 +817,7 @@ PlayerSettings:
   webWasm2023: 0
   scriptingDefineSymbols:
     Android: MAGIO
+    Standalone: MAGIO
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
