@@ -903,15 +903,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[1].b
-      value: 1
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[1].g
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[1].r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[2].a
@@ -984,6 +984,14 @@ PrefabInstance:
     - target: {fileID: 4847317711313711872, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Name
       value: LightSource_Example (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847317711313711872, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Positions.Array.size
@@ -1063,15 +1071,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key1.b
-      value: 1
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key1.g
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key1.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key2.a
@@ -1532,23 +1540,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
       propertyPath: m_Intensity
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8324319241989697342, guid: ff79495fdad400b468623baf5e45d155, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1760,27 +1768,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: 'TypeOfLights.Array.data[0]'
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
-      propertyPath: 'TypeOfLights.Array.data[1]'
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
-      propertyPath: 'TypeOfLights.Array.data[2]'
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
-      propertyPath: segmentColors.Array.data[0].b
+      propertyPath: 'TypeOfLights.Array.data[1]'
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
+      propertyPath: 'TypeOfLights.Array.data[2]'
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
+      propertyPath: segmentColors.Array.data[0].b
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[0].g
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[0].r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[1].a
@@ -1788,15 +1796,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[1].b
-      value: 1
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[1].g
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[1].r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[2].a
@@ -1804,15 +1812,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[2].b
-      value: 1
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[2].g
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 1037207873187548655, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: segmentColors.Array.data[2].r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3447341831241195723, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Color.b
@@ -1869,6 +1877,14 @@ PrefabInstance:
     - target: {fileID: 4847317711313711872, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Name
       value: LightSource_Example
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847317711313711872, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Positions.Array.size
@@ -1928,27 +1944,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.b
-      value: 1
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.g
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key1.b
-      value: 1
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key1.g
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key1.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key2.a
@@ -1956,15 +1972,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key2.b
-      value: 1
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key2.g
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.key2.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5181988204482171066, guid: 7a6195d48b520dd4198abe579db0a51e, type: 3}
       propertyPath: m_Parameters.colorGradient.m_NumAlphaKeys
@@ -2033,23 +2049,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
       propertyPath: m_Intensity
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8324319241989697342, guid: ff79495fdad400b468623baf5e45d155, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

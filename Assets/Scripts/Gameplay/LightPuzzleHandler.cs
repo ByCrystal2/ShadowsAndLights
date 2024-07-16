@@ -53,6 +53,36 @@ public class LightPuzzleHandler : MonoBehaviour
         return TrapsParent;
     }
 
+    public void SetAllDirectorsOutlinedForSeconds(float _seconds)
+    {
+        CancelInvoke();
+        SetDirectorsOutlined(true);
+        Invoke(nameof(ResetLayerOfDirectors), _seconds);
+    }
+
+    void ResetLayerOfDirectors()
+    {
+        SetDirectorsOutlined(false);
+    }
+
+    void SetDirectorsOutlined(bool _outlineActive)
+    {
+        List<Transform> All = new();
+        foreach (Transform t in DirectorsParent) 
+        { 
+            All.Add(t);
+            Transform[] childs = t.GetComponentsInChildren<Transform>();
+            foreach (var item in childs)
+            {
+                All.Add(item);
+            }
+        }
+
+        int newLayer = _outlineActive ? LayerMask.NameToLayer("PlayerCarry") : LayerMask.NameToLayer("PlayerIgnore");
+        foreach (var item in All)
+            item.gameObject.layer = newLayer;
+    }
+
     public static Gradient GetColorGradient(LightColor color)
     {
         Gradient gradient = new Gradient();

@@ -47,7 +47,12 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
         }
         if (_interactType == InteractType.Pickable)
         {
-             player.CollectObject(this, HandObject);
+            player.CollectObject(this, HandObject);
+            int layer = LayerMask.NameToLayer("PlayerCarry");
+            Transform[] ts = transform.GetComponentsInChildren<Transform>();
+            List<Transform> all = new();
+            all.Add(transform);
+            SetObjectOutlined(true, all);
         }
         else if (_interactType == InteractType.Dropable)
         {
@@ -56,9 +61,20 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
             IsCollected = false;
             player.playerUI.CloseInteractUIS();
             Debug.Log(name + " adli obje birakildi..");
+            int layer = LayerMask.NameToLayer("PlayerIgnore");
+            Transform[] ts = transform.GetComponentsInChildren<Transform>();
+            List<Transform> all = new();
+            all.Add(transform);
+            SetObjectOutlined(false, all);
         }
     }
     
+    public void SetObjectOutlined(bool _outlineActive, List<Transform> _gameObjects)
+    {
+        int newLayer = _outlineActive ? LayerMask.NameToLayer("PlayerCarry") : LayerMask.NameToLayer("PlayerIgnore");
+        foreach (var item in _gameObjects)
+            item.gameObject.layer = newLayer;
+    }
 }
 public interface ICollectable
 {
