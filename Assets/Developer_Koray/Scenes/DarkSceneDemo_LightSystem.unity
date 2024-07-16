@@ -2047,26 +2047,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Director_Example
       objectReference: {fileID: 0}
-    - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
-      propertyPath: m_Color.b
-      value: 0.95
-      objectReference: {fileID: 0}
-    - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
-      propertyPath: m_Color.g
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
-      propertyPath: m_Color.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7393061488836799219, guid: ff79495fdad400b468623baf5e45d155, type: 3}
-      propertyPath: m_Intensity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8324319241989697342, guid: ff79495fdad400b468623baf5e45d155, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
