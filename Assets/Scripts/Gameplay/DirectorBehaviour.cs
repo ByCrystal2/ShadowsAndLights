@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.LightTransport;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,13 +20,14 @@ public class DirectorBehaviour : MonoBehaviour
     private bool ReflectionActive;
     
     public List<ColorOnReflect> ColorsOnReflect = new List<ColorOnReflect>();
-    private void Awake()
+    void Awake()
     {
-        rotateAnObject = GetComponent<IRotateAnObject>();        
+        rotateAnObject = GetComponent<IRotateAnObject>();
+        LevelID = transform.parent.GetComponent<DirectorsHolder>().LevelID;
     }
     private void Start()
     {
-        SetRotateValues();
+        //SetRotateValues();
     }
     private void OnValidate()
     {
@@ -37,11 +40,6 @@ public class DirectorBehaviour : MonoBehaviour
 #endif
 
     private int LevelID;
-
-    void Awake()
-    {
-        LevelID = transform.parent.GetComponent<DirectorsHolder>().LevelID;
-    }
 
     public (Color _color, LightPuzzleHandler.LightColor _lightColor) ActivateReflectLight(LightPuzzleHandler.LightColor _HitColor)
     {

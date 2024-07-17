@@ -227,7 +227,7 @@ public class CharacterBehaviour : MonoBehaviour
             {
                 speed = 20;
                 percentage = Mathf.Clamp01(currentTouchTime / (targetTouchTime / 2));
-                if (currentTouchTime >= (targetTouchTime / 2))
+                if (currentTouchTime >= (targetTouchTime / 3))
                     fillerColor = Color.red;
                 else if (currentTouchTime >= (targetTouchTime / 4))
                     fillerColor = Color.yellow;
@@ -277,8 +277,12 @@ public class CharacterBehaviour : MonoBehaviour
         {
             Debug.Log(currentRotatingObject + " adli obje'nin " + currentRotatingObject.RotatableObject + " adli rotate objesi donduruluyor...");
             Vector2 deltaPosition = touch.position - lastTouchPosition;
-            //float rotationAmount = deltaPosition.x * 0.5f; // Dönme hýzýný ayarlamak için çarpan kullanabilirsiniz.
-            currentRotatingObject.RotatableObject.RotateWithRotateAngel(deltaPosition);
+
+            // Convert touch delta to rotation angles
+            float rotationX = deltaPosition.y;
+            float rotationY = -deltaPosition.x;
+
+            currentRotatingObject.RotatableObject.RotateWithRotateAngel(new Vector3(rotationX, rotationY, 0));
             lastTouchPosition = touch.position;
         }
     }

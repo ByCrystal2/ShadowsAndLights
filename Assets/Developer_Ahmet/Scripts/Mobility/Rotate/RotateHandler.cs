@@ -3,48 +3,53 @@ using UnityEngine;
 public class RotateHandler : MonoBehaviour, IRotatable
 {
     public RotateAngle RotateAngel { get; set; }
-    public float RotateSpeed { get; set; }
+    public float RotateSpeed { get; set; } = 10f;
 
-    public void RotateWithRotateAngel(Vector3 _rotation)
+    public void RotateWithRotateAngel(Vector3 rotation)
     {
+        //Vector3 rotation = new Vector3((_rotation.x * RotateSpeed * Time.deltaTime), (_rotation.y * RotateSpeed * Time.deltaTime), 0);
+        //Debug.Log("RotateWithRotateAngel rotation => " + rotation);
         switch (RotateAngel)
         {
             case RotateAngle.All:
-                Rotate(_rotation);
+                Rotate(rotation);
                 break;
             case RotateAngle.RotateX:
-                RotateX(_rotation.x);
+                RotateX(rotation.x);
                 break;
             case RotateAngle.RotateY:
-                RotateY(_rotation.y);
+                RotateY(rotation.y);
                 break;
             case RotateAngle.RotateZ:
-                RotateZ(_rotation.z);
+                RotateZ(rotation.z);
                 break;
             default:
                 break;
         }
     }
-    public void Rotate(Vector3 _rotation)
+
+    public void Rotate(Vector3 rotation)
     {
-        transform.Rotate(_rotation * RotateSpeed);
-    }
-    public void RotateX(float _angle)
-    {
-        _angle = _angle * RotateSpeed;
-        transform.Rotate(new Vector3(_angle,0,0), Space.Self);
+        Quaternion targetRotation = Quaternion.Euler(rotation) * transform.rotation;
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotateSpeed);
     }
 
-    public void RotateY(float _angle)
+    public void RotateX(float angle)
     {
-        _angle = _angle * RotateSpeed;
-        transform.Rotate(new Vector3(0, _angle, 0), Space.Self);
+        Quaternion targetRotation = Quaternion.Euler(angle, 0, 0) * transform.rotation;
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotateSpeed);
     }
 
-    public void RotateZ(float _angle)
+    public void RotateY(float angle)
     {
-        _angle = _angle * RotateSpeed;
-        transform.Rotate(new Vector3(0, 0, _angle), Space.Self);
+        Quaternion targetRotation = Quaternion.Euler(0, angle, 0) * transform.rotation;
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotateSpeed);
+    }
+
+    public void RotateZ(float angle)
+    {
+        Quaternion targetRotation = Quaternion.Euler(0, 0, angle) * transform.rotation;
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotateSpeed);
     }
 }
 
