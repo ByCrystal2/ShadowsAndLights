@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -6,9 +7,10 @@ public class LightPuzzleHandler : MonoBehaviour
 {
     public static LightPuzzleHandler instance {  get; private set; }
 
-    public Transform LightsParent;
-    public Transform DirectorsParent;
-    public Transform TrapsParent;
+    public List<LightsHolder> LightsParents;
+    public List<DirectorsHolder> DirectorsParents;
+    public List<TrapsHolder> TrapsParents;
+    public List<TargetHolder> TargetsParents;
 
     public static List<LightData> LightsOfLevel = new() {
         new(){ lightType = LightColor.White ,ColorOfLight = new() { r = 1, b = 1, g = 1, a = 1} },
@@ -33,55 +35,81 @@ public class LightPuzzleHandler : MonoBehaviour
 
         instance = this;
 
-        LightsParent = FindFirstObjectByType<LightsHolder>().transform;
-        DirectorsParent = FindFirstObjectByType<DirectorsHolder>().transform;
-        TrapsParent = FindFirstObjectByType<TrapsHolder>().transform;
+        LightsParents = FindObjectsByType<LightsHolder>(FindObjectsSortMode.InstanceID).ToList();
+        DirectorsParents = FindObjectsByType<DirectorsHolder>(FindObjectsSortMode.InstanceID).ToList();
+        TrapsParents = FindObjectsByType<TrapsHolder>(FindObjectsSortMode.InstanceID).ToList();
+        TargetsParents = FindObjectsByType<TargetHolder>(FindObjectsSortMode.InstanceID).ToList();
     }
 
-    public Transform GetLightsParent()
+    public Transform GetLightsParent(int _level)
     {
-        return LightsParent;
+        foreach (var item in LightsParents)
+            if (item.LevelID == _level)
+                return item.transform;
+
+        Debug.LogError("Id mevcut degil! Tekrar check et.");
+        return null;
     }
 
-    public Transform GetDirectorsParent()
+    public Transform GetDirectorsParent(int _level)
     {
-        return DirectorsParent;
+        foreach (var item in DirectorsParents)
+            if (item.LevelID == _level)
+                return item.transform;
+
+        Debug.LogError("Id mevcut degil! Tekrar check et.");
+        return null;
     }
 
-    public Transform GetTrapsParent()
+    public Transform GetTrapsParent(int _level)
     {
-        return TrapsParent;
-    }
+        foreach (var item in TrapsParents)
+            if (item.LevelID == _level)
+                return item.transform;
 
-    public void SetAllDirectorsOutlinedForSeconds(float _seconds)
+        Debug.LogError("Id mevcut degil! Tekrar check et.");
+        return null;
+    }
+    
+    public Transform GetTargetsParent(int _level)
     {
-        CancelInvoke();
-        SetDirectorsOutlined(true);
-        Invoke(nameof(ResetLayerOfDirectors), _seconds);
+        foreach (var item in TargetsParents)
+            if (item.LevelID == _level)
+                return item.transform;
+
+        Debug.LogError("Id mevcut degil! Tekrar check et.");
+        return null;
     }
 
-    void ResetLayerOfDirectors()
-    {
-        SetDirectorsOutlined(false);
-    }
+    //public void SetAllDirectorsOutlinedForSeconds(float _seconds)
+    //{
+    //    CancelInvoke();
+    //    SetDirectorsOutlined(true);
+    //    Invoke(nameof(ResetLayerOfDirectors), _seconds);
+    //}
 
-    void SetDirectorsOutlined(bool _outlineActive)
-    {
-        List<Transform> All = new();
-        foreach (Transform t in DirectorsParent) 
-        { 
-            All.Add(t);
-            Transform[] childs = t.GetComponentsInChildren<Transform>();
-            foreach (var item in childs)
-            {
-                All.Add(item);
-            }
-        }
+    //void ResetLayerOfDirectors()
+    //{
+    //    SetDirectorsOutlined(false);
+    //}
 
-        int newLayer = _outlineActive ? LayerMask.NameToLayer("PlayerCarry") : LayerMask.NameToLayer("PlayerIgnore");
-        foreach (var item in All)
-            item.gameObject.layer = newLayer;
-    }
+    //void SetDirectorsOutlined(bool _outlineActive)
+    //{
+    //    List<Transform> All = new();
+    //    foreach (Transform t in DirectorsParent) 
+    //    { 
+    //        All.Add(t);
+    //        Transform[] childs = t.GetComponentsInChildren<Transform>();
+    //        foreach (var item in childs)
+    //        {
+    //            All.Add(item);
+    //        }
+    //    }
+
+    //    int newLayer = _outlineActive ? LayerMask.NameToLayer("PlayerCarry") : LayerMask.NameToLayer("PlayerIgnore");
+    //    foreach (var item in All)
+    //        item.gameObject.layer = newLayer;
+    //}
 
     public static Gradient GetColorGradient(LightColor color)
     {

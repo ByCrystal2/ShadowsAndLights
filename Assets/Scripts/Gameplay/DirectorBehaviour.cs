@@ -19,6 +19,14 @@ public class DirectorBehaviour : MonoBehaviour
 #if UNITY_EDITOR
     private EditorCoroutine currentEditorCoroutine;
 #endif
+
+    private int LevelID;
+
+    void Awake()
+    {
+        LevelID = transform.parent.GetComponent<DirectorsHolder>().LevelID;
+    }
+
     public (Color _color, LightPuzzleHandler.LightColor _lightColor) ActivateReflectLight(LightPuzzleHandler.LightColor _HitColor)
     {
         float LightFadeSeconds = 0;
@@ -56,6 +64,12 @@ public class DirectorBehaviour : MonoBehaviour
         foreach (var item in ColorsOnReflect)
             mixes.Add(item.ColorOnSurface);
         var reflect = LightPuzzleHandler.GetMixedColor(mixes);
+        if (!reflect._hasMix)
+        {
+            //Debug.Log("No mix, original color is: " + LightPuzzleHandler.GetColorByLight(_HitColor).ToString());
+            //Debug.Log("No mix, original LightColor is: " + reflect._lightColor.ToString());
+            //Debug.Log("No mix, original target is: " + reflect._target.ToString());
+        }
         return (reflect._hasMix ? reflect._target : LightPuzzleHandler.GetColorByLight(_HitColor), reflect._lightColor);
     }
 
@@ -166,6 +180,11 @@ public class DirectorBehaviour : MonoBehaviour
             ReflectLight.gameObject.SetActive(false);
             ReflectLight.intensity = 0;
         }
+    }
+
+    public int GetLevelID()
+    {
+        return LevelID;
     }
 
     [System.Serializable]

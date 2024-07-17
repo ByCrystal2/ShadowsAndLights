@@ -57,7 +57,11 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
         else if (_interactType == InteractType.Dropable)
         {
             //birakme islemleri...
-            transform.SetParent(LightPuzzleHandler.instance.GetDirectorsParent());
+            int _currentLv = 1; //Diger objeler icin onlarin classlarindan leveline erisebilirsin sonrasinda. su an tek tasinabilir obje Director.
+            if(transform.TryGetComponent(out DirectorBehaviour b))
+                _currentLv = b.GetLevelID();
+
+            transform.SetParent(LightPuzzleHandler.instance.GetDirectorsParent(_currentLv));
             IsCollected = false;
             player.playerUI.CloseInteractUIS();
             Debug.Log(name + " adli obje birakildi..");
