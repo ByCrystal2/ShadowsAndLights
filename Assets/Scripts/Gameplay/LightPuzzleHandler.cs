@@ -7,6 +7,9 @@ public class LightPuzzleHandler : MonoBehaviour
 {
     public static LightPuzzleHandler instance {  get; private set; }
 
+    [SerializeField] List<TrapEffectHelper> TargetEffectMaterials = new List<TrapEffectHelper>();
+    [SerializeField] List<TrapSoundHelper> TargetEffectSounds = new List<TrapSoundHelper>();
+    [SerializeField] List<GameObject> Arrows = new List<GameObject>();
     public List<LightsHolder> LightsParents;
     public List<DirectorsHolder> DirectorsParents;
     public List<TrapsHolder> TrapsParents;
@@ -16,7 +19,7 @@ public class LightPuzzleHandler : MonoBehaviour
         new(){ lightType = LightColor.White ,ColorOfLight = new() { r = 1, b = 1, g = 1, a = 1} },
         new(){ lightType = LightColor.Red ,ColorOfLight = new() { r = 1, b = 0.2f, g = 0.2f, a = 1} },
         new(){ lightType = LightColor.Blue ,ColorOfLight = new() { r = 0, b = 0.95f, g = 0.3f, a = 1} },
-        new(){ lightType = LightColor.Yellow ,ColorOfLight = new() { r = 1, b = 0.1f, g = 0.7f, a = 1} },
+        new(){ lightType = LightColor.Yellow ,ColorOfLight = new() { r = 1, b = 0f, g = 0.85f, a = 1} },
         new(){ lightType = LightColor.Cyan ,ColorOfLight = new() { r = 0, b = 0.95f, g = 1, a = 1} },
         new(){ lightType = LightColor.Purple ,ColorOfLight = new() { r = 1, b = 0.85f, g = 0.2f, a = 1} },
         new(){ lightType = LightColor.Green ,ColorOfLight = new() { r = 0, b = 0.5f, g = 1, a = 1} },
@@ -187,7 +190,20 @@ public class LightPuzzleHandler : MonoBehaviour
 
         return (Color.white, false, LightColor.White);
     }
-
+    public Material GetMaterialInEffectOnTarget(TrapEffectType _trapEffectType)
+    {
+        List<Material> _materials = TargetEffectMaterials.Where(x => x.EffectType == _trapEffectType).Select(x => x.Material).ToList();
+        return _materials[Random.Range(0, _materials.Count)];
+    }
+    public AudioClip GetSoundInEffectOnTarget(TrapEffectType _trapEffectType)
+    {
+        List<AudioClip> _clips = TargetEffectSounds.Where(x => x.EffectType == _trapEffectType).Select(x => x.Clip).ToList();
+        return _clips[Random.Range(0, _clips.Count)];
+    }
+    public GameObject GetArrow()
+    {
+        return Arrows[Random.Range(0, Arrows.Count)];
+    }
     public enum LightColor
     {
         White,
@@ -209,5 +225,6 @@ public class LightPuzzleHandler : MonoBehaviour
         Rotate90_Each3,
         Switch_Each3,
         Chargable,
-    }
+    }    
 }
+
