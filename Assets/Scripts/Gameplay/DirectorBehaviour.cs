@@ -12,10 +12,26 @@ using Unity.EditorCoroutines.Editor;
 public class DirectorBehaviour : MonoBehaviour
 {
     public Light ReflectLight;
+    [SerializeField] RotateAngle RotateAngel;
+    [SerializeField, Range(0, 10)] float RotateSpeed;
+    IRotateAnObject rotateAnObject;
     private bool ReflectionActive;
-
+    
     public List<ColorOnReflect> ColorsOnReflect = new List<ColorOnReflect>();
-
+    private void Awake()
+    {
+        rotateAnObject = GetComponent<IRotateAnObject>();        
+    }
+    private void Start()
+    {
+        SetRotateValues();
+    }
+    private void OnValidate()
+    {
+        SetRotateValues();
+    }
+    void SetRotateValues() {if (rotateAnObject != null) { rotateAnObject.RotatableObject.RotateAngel = RotateAngel; rotateAnObject.RotatableObject.RotateSpeed = RotateSpeed; }
+    }
 #if UNITY_EDITOR
     private EditorCoroutine currentEditorCoroutine;
 #endif
