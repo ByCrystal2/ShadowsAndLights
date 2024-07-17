@@ -1,4 +1,5 @@
 using StateMachineSystem;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(PlayerUI))]
@@ -7,10 +8,12 @@ public class CharacterBehaviour : MonoBehaviour
     [HideInInspector] public PlayerUI playerUI;
     StateMachine stateMachine;
     [SerializeField] Transform collectableItemsContent;
+    
     private void Awake()
     {
         stateMachine = new StateMachine();
         playerUI = GetComponent<PlayerUI>();
+        
     }
     public void StatesInit()
     {
@@ -324,4 +327,5 @@ public class CharacterBehaviour : MonoBehaviour
             playerUI.CurrentInteract = null;
         triggerInteracts.Remove(other.gameObject);
     }
+    
 }
