@@ -287,7 +287,11 @@ MonoBehaviour:
   PlayOnEditor: 0
   isActive: 0
   segmentColors:
-  - {r: 1, g: 0.5, b: 0.5, a: 1}
+  - _color: {r: 0, g: 0, b: 0, a: 0}
+    _hitEndPos: {x: 0, y: 0, z: 0}
+    _startPos: {x: 0, y: 0, z: 0}
+    _direction: {x: 0, y: 0, z: 0}
+    _hitDirector: {fileID: 0}
 --- !u!120 &5181988204482171066
 LineRenderer:
   serializedVersion: 2
@@ -384,8 +388,8 @@ LineRenderer:
       m_ColorSpace: -1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 4
-    numCapVertices: 4
+    numCornerVertices: 3
+    numCapVertices: 1
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
