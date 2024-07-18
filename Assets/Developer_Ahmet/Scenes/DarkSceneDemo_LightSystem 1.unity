@@ -467,10 +467,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_Core_Example_Ahmet
       objectReference: {fileID: 0}
-    - target: {fileID: 5299532693281798415, guid: c661a9a9323bd3543845e4a520b9ce7c, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

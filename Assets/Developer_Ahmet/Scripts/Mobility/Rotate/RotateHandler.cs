@@ -8,7 +8,7 @@ public class RotateHandler : MonoBehaviour, IRotatable
     public void RotateWithRotateAngel(Vector3 rotation)
     {
         //Vector3 rotation = new Vector3((_rotation.x * RotateSpeed * Time.deltaTime), (_rotation.y * RotateSpeed * Time.deltaTime), 0);
-        //Debug.Log("RotateWithRotateAngel rotation => " + rotation);
+        Debug.Log("RotateWithRotateAngel RotateAngel => " + RotateAngel.ToString());
         switch (RotateAngel)
         {
             case RotateAngle.All:

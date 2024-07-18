@@ -48,7 +48,10 @@ public class ArrowDispenser : Trap, ICanHoldMultipleObjects<ArrowBehaviour>
         ArrowsSpeed = arrowsSpeed;
         DefaultRotate = defaultRotate;
     }
-    
+    public bool AllArrowsShot()
+    {
+        return Objects.Count <= 0 ? true : false;
+    }
     public Quaternion DefaultRotate { get; set; }
     public Transform ArrowShootingContent;
     public float ArrowsSpeed{ get; set; }
@@ -88,6 +91,7 @@ public interface ICanHoldMultipleObjects<T> where T : Component
 }
 public interface ITrapMovable
 {
+    public Vector3 DefaultPos { get; set; }
     public float Speed { get; set; }
     public Vector3 Direction { get; set; } // Ex: Vector3.forward;
 }

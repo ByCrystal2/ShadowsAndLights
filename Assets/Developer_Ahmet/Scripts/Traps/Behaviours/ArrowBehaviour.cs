@@ -21,6 +21,7 @@ public class ArrowBehaviour : MonoBehaviour, ICanDamage, ITrapMovable, IHaveVisu
     public Material Material { get; set; }
     public TrapEffectType EffectOnTarget { get ; set; }
     public float ChangeTime { get; set; }
+    public Vector3 DefaultPos { get; set; }
 
     public IEnumerator IEHit(HealthHandler targetHealth, float waiting)
     {
@@ -31,21 +32,44 @@ public class ArrowBehaviour : MonoBehaviour, ICanDamage, ITrapMovable, IHaveVisu
     private void OnEnable()
     {
         transform.localPosition = Vector3.zero;
+        DefaultPos = transform.localPosition;
     }
     bool followWay;
     private void Update()
     {
-        if (m_Dispenser != null && followWay)
+        if (followWay)
         {
-            transform.Translate((transform.position + Direction) * (Speed * Time.deltaTime));
+            MoveArrow();
+            CheckDistance();
         }
+    }
+    private void MoveArrow()
+    {
+        transform.Translate(Direction * Speed * Time.deltaTime,Space.World);
+    }
+
+    private void CheckDistance()
+    {
+        if (Vector3.Distance(transform.localPosition, DefaultPos) > 5f)
+        {
+            followWay = false;
+            DeactivateArrow();
+        }
+    }
+
+    private void DeactivateArrow()
+    {
+        gameObject.SetActive(false);
+        Destroy(gameObject, 1f);
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out HealthHandler healthHandler))
         {
             StartCoroutine(IEHit(healthHandler, 0));
+            Destroy(gameObject);
         }
-        followWay = false;
+        else
+            followWay = false;
     }
 }

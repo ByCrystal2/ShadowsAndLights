@@ -34,13 +34,14 @@ public class DirectorBehaviour : MonoBehaviour
     }
     private void Start()
     {
-        //SetRotateValues();
+        SetRotateValues();
     }
     private void OnValidate()
     {
         SetRotateValues();
     }
-    void SetRotateValues() {if (rotateAnObject != null) { rotateAnObject.RotatableObject.RotateAngel = RotateAngel; rotateAnObject.RotatableObject.RotateSpeed = RotateSpeed; }
+    void SetRotateValues() {
+        if (rotateAnObject != null) { rotateAnObject.RotatableObject.RotateAngel = RotateAngel; rotateAnObject.RotatableObject.RotateSpeed = RotateSpeed; Debug.Log("rotateAnObject values are changed. => " + rotateAnObject.RotatableObject.RotateAngel); }
     }
 #if UNITY_EDITOR
     private EditorCoroutine currentEditorCoroutine;

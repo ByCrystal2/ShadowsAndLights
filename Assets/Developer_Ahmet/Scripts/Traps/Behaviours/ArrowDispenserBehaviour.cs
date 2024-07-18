@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider))]
@@ -17,16 +18,37 @@ public partial class ArrowDispenserBehaviour : TrapBehaviour
             m_ArrowDispenser.Objects.Add(arrowBehaviour);
         }
         //InvokeRepeating(nameof(ShootNewArrow), 2,4);
-    }
-    private void Update()
+    }    
+    IEnumerator ShootArrows()
     {
-        // burda kalindi en son. ok sohotlanmali.
+        for (int i = 0;i < HowMuchArrow; i++)
+        {
+            yield return new WaitForSeconds(ChangeTime);
+            ShotArrow();
+        }        
     }
-    public void ShootNewArrow()
+    void ShotArrow()
     {
-        if (m_ArrowDispenser.Objects.Count <= 0) return;
         m_ArrowDispenser.Objects[0].gameObject.SetActive(true);
         m_ArrowDispenser.Objects.RemoveAt(0);
+        Debug.Log($"This ArrowDispenser ({name}) Fired! Currnet Arrows Count:{m_ArrowDispenser.Objects.Count}");
+    }
+    Coroutine shotArrowsCoroutine;
+    private void OnTriggerEnter(Collider other)
+    {
+        if (m_ArrowDispenser.AllArrowsShot()) return;
+        if (other.CompareTag("Animal"))
+        {
+            Debug.Log($"This ArrowDispenser ({name}) trigged the player.");
+            if (IsConsecutiveShots)
+            {
+                if (shotArrowsCoroutine == null) { shotArrowsCoroutine = StartCoroutine(ShootArrows()); }
+            }
+            else
+                ShotArrow();
+
+        }
+                     
     }
 }
 public partial class ArrowDispenserBehaviour : TrapBehaviour
@@ -36,4 +58,5 @@ public partial class ArrowDispenserBehaviour : TrapBehaviour
     public int HowMuchArrow;
     public Transform ArrowShootingContent;
     public Quaternion ArrowDefaultRotate;
+    public bool IsConsecutiveShots;
 }//SerializeFieds...
