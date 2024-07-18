@@ -158,6 +158,7 @@ public class LightPuzzleHandler : MonoBehaviour
 
     public static ( Color _target, bool _hasMix, LightColor _lightColor) GetMixedColor(List<LightColor> _colors)
     {
+        //Improve here
         bool containsBlue = _colors.Contains(LightColor.Blue);
         bool containsRed = _colors.Contains(LightColor.Red);
         bool containsGreen = _colors.Contains(LightColor.Green);

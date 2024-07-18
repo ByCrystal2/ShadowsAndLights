@@ -487,8 +487,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ReflectLight: {fileID: 7393061488836799219}
+  Type: 00000000
   RotateAngel: 0
   RotateSpeed: 0.5
+  CurrentSources:
+    Sources: []
   ColorsOnReflect: []
 --- !u!114 &655244358627625795
 MonoBehaviour:

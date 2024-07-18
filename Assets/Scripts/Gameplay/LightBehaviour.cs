@@ -35,6 +35,8 @@ public class LightBehaviour : MonoBehaviour
     public List<SegmentColour> segmentColors = new();
     private LightPuzzleHandler.LightColor OverridedColor;
 
+    public BlockedData BlockByMix;
+
     void FixedUpdate()
     {
         UpdateLight();
@@ -117,6 +119,22 @@ public class LightBehaviour : MonoBehaviour
 
     void SendRay(Vector3 origin, Vector3 direction, int _bounces)
     {
+        if (BlockByMix.blockedUntil > Time.time)
+        {
+            if (!BlockByMix.masterMixed && BlockByMix.bounceAfter < _bounces)
+            {
+                //Debug.Log("Light is blocked by mix. Because other light created combined mix.");
+                return;
+            }
+            if (BlockByMix.masterMixed)
+            {
+                //direction = BlockByMix.OverridedDirection;
+            }
+        }
+        else
+        {
+            BlockByMix.masterMixed = false;
+        }
         Ray ray = new Ray(origin, direction);
         RaycastHit hit;
 
@@ -129,6 +147,9 @@ public class LightBehaviour : MonoBehaviour
                 Vector3 newDirection = Vector3.Reflect(direction, hit.normal);
                 DirectorBehaviour director = hit.transform.GetComponentInParent<DirectorBehaviour>();
                 var nextColorHolder = director.ActivateReflectLight(OverridedColor);
+                Vector3 dir = director.AddColorToTheSource(this, nextColorHolder._lightColor, _bounces, newDirection, hit.normal);
+                if (dir != Vector3.zero)
+                    newDirection = dir;
 
                 if (_bounces > 0)
                 {
@@ -436,6 +457,15 @@ public class LightBehaviour : MonoBehaviour
         return newKeys;
     }
 
+    public void SetBlockedByMixUntil(float _time, bool _isMaster, int _bounceAfter, Vector3 _OverridedDirection)
+    {
+        BlockByMix = new();
+        BlockByMix.masterMixed = _isMaster;
+        BlockByMix.blockedUntil = _time;
+        BlockByMix.bounceAfter = _bounceAfter;
+        BlockByMix.OverridedDirection = _OverridedDirection;
+    }
+
     [System.Serializable]
     public struct SegmentColour
     {
@@ -444,6 +474,15 @@ public class LightBehaviour : MonoBehaviour
         public Vector3 _startPos;
         public Vector3 _direction;
         public DirectorBehaviour _hitDirector;
+    }
+
+    [System.Serializable]
+    public struct BlockedData
+    {
+        public bool masterMixed;
+        public float blockedUntil;
+        public float bounceAfter;
+        public Vector3 OverridedDirection;
     }
 
 #if UNITY_EDITOR
