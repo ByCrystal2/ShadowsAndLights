@@ -693,25 +693,25 @@ MonoBehaviour:
     m_Value: {fileID: 0}
     dimension: 1
   outline:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 1
   outlineColor:
-    m_OverrideState: 0
-    m_Value: {r: 0, g: 0, b: 0, a: 0.8}
+    m_OverrideState: 1
+    m_Value: {r: 0.3660378, g: 0.3660378, b: 0.3660378, a: 0.8}
   outlineThreshold:
-    m_OverrideState: 0
-    m_Value: 0.2
+    m_OverrideState: 1
+    m_Value: 0.125
   outlineMinDepthThreshold:
     m_OverrideState: 0
     m_Value: 0
   outlineCustomize:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 1
   outlineLayerMask:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value:
       serializedVersion: 2
-      m_Bits: 4294967295
+      m_Bits: 268435456
   outlineLayerCutOff:
     m_OverrideState: 0
     m_Value: 0

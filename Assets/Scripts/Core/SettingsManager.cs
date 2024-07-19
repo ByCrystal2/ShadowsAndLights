@@ -50,6 +50,13 @@ public class SettingsManager : MonoBehaviour
         else
         {
             ActiveSetting = new Settings();
+            //test icin yazilmis kodlardir, istenirse silinebilir. (Ahmet yazdi.)
+            AudioSettings audioSettings = new AudioSettings();
+            audioSettings.MainVolume = 80f;
+            audioSettings.SFXVolume = 80f;
+            audioSettings.BGMVolume = 80f;
+            ActiveSetting.audioSettings = audioSettings;
+            //test icin yazilmis kodlardir, istenirse silinebilir. (Ahmet yazdi.)
             Debug.Log("Settings could not be found. Will be set as default");
         }
         ApplySettingEffects();

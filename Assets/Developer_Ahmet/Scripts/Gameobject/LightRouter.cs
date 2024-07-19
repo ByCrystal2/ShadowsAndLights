@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectHand, IRotateAnObject
 {
     [SerializeField] RotateHandler RotateObject;
@@ -10,6 +11,7 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
     public IRotatable RotatableObject { get { return RotateObject; } set { } }
 
     public List<InteractType> InteractTypes { get; set; } = new List<InteractType>();
+    public DirectorBarHandler barHandler { get; set; }
 
     CharacterBehaviour player;
     private void Awake()
@@ -17,6 +19,8 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
         player = GameObject.FindWithTag("Animal").GetComponent<CharacterBehaviour>();
         HandObject = gameObject;
         InteractTypes = new List<InteractType> { InteractType.Pickable, InteractType.Dropable, InteractType.Rotatable };
+        barHandler = GetComponentInChildren<DirectorBarHandler>();
+        barHandler.gameObject.SetActive(false);
     }
 
     public void Collect()
@@ -47,18 +51,46 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
         }
         if (_interactType == InteractType.Pickable)
         {
-             player.CollectObject(this, HandObject);
+            barHandler.gameObject.SetActive(false);
+            player.CollectObject(this, HandObject);
+            int layer = LayerMask.NameToLayer("PlayerCarry");
+            Transform[] ts = transform.GetComponentsInChildren<Transform>();
+            List<Transform> all = new();
+            all.Add(transform);
+            SetObjectOutlined(true, all);
         }
         else if (_interactType == InteractType.Dropable)
         {
             //birakme islemleri...
-            transform.SetParent(null);
+            int _currentLv = 1; //Diger objeler icin onlarin classlarindan leveline erisebilirsin sonrasinda. su an tek tasinabilir obje Director.
+            if(transform.TryGetComponent(out DirectorBehaviour b))
+                _currentLv = b.GetLevelID();
+
+            transform.SetParent(LightPuzzleHandler.instance.GetDirectorsParent(_currentLv));
+            barHandler.gameObject.SetActive(false);
+            transform.localPosition = new Vector3(transform.localPosition.x, GetFloorHeight(), transform.localPosition.z);
+            //transform.localPosition = new Vector3();
             IsCollected = false;
             player.playerUI.CloseInteractUIS();
             Debug.Log(name + " adli obje birakildi..");
+            int layer = LayerMask.NameToLayer("PlayerIgnore");
+            Transform[] ts = transform.GetComponentsInChildren<Transform>();
+            List<Transform> all = new();
+            all.Add(transform);
+            SetObjectOutlined(false, all);
         }
     }
     
+    public float GetFloorHeight()
+    {
+        return 0;
+    }
+    public void SetObjectOutlined(bool _outlineActive, List<Transform> _gameObjects)
+    {
+        int newLayer = _outlineActive ? LayerMask.NameToLayer("PlayerCarry") : LayerMask.NameToLayer("PlayerIgnore");
+        foreach (var item in _gameObjects)
+            item.gameObject.layer = newLayer;
+    }
 }
 public interface ICollectable
 {
@@ -73,6 +105,7 @@ public interface ICollectInventory
 public interface ICollectHand
 {
     public GameObject HandObject { get; set; }
+    public DirectorBarHandler barHandler { get; set; }
 }
 
 public interface IInteractable

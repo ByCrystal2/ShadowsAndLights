@@ -11,6 +11,7 @@ TagManager:
   - Animal
   - Water
   - Interactable
+  - Reflect
   layers:
   - Default
   - TransparentFX
@@ -40,8 +41,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - PlayerCarry
+  - PlayerIgnore
   - Item
   - Light
   m_SortingLayers:

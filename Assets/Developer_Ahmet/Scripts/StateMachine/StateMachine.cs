@@ -127,6 +127,40 @@ namespace StateMachineSystem
             throw new System.NotImplementedException();
         }
     }
+    public class PatrolState : IState
+    {
+        public void Enter()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Exit()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Tick()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+    public class ChaseState : IState
+    {
+        public void Enter()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Exit()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Tick()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
     public class AttackState : IState
     {
         public void Enter()

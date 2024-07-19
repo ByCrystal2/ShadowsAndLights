@@ -1,5 +1,5 @@
-
 using StateMachineSystem;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(PlayerUI))]
@@ -8,10 +8,12 @@ public class CharacterBehaviour : MonoBehaviour
     [HideInInspector] public PlayerUI playerUI;
     StateMachine stateMachine;
     [SerializeField] Transform collectableItemsContent;
+    
     private void Awake()
     {
         stateMachine = new StateMachine();
         playerUI = GetComponent<PlayerUI>();
+        
     }
     public void StatesInit()
     {
@@ -60,7 +62,7 @@ public class CharacterBehaviour : MonoBehaviour
         {
             _obj.transform.SetParent(collectableItemsContent);
             Transform objTrans = _obj.transform;
-            objTrans.transform.localPosition = Vector3.zero;
+            objTrans.localPosition = new Vector3();
             objTrans.localRotation = new Quaternion(objTrans.rotation.x,Vector3.forward.z, objTrans.rotation.z, objTrans.localRotation.w);
             playerUI.CloseInteractUIS();
             playerUI.ShowDropable();
@@ -72,101 +74,21 @@ public class CharacterBehaviour : MonoBehaviour
     {
         return collectableItemsContent.transform.childCount > 0 ? true : false;
     }
-    float targetTouchTime = 2f, currentTouchTime = 0;
+    float targetTouchTime = 1.5f, currentTouchTime = 0;
     private Vector2 lastTouchPosition;
+    IInteractable lastInteractObject;
     IInteractable currentHandObject;
     IRotateAnObject currentRotatingObject;
     bool isRotatableObjRotating = true;
+    float waitSecondProcess = 2f;
     private void Update()
-    {
-        //if (Input.touchCount > 0)
-        //{
-        //    Touch touch = Input.GetTouch(0);
-        //    Ray ray = Camera.main.ScreenPointToRay(touch.position);
-        //    RaycastHit hit;
-
-        //    if (Physics.Raycast(ray,out hit, 100f))
-        //    {
-        //        GameObject hitObject = hit.collider.gameObject;
-        //        if (hitObject.CompareTag("Interactable"))
-        //        {
-        //        Debug.Log("Interactable object name => " + hit.collider.gameObject.name);
-        //            currentTouchTime += Time.deltaTime;
-        //            IInteractable interact = hitObject.GetComponent<IInteractable>();
-        //            if (interact != null) 
-        //            {
-        //                if (interact is IRotateAnObject rotateObj)
-        //                {
-        //                    if (!HandsFull() && !isRotatableObjRotating)
-        //                    {
-        //                        if (currentTouchTime >= targetTouchTime/2.5f)
-        //                        {
-
-        //                            MainUIManager.instance.LockPlayer();
-        //                            currentRotatingObject = rotateObj;
-        //                            isRotatableObjRotating = true;                                    
-        //                        }                                
-        //                    }
-        //                }
-        //                if (currentTouchTime >= targetTouchTime)
-        //                {
-        //                    if (!HandsFull())
-        //                    {
-        //                        isRotatableObjRotating = false;
-        //                        interact.Interact(InteractType.Pickable);
-        //                        currentHandObject = interact;
-        //                        targetTouchTime = 2;
-        //                        currentTouchTime = 0;
-        //                        MainUIManager.instance.UnLockPlayer();
-        //                    }
-        //                    else
-        //                    {
-
-        //                    }
-        //                    return;
-        //                }
-        //                if (currentTouchTime >= targetTouchTime/2)
-        //                {
-        //                    if (HandsFull())
-        //                    {
-        //                        isRotatableObjRotating = false;
-        //                        interact.Interact(InteractType.Dropable);
-        //                        currentHandObject = interact;
-        //                        targetTouchTime = 2;
-        //                        currentTouchTime = 0;
-        //                        MainUIManager.instance.UnLockPlayer();
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        if (isRotatableObjRotating)
-        //        {
-        //            if (currentRotatingObject != null)
-        //            {
-        //                Debug.Log(currentRotatingObject + " adli obje'nin " + currentRotatingObject.RotatableObject + " adli rotate objesi donduruluyor...");
-        //                Vector2 deltaPosition = touch.position - lastTouchPosition;
-        //                float rotationAmount = deltaPosition.x * 0.5f; // Dönme hýzýný ayarlamak için çarpan kullanabilirsiniz.
-        //                currentRotatingObject.RotatableObject.RotateY(rotationAmount);
-        //                lastTouchPosition = touch.position;
-        //            }
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    if (isRotatableObjRotating)
-        //    {
-        //        isRotatableObjRotating = false;
-        //        MainUIManager.instance.UnLockPlayer();
-        //    }
-
-        //    if (targetTouchTime != 2 || currentTouchTime != 0)
-        //    {
-        //        targetTouchTime = 2;
-        //        currentTouchTime = 0;
-        //    }
-        //}
-        if (Input.touchCount > 0)
+    {        
+        if (waitSecondProcess > 0)
+        {
+            waitSecondProcess -= Time.deltaTime;
+            //Debug.Log($"Second process will run in {waitSecondProcess} second.");
+        }
+        if (Input.touchCount > 0 && waitSecondProcess <= 0)
         {
             HandleTouchInput();
         }
@@ -174,10 +96,56 @@ public class CharacterBehaviour : MonoBehaviour
         {
             ResetTouchState();
         }
-        if (isRotatableObjRotating && Input.touchCount > 0)
+        RotateProcessControl();
+    }
+    public void RotateProcessControl()
+    {
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began && HandsFull() && isRotatableObjRotating)
         {
             Touch touch = Input.GetTouch(0);
-            RotateObject(touch);
+            Ray ray = Camera.main.ScreenPointToRay(touch.position);
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+            {
+                GameObject hitObject = hit.collider.gameObject;
+                if (hitObject.CompareTag("Interactable"))
+                {
+                    if (currentHandObject != null)
+                    {
+                        if (currentHandObject is ICollectHand handler)
+                        {
+                            if (hitObject.GetInstanceID() == handler.HandObject.GetInstanceID())
+                            {
+                                currentRotatingObject = hitObject.GetComponent<IRotateAnObject>();
+                                Debug.Log("currentRotatingObject = hitObject.GetComponent<IRotateAnObject>();");
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        else if (Input.touchCount <= 0 && HandsFull())
+        {
+            currentRotatingObject = null;
+            Debug.Log("currentRotatingObject = null;");
+        }
+        if (isRotatableObjRotating && HandsFull() && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+        {
+            Touch touch = Input.GetTouch(0);
+            Ray ray = Camera.main.ScreenPointToRay(touch.position);
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+            {
+                GameObject hitObject = hit.collider.gameObject;
+                if (currentHandObject is ICollectHand handler)
+                {
+                    //Debug.Log("for Rotate hitObject name => " + hitObject.name);
+                    if (hitObject.GetInstanceID() != handler.HandObject.GetInstanceID())
+                    {
+                        RotateObject(touch);
+                        Debug.Log("RotateObject(touch);");
+                    }
+                }
+            }
         }
     }
     private void HandleTouchInput()
@@ -195,8 +163,14 @@ public class CharacterBehaviour : MonoBehaviour
                 IInteractable interact = hitObject.GetComponent<IInteractable>();
                 if (interact != null)
                 {
+                    lastInteractObject = interact;
                     HandleInteractableObject(interact, touch);
                 }
+            }
+            else
+            {
+                ResetTouchState();
+                
             }
         }
     }
@@ -208,11 +182,13 @@ public class CharacterBehaviour : MonoBehaviour
             HandleRotatableObject(rotateObj);
         }
         MainUIManager.instance.LockPlayer();
+        if (touch.phase == TouchPhase.Moved) return;
         if (currentTouchTime >= targetTouchTime)
         {
             if (!HandsFull())
             {
                 PickUpObject(interact);
+                waitSecondProcess = 1f;
             }
         }
         else if (currentTouchTime >= targetTouchTime / 2)
@@ -220,21 +196,63 @@ public class CharacterBehaviour : MonoBehaviour
             if (HandsFull())
             {
                 DropObject(interact);
+                waitSecondProcess = 1f;
             }
+        }        
+            CollectHandControl(interact);
+        
+    }
+    public void CollectHandControl(IInteractable interact)
+    {
+        if (interact is ICollectHand collectHand)
+        {
+            if (!collectHand.barHandler.gameObject.activeSelf)
+                collectHand.barHandler.gameObject.SetActive(true);
+
+            float percentage = 0;
+            int barValue = Mathf.RoundToInt(percentage * 100);
+
+            Color bgColor = Color.white;
+            Color fillerColor = Color.green;
+            float speed;
+            if (!HandsFull())
+            {
+                speed = 5;
+                percentage = Mathf.Clamp01(currentTouchTime / targetTouchTime);
+                if (currentTouchTime >= targetTouchTime / 2)
+                    fillerColor = Color.green;
+                else if ( currentTouchTime >= targetTouchTime / 4)
+                    fillerColor = Color.blue;
+                else
+                    fillerColor = Color.cyan;
+            }
+            else 
+            {
+                speed = 20;
+                percentage = Mathf.Clamp01(currentTouchTime / (targetTouchTime / 2));
+                if (currentTouchTime >= (targetTouchTime / 3))
+                    fillerColor = Color.red;
+                else if (currentTouchTime >= (targetTouchTime / 4))
+                    fillerColor = Color.yellow;
+                else
+                    fillerColor = Color.grey;
+            }
+
+            // Set the bar smoothly
+            collectHand.barHandler.SetBar(bgColor, fillerColor, percentage, speed);
         }
     }
-
     private void HandleRotatableObject(IRotateAnObject rotateObj)
     {
-        if (!HandsFull() && !isRotatableObjRotating)
+        if (HandsFull() && !isRotatableObjRotating)
         {
                 MainUIManager.instance.LockPlayer();
-            if (currentTouchTime >= targetTouchTime / 2.5f)
-            {
+            //if (currentTouchTime >= targetTouchTime / 2.5f)
+            //{
                 currentRotatingObject = rotateObj;
                 isRotatableObjRotating = true;
                 lastTouchPosition = Input.GetTouch(0).position;
-            }
+            //}
         }
     }
 
@@ -262,25 +280,38 @@ public class CharacterBehaviour : MonoBehaviour
         {
             Debug.Log(currentRotatingObject + " adli obje'nin " + currentRotatingObject.RotatableObject + " adli rotate objesi donduruluyor...");
             Vector2 deltaPosition = touch.position - lastTouchPosition;
-            float rotationAmount = deltaPosition.x * 0.5f; // Dönme hýzýný ayarlamak için çarpan kullanabilirsiniz.
-            currentRotatingObject.RotatableObject.RotateX(rotationAmount);
+
+            // Convert touch delta to rotation angles
+            float rotationX = deltaPosition.y;
+            float rotationY = -deltaPosition.x;
+
+            currentRotatingObject.RotatableObject.RotateWithRotateAngel(new Vector3(rotationX, rotationY, 0));
             lastTouchPosition = touch.position;
         }
     }
 
     private void ResetTouchState()
-    {
-        if (isRotatableObjRotating)
+    {        
+        if (lastInteractObject is ICollectHand collectHand)
         {
-            isRotatableObjRotating = false;
+            if (collectHand.barHandler.gameObject.activeSelf)
+            {
+                collectHand.barHandler.gameObject.SetActive(false);
+                collectHand.barHandler.ResetBar();
+            }            
         }
+        //if (isRotatableObjRotating)
+        //{
+        //    isRotatableObjRotating = false;
+        //}
 
-        if (targetTouchTime != 2f || currentTouchTime != 0f)
+        if (targetTouchTime != 1.5f || currentTouchTime != 0f)
         {
-            targetTouchTime = 2f;
+            targetTouchTime = 1.5f;
             currentTouchTime = 0f;
         }
             MainUIManager.instance.UnLockPlayer();
+        //waitSecondProcess = 0.5f;
     }
     public List<GameObject> triggerInteracts = new List<GameObject>();
     private void OnTriggerEnter(Collider other)
@@ -296,4 +327,5 @@ public class CharacterBehaviour : MonoBehaviour
             playerUI.CurrentInteract = null;
         triggerInteracts.Remove(other.gameObject);
     }
+    
 }
