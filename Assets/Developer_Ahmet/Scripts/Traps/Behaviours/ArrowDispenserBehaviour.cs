@@ -7,10 +7,10 @@ public partial class ArrowDispenserBehaviour : TrapBehaviour
    ArrowDispenser m_ArrowDispenser;
     private void Start()
     {
-        m_ArrowDispenser = new ArrowDispenser(ID, HowMuchArrow, TrapEffectType.ArrowDispenser, ChangeTime, ArrowShootingContent, ArrowsDamage, ArrowsSpeed, ArrowDefaultRotate);
+        m_ArrowDispenser = new ArrowDispenser(ID, HowMuchArrow, TrapType, EffectType, ChangeTime, ArrowShootingContent, ArrowsDamage, ArrowsSpeed, ArrowDefaultRotate, ExtinctionValue);
         for (int i = 0; i < HowMuchArrow; i++)
         {
-            GameObject arrow = Instantiate(LightPuzzleHandler.instance.GetArrow(), m_ArrowDispenser.ArrowShootingContent);
+            GameObject arrow = Instantiate(LightPuzzleHandler.instance.GetArrow(ArrowType), m_ArrowDispenser.ArrowShootingContent);
             ArrowBehaviour arrowBehaviour = arrow.GetComponent<ArrowBehaviour>();
             arrowBehaviour.SetDispenser(m_ArrowDispenser);
             arrow.transform.localRotation = ArrowDefaultRotate;
@@ -31,6 +31,8 @@ public partial class ArrowDispenserBehaviour : TrapBehaviour
     {
         m_ArrowDispenser.Objects[0].gameObject.SetActive(true);
         m_ArrowDispenser.Objects.RemoveAt(0);
+        //AudioSource.PlayOneShot(LightPuzzleHandler.instance.GetSoundInEffectOnTarget(TrapType));
+        GameAudioManager.instance.PlayTrapSound(AudioSourceHelper);
         Debug.Log($"This ArrowDispenser ({name}) Fired! Currnet Arrows Count:{m_ArrowDispenser.Objects.Count}");
     }
     Coroutine shotArrowsCoroutine;
@@ -39,14 +41,13 @@ public partial class ArrowDispenserBehaviour : TrapBehaviour
         if (m_ArrowDispenser.AllArrowsShot()) return;
         if (other.CompareTag("Animal"))
         {
-            Debug.Log($"This ArrowDispenser ({name}) trigged the player.");
+            Debug.Log($"This ArrowDispenser ({name}) trigged the target ({other.name}).");
             if (IsConsecutiveShots)
             {
                 if (shotArrowsCoroutine == null) { shotArrowsCoroutine = StartCoroutine(ShootArrows()); }
             }
             else
                 ShotArrow();
-
         }
                      
     }
@@ -59,4 +60,20 @@ public partial class ArrowDispenserBehaviour : TrapBehaviour
     public Transform ArrowShootingContent;
     public Quaternion ArrowDefaultRotate;
     public bool IsConsecutiveShots;
+    public ArrowType ArrowType;
+    [Range(0, 50)] public float ExtinctionValue;
 }//SerializeFieds...
+[System.Serializable]
+public struct ArrowHelper
+{
+    public GameObject Arrow;
+    public ArrowType ArrowType;
+}
+public enum ArrowType
+{
+    Normal,
+    FieryArrow,
+    FreezerArrow,
+    PoisonArrow,
+    SlowdownArrow
+}

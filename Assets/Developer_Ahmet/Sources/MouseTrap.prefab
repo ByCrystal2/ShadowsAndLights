@@ -229,9 +229,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 1
-  TrapEffectType: 1
+  TrapType: 1
+  EffectType: 0
   ChangeTime: 0.5
-  AudioSource: {fileID: 8454108187339018687}
+  AudioSourceHelper:
+    id: 1
+    Position: {x: 0, y: 0, z: 0}
+    Loop: 0
+    Priority: 128
+    Volume: 0.5
+    Pitch: 1
+    StereoPan: 0
+    SpatialBlend: 1
+    ReverbZoneMix: 1
+    DopplerLevel: 5
+    Spread: 189
+    MinDistance: 1
+    MaxDistance: 500
   Damage: 10
 --- !u!65 &1081256357883087037
 BoxCollider:
@@ -257,10 +271,5 @@ BoxCollider:
 --- !u!4 &3826584462569726510 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1452193837901877197, guid: 83ef9a46c3be7e04c8d14b44950a8c50, type: 3}
-  m_PrefabInstance: {fileID: 2395344160196947427}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &8454108187339018687 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 6084079733162130524, guid: 83ef9a46c3be7e04c8d14b44950a8c50, type: 3}
   m_PrefabInstance: {fileID: 2395344160196947427}
   m_PrefabAsset: {fileID: 0}

@@ -169,6 +169,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArrowDispenserTrap
       objectReference: {fileID: 0}
+    - target: {fileID: 6084079733162130524, guid: 83ef9a46c3be7e04c8d14b44950a8c50, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -249,22 +253,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 2000
-  TrapEffectType: 2
+  TrapType: 2
+  EffectType: 0
   ChangeTime: 1
-  AudioSource: {fileID: 8631596441962282779}
+  AudioSourceHelper:
+    id: 2
+    Position: {x: 0, y: 0, z: 0}
+    Loop: 0
+    Priority: 128
+    Volume: 0.5
+    Pitch: 1
+    StereoPan: 0
+    SpatialBlend: 1
+    ReverbZoneMix: 1
+    DopplerLevel: 5
+    Spread: 189
+    MinDistance: 1
+    MaxDistance: 500
   ArrowsDamage: 5
   ArrowsSpeed: 8
   HowMuchArrow: 10
   ArrowShootingContent: {fileID: 105386863966635833}
   ArrowDefaultRotate: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
   IsConsecutiveShots: 1
+  ArrowType: 0
+  ExtinctionValue: 10
 --- !u!4 &3999288737799392394 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1452193837901877197, guid: 83ef9a46c3be7e04c8d14b44950a8c50, type: 3}
-  m_PrefabInstance: {fileID: 2569138055212942151}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &8631596441962282779 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 6084079733162130524, guid: 83ef9a46c3be7e04c8d14b44950a8c50, type: 3}
   m_PrefabInstance: {fileID: 2569138055212942151}
   m_PrefabAsset: {fileID: 0}
