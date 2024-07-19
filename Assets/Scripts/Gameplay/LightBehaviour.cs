@@ -147,9 +147,19 @@ public class LightBehaviour : MonoBehaviour
                 Vector3 newDirection = Vector3.Reflect(direction, hit.normal);
                 DirectorBehaviour director = hit.transform.GetComponentInParent<DirectorBehaviour>();
                 var nextColorHolder = director.ActivateReflectLight(OverridedColor);
-                Vector3 dir = director.AddColorToTheSource(this, nextColorHolder._lightColor, _bounces, newDirection, hit.normal);
-                if (dir != Vector3.zero)
-                    newDirection = dir;
+                Vector3 overridedDir = Vector3.zero;
+                if (OverridedColor == LightPuzzleHandler.LightColor.Red ||
+                OverridedColor == LightPuzzleHandler.LightColor.Blue ||
+                OverridedColor == LightPuzzleHandler.LightColor.Green ||
+                OverridedColor == LightPuzzleHandler.LightColor.Close ||
+                OverridedColor == LightPuzzleHandler.LightColor.DeadWhite ||
+                OverridedColor == LightPuzzleHandler.LightColor.Impostor)
+                {
+                    overridedDir = director.AddColorToTheSource(this, nextColorHolder._lightColor, _bounces, newDirection, hit.normal);
+                }
+
+                if (overridedDir != Vector3.zero)
+                    newDirection = overridedDir;
 
                 if (_bounces > 0)
                 {
@@ -162,9 +172,19 @@ public class LightBehaviour : MonoBehaviour
                     segmentColors[_bounces - 1] = segmentColourLast;
                 }
 
+                bool coreColor = false;
+                foreach (var item in nextColorHolder._coreColors)
+                {
+                    if (OverridedColor == item)
+                    {
+                        coreColor = true;
+                        break;
+                    }
+                }
+
                 SegmentColour segmentColour = new SegmentColour()
                 {
-                    _color = nextColorHolder._color,
+                    _color = coreColor ? nextColorHolder._color : LightPuzzleHandler.GetColorByLight(OverridedColor),
                     _startPos = ray.origin,
                     _hitEndPos = hit.point,
                     _direction = ray.direction,
@@ -172,7 +192,7 @@ public class LightBehaviour : MonoBehaviour
                 };
 
                 segmentColors.Add(segmentColour);
-                OverridedColor = nextColorHolder._lightColor;
+                OverridedColor = coreColor ? nextColorHolder._lightColor : OverridedColor;
                 SendRay(hit.point, newDirection, _bounces + 1);
             }
             else

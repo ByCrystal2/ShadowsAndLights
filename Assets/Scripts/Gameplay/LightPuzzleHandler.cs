@@ -156,7 +156,7 @@ public class LightPuzzleHandler : MonoBehaviour
         return Color.white;
     }
 
-    public static ( Color _target, bool _hasMix, LightColor _lightColor) GetMixedColor(List<LightColor> _colors)
+    public static ( Color _target, bool _hasMix, LightColor _lightColor, List<LightColor> _coreColors) GetMixedColor(List<LightColor> _colors)
     {
         //Improve here
         bool containsBlue = _colors.Contains(LightColor.Blue);
@@ -165,31 +165,31 @@ public class LightPuzzleHandler : MonoBehaviour
 
         if (containsBlue && containsRed && containsGreen)
         {
-            return (Color.white, true, LightColor.White);
+            return (Color.white, true, LightColor.White, new() { LightColor.Blue , LightColor.Red, LightColor.Green});
         }
         else if (containsBlue && containsRed)
         {
             foreach (var item in LightsOfLevel)
                 if (item.lightType == LightColor.Purple)
-                    return (item.ColorOfLight, true, LightColor.Purple);
+                    return (item.ColorOfLight, true, LightColor.Purple, new() { LightColor.Blue, LightColor.Red });
         }
         else if (containsBlue && containsGreen)
         {
             foreach (var item in LightsOfLevel)
                 if (item.lightType == LightColor.Cyan)
-                    return (item.ColorOfLight, true, LightColor.Cyan);
+                    return (item.ColorOfLight, true, LightColor.Cyan, new() { LightColor.Blue, LightColor.Green });
         }
         else if (containsRed && containsGreen)
         {
             foreach (var item in LightsOfLevel)
                 if (item.lightType == LightColor.Yellow)
-                    return (item.ColorOfLight, true, LightColor.Yellow);
+                    return (item.ColorOfLight, true, LightColor.Yellow, new() { LightColor.Red, LightColor.Green });
         }
         foreach (var item in LightsOfLevel)
             if (item.lightType == _colors[0])
-                return (item.ColorOfLight, false, item.lightType);
+                return (item.ColorOfLight, false, item.lightType, new());
 
-        return (Color.white, false, LightColor.White);
+        return (Color.white, false, LightColor.White, new());
     }
     public Material GetMaterialInEffectOnTarget(TrapEffectType _trapEffectType)
     {
