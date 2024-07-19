@@ -6,14 +6,15 @@ public partial class MouseTrapBehaviour : TrapBehaviour
     MouseTrap Me;
     void Start()
     {
-        Me = new MouseTrap(ID, Damage, TrapEffectType, ChangeTime);
+        Me = new MouseTrap(ID, Damage, TrapType, EffectType, ChangeTime);
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out HealthHandler health))
         {
-            StartCoroutine(Me.IEHit(health, 0f));
-            AudioSource.PlayOneShot(LightPuzzleHandler.instance.GetSoundInEffectOnTarget(TrapEffectType));
+            Me.IEHit(health);
+            //AudioSource.PlayOneShot(LightPuzzleHandler.instance.GetSoundInEffectOnTarget(TrapType));
+            GameAudioManager.instance.PlayTrapSound(AudioSourceHelper);
         }
     }
 }

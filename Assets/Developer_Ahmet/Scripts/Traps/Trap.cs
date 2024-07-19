@@ -5,48 +5,57 @@ using UnityEngine;
 public abstract class Trap : IHaveVisualEffect
 {
     public int ID;
-    public TrapEffectType EffectOnTarget { get; set; }
+    public TrapType TrapType { get; set; }
     public Material Material { get; set; }
     public float ChangeTime { get; set; }
+    public EffectType EffectType { get; set; }
 
-    protected Trap(int _id, TrapEffectType _trapEffectType,float _changeTime)
+    protected Trap(int _id, TrapType _trapType, EffectType _effectType,float _changeTime)
     {
         ID = _id;
-        EffectOnTarget = _trapEffectType;
-        Material = LightPuzzleHandler.instance.GetMaterialInEffectOnTarget(EffectOnTarget);
+        TrapType = _trapType;
+        EffectType = _effectType;
+        Material = LightPuzzleHandler.instance.GetMaterialInEffectOnTarget(TrapType, EffectType);
         ChangeTime = _changeTime;
     }
 }
 public class TrapBehaviour : MonoBehaviour
 {
     [SerializeField] protected int ID;
-    [SerializeField] protected TrapEffectType TrapEffectType;
+    [SerializeField] protected TrapType TrapType;
+    [SerializeField] protected EffectType EffectType;
     [SerializeField,Range(0, 2)] protected float ChangeTime;
-    [SerializeField] protected AudioSource AudioSource;
+    [SerializeField] protected AudioSourceHelper AudioSourceHelper;
+    private void Awake()
+    {
+        AudioSourceHelper.Position = transform.position;
+    }
+    //[SerializeField] protected AudioSource AudioSource;
 }
 public class MouseTrap : Trap, ICanDamage
 {
     public float Damage { get; set; }
-    public MouseTrap(int _id, float _damage, TrapEffectType _trapEffectType, float _changeTime) : base(_id, _trapEffectType, _changeTime)
+    public MouseTrap(int _id, float _damage, TrapType _trapType, EffectType _effectType, float _changeTime) : base(_id, _trapType,_effectType, _changeTime)
     {
         Damage = _damage;
     }
 
-    public IEnumerator IEHit(HealthHandler _targetHealth, float _waiting)
+    public void IEHit(HealthHandler _targetHealth)
     {
-        yield return new WaitForSeconds(_waiting);
+        //yield return new WaitForSeconds(_waiting);
         _targetHealth.TakeDamage(this);
     }
 }
 public class ArrowDispenser : Trap, ICanHoldMultipleObjects<ArrowBehaviour>
 {
-    public ArrowDispenser(int _id,int _howManyArrows, TrapEffectType _trapEffectType, float _changeTime, Transform arrowShootingContent, float arrowsDamage, float arrowsSpeed, Quaternion defaultRotate) : base(_id, _trapEffectType, _changeTime)
+    public ArrowDispenser(int _id,int _howManyArrows, TrapType _trapType,EffectType _effectType, float _changeTime, Transform arrowShootingContent, float arrowsDamage, float arrowsSpeed, Quaternion defaultRotate, float extinctionValue) : base(_id, _trapType,_effectType, _changeTime)
     {
         HowMany = _howManyArrows;
         ArrowShootingContent = arrowShootingContent;
         ArrowsDamage = arrowsDamage;
         ArrowsSpeed = arrowsSpeed;
         DefaultRotate = defaultRotate;
+        ExtinctionValue = extinctionValue;
     }
     public bool AllArrowsShot()
     {
@@ -56,6 +65,7 @@ public class ArrowDispenser : Trap, ICanHoldMultipleObjects<ArrowBehaviour>
     public Transform ArrowShootingContent;
     public float ArrowsSpeed{ get; set; }
     public float ArrowsDamage{ get; set; }
+    public float ExtinctionValue { get; set; }
     public int HowMany { get; set; }
     public List<ArrowBehaviour> Objects { get; set; } = new List<ArrowBehaviour>();
 }
@@ -63,26 +73,37 @@ public class ArrowDispenser : Trap, ICanHoldMultipleObjects<ArrowBehaviour>
 public struct TrapEffectHelper
 {
     public Material Material;
-    public TrapEffectType EffectType;
+    public TrapType TrapType;
+    public EffectType EffectType;
+
 }
 [System.Serializable]
 public struct TrapSoundHelper
 {
     public AudioClip Clip;
-    public TrapEffectType EffectType;
+    public TrapType TrapType;
 }
-public enum TrapEffectType
+public enum TrapType
 {
     None,
     MouseTrap,
     ArrowDispenser,
+    Arrow,
     Burning,
     PosionWater,
+}
+public enum EffectType
+{
+    Normal,
+    Fiery,
+    Freezer,
+    Posion,
+    Slowdown,
 }
 public interface ICanDamage
 {
     public float Damage { get; set; }
-    IEnumerator IEHit(HealthHandler targetHealth, float waiting);
+    void IEHit(HealthHandler targetHealth);
 }
 public interface ICanHoldMultipleObjects<T> where T : Component
 {
@@ -98,6 +119,7 @@ public interface ITrapMovable
 public interface IHaveVisualEffect
 {
     public Material Material { get; set; }
-    public TrapEffectType EffectOnTarget { get; set; }
+    public TrapType TrapType { get; set; }
+    public EffectType EffectType { get; set; }
     public float ChangeTime { get; set; }
 }
