@@ -44,7 +44,7 @@ public class DirectorBehaviour : MonoBehaviour
     }
 
     void SetRotateValues() {
-        if (rotateAnObject != null) { rotateAnObject.RotatableObject.RotateAngel = RotateAngel; rotateAnObject.RotatableObject.RotateSpeed = RotateSpeed; Debug.Log("rotateAnObject values are changed. => " + rotateAnObject.RotatableObject.RotateAngel); }
+        if (rotateAnObject != null) if(rotateAnObject.RotatableObject != null) { rotateAnObject.RotatableObject.RotateAngel = RotateAngel; rotateAnObject.RotatableObject.RotateSpeed = RotateSpeed; Debug.Log("rotateAnObject values are changed. => " + rotateAnObject.RotatableObject.RotateAngel); }
     }
 
 #if UNITY_EDITOR

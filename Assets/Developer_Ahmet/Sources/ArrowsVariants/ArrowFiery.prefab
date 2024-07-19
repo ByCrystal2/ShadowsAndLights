@@ -53,9 +53,17 @@ PrefabInstance:
       value: ArrowFiery
       objectReference: {fileID: 0}
     - target: {fileID: 6924773477705674612, guid: a75e2976d596b194baf1c883e3dc8448, type: 3}
+      propertyPath: changeTime
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6924773477705674612, guid: a75e2976d596b194baf1c883e3dc8448, type: 3}
       propertyPath: effectType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6924773477705674612, guid: a75e2976d596b194baf1c883e3dc8448, type: 3}
+      propertyPath: particleEffectObject
+      value: 
+      objectReference: {fileID: 7455372202216957759, guid: 12a65a67eae53b74aa88a9ad22a69255, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

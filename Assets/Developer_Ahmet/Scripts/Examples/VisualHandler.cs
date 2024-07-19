@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ArrowBehaviour;
 
 public class VisualHandler : MonoBehaviour
 {
     [SerializeField] private List<Renderer> myRenderers = new List<Renderer>();
     private List<Material[]> myDefaultMaterials = new List<Material[]>();
+    [SerializeField] Transform effectContent;
 
     private void Awake()
     {
@@ -52,5 +54,26 @@ public class VisualHandler : MonoBehaviour
         }
 
         Debug.Log($"{gameObject.name} objesinin materyalleri sýfýrlandý!");
+    }
+    public void StartEffect(IHaveVisualEffect haveVisualEffect)
+    {
+        if (haveVisualEffect.ParticleObject == null) return;
+        EffectType effect;
+        if (haveVisualEffect is ArrowBehaviour _arrow)
+        {
+            GameObject particleEffect = _arrow.GetArrow().EffectTheTarget(_arrow.ParticleObject, effectContent);
+            StartCoroutine(EffectDamage(particleEffect,haveVisualEffect));
+            
+        }
+            Debug.Log(haveVisualEffect.ParticleObject.name + " adli particle effect instantiate edildi. Gonderilen obje:" + name);
+    }
+    IEnumerator EffectDamage(GameObject particleObj,IHaveVisualEffect visualEffect)
+    {
+        for (int i = 0; i < visualEffect.EffectChangeTime; i++)
+        {
+            GetComponent<HealthHandler>().TakeDamage(visualEffect);
+            yield return new WaitForSeconds(1);
+        }
+        Destroy(particleObj);
     }
 }

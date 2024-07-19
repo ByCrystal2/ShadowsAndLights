@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: effectType
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6924773477705674612, guid: a75e2976d596b194baf1c883e3dc8448, type: 3}
+      propertyPath: particleEffectObject
+      value: 
+      objectReference: {fileID: 3081362037621676516, guid: 3ee8ebcededf76840a32b5be812c0e1e, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

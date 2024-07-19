@@ -9,14 +9,20 @@ public abstract class Trap : IHaveVisualEffect
     public Material Material { get; set; }
     public float ChangeTime { get; set; }
     public EffectType EffectType { get; set; }
+    public GameObject ParticleObject { get; set; }
+    public float EffectDamage { get; set; }
+    public float EffectChangeTime { get; set; }
 
-    protected Trap(int _id, TrapType _trapType, EffectType _effectType,float _changeTime)
+    protected Trap(int _id, TrapType _trapType, EffectType _effectType,float _changeTime, GameObject particleObject = null, float effectDamage = 0, float effectChangeTime = 0)
     {
         ID = _id;
         TrapType = _trapType;
         EffectType = _effectType;
         Material = LightPuzzleHandler.instance.GetMaterialInEffectOnTarget(TrapType, EffectType);
         ChangeTime = _changeTime;
+        ParticleObject = particleObject;
+        EffectDamage = effectDamage;
+        EffectChangeTime = effectChangeTime;
     }
 }
 public class TrapBehaviour : MonoBehaviour
@@ -24,8 +30,11 @@ public class TrapBehaviour : MonoBehaviour
     [SerializeField] protected int ID;
     [SerializeField] protected TrapType TrapType;
     [SerializeField] protected EffectType EffectType;
-    [SerializeField,Range(0, 2)] protected float ChangeTime;
+    [SerializeField,Range(0, 5)] protected float ChangeTime;
     [SerializeField] protected AudioSourceHelper AudioSourceHelper;
+    [SerializeField] protected GameObject ParticleObject;
+    [SerializeField] protected float EffectDamage;
+    [SerializeField] protected float EffectChangeTime;
     private void Awake()
     {
         AudioSourceHelper.Position = transform.position;
@@ -43,7 +52,7 @@ public class MouseTrap : Trap, ICanDamage
     public void IEHit(HealthHandler _targetHealth)
     {
         //yield return new WaitForSeconds(_waiting);
-        _targetHealth.TakeDamage(this);
+        _targetHealth.TakeDamage((ICanDamage)this);
     }
 }
 public class ArrowDispenser : Trap, ICanHoldMultipleObjects<ArrowBehaviour>
@@ -118,8 +127,11 @@ public interface ITrapMovable
 }
 public interface IHaveVisualEffect
 {
+    public GameObject ParticleObject { get; set; }
+    public float EffectDamage{ get; set; }
     public Material Material { get; set; }
     public TrapType TrapType { get; set; }
     public EffectType EffectType { get; set; }
     public float ChangeTime { get; set; }
+    public float EffectChangeTime { get; set; }
 }

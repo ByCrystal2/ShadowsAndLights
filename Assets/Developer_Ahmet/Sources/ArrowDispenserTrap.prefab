@@ -169,6 +169,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArrowDispenserTrap
       objectReference: {fileID: 0}
+    - target: {fileID: 3181682993644506225, guid: 83ef9a46c3be7e04c8d14b44950a8c50, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6084079733162130524, guid: 83ef9a46c3be7e04c8d14b44950a8c50, type: 3}
       propertyPath: m_PlayOnAwake
       value: 0
