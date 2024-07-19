@@ -26,21 +26,22 @@ public class VisualHandler : MonoBehaviour
     {
         Debug.Log($"{gameObject.name} objesinin materyalleri güncelleniyor... Material Name => {newMaterial.name}");
 
+        // Var olan materyal dizisine yeni materyali ekle
         foreach (Renderer renderer in myRenderers)
         {
             if (renderer != null)
             {
-                Material[] newMaterials = new Material[renderer.materials.Length];
-                for (int j = 0; j < newMaterials.Length; j++)
-                {
-                    newMaterials[j] = newMaterial;
-                }
+                Material[] originalMaterials = renderer.materials;
+                Material[] newMaterials = new Material[originalMaterials.Length + 1];
+                originalMaterials.CopyTo(newMaterials, 0);
+                newMaterials[newMaterials.Length - 1] = newMaterial;
                 renderer.materials = newMaterials;
             }
         }
 
         yield return new WaitForSeconds(changeTime);
 
+        // Eski materyalleri geri yükle
         for (int i = 0; i < myRenderers.Count; i++)
         {
             Renderer renderer = myRenderers[i];

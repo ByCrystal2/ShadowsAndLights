@@ -9,7 +9,7 @@ public class LightPuzzleHandler : MonoBehaviour
 
     [SerializeField] List<TrapEffectHelper> TargetEffectMaterials = new List<TrapEffectHelper>();
     [SerializeField] List<TrapSoundHelper> TargetEffectSounds = new List<TrapSoundHelper>();
-    [SerializeField] List<GameObject> Arrows = new List<GameObject>();
+    [SerializeField] List<ArrowHelper> Arrows = new List<ArrowHelper>();
     public List<LightsHolder> LightsParents;
     public List<DirectorsHolder> DirectorsParents;
     public List<TrapsHolder> TrapsParents;
@@ -191,19 +191,20 @@ public class LightPuzzleHandler : MonoBehaviour
 
         return (Color.white, false, LightColor.White, new());
     }
-    public Material GetMaterialInEffectOnTarget(TrapEffectType _trapEffectType)
+    public Material GetMaterialInEffectOnTarget(TrapType _trapType, EffectType _effectType)
     {
-        List<Material> _materials = TargetEffectMaterials.Where(x => x.EffectType == _trapEffectType).Select(x => x.Material).ToList();
+        List<Material> _materials = TargetEffectMaterials.Where(x => x.TrapType == _trapType && x.EffectType == _effectType).Select(x => x.Material).ToList();
         return _materials[Random.Range(0, _materials.Count)];
     }
-    public AudioClip GetSoundInEffectOnTarget(TrapEffectType _trapEffectType)
+    public AudioClip GetSoundInEffectOnTarget(TrapType _trapType)
     {
-        List<AudioClip> _clips = TargetEffectSounds.Where(x => x.EffectType == _trapEffectType).Select(x => x.Clip).ToList();
+        List<AudioClip> _clips = TargetEffectSounds.Where(x => x.TrapType == _trapType).Select(x => x.Clip).ToList();
         return _clips[Random.Range(0, _clips.Count)];
     }
-    public GameObject GetArrow()
+    public GameObject GetArrow(ArrowType _arrowType)
     {
-        return Arrows[Random.Range(0, Arrows.Count)];
+        List<ArrowHelper> randomArrows = Arrows.Where(x=> x.ArrowType == _arrowType).ToList();
+        return randomArrows[Random.Range(0, randomArrows.Count)].Arrow;
     }
     public enum LightColor
     {

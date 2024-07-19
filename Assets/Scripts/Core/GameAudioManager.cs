@@ -95,4 +95,54 @@ public class GameAudioManager : MonoBehaviour
         _s.outputAudioMixerGroup = null;
         _s.gameObject.SetActive(false);
     }
+    public void PlayTrapSound(AudioSourceHelper _audioSourceHelper)
+    {
+        float targetVol = _audioSourceHelper.Volume; //0.75f;
+        float volGeneral = CalculateSoundPercentGeneral(targetVol);
+        float volFinal = CalculateSoundPercentSfx(volGeneral);
+
+        AudioClip clip = Resources.Load<AudioClip>("Sounds/Traps/Trap_" + _audioSourceHelper.id.ToString());
+
+        AudioSource source = GetFreeAudioSource(false);
+        source.transform.position = _audioSourceHelper.Position;
+        source.volume = volFinal;
+        source.pitch = _audioSourceHelper.Pitch;
+        source.PlayOneShot(clip);
+
+        StartCoroutine(ReturnToPool(source, clip.length + 1));
+    }
 }
+[System.Serializable]
+public struct AudioSourceHelper
+{
+    public int id;
+    [HideInInspector] public Vector3 Position;
+    public bool Loop;
+    public float Priority;
+    public float Volume;
+    public float Pitch;
+    public float StereoPan;
+    public float SpatialBlend;
+    public float ReverbZoneMix;
+    public float DopplerLevel;
+    public float Spread;
+    public float MinDistance;
+    public float MaxDistance;
+    public AudioSourceHelper(int _id,Vector3 _position, bool _loop, float _priority, float _volume, float _pitch, float _stereoPan, float _spatialBlend, float _reverbZoneMix, float _dopplerLevel, float _spread, float _minDistance, float _maxDistance)
+    {
+        id = _id;
+        Position = _position;
+        Loop = _loop;
+        Priority = _priority;
+        Volume = _volume;
+        Pitch = _pitch;
+        StereoPan = _stereoPan;
+        SpatialBlend = _spatialBlend;
+        ReverbZoneMix = _reverbZoneMix;
+        DopplerLevel = _dopplerLevel;
+        Spread = _spread;
+        MinDistance = _minDistance;
+        MaxDistance = _maxDistance;
+    }
+}
+
