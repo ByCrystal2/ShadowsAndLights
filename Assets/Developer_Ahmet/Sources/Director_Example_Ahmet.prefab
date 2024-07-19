@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 2892045597198763520}
   - component: {fileID: 4025769005688202983}
   - component: {fileID: 8623768818405045055}
-  - component: {fileID: 3538626307616431336}
+  - component: {fileID: 6741509521072007300}
   m_Layer: 29
   m_Name: ReflectArea
   m_TagString: Reflect
@@ -196,8 +196,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3538626307616431336
-MeshCollider:
+--- !u!65 &6741509521072007300
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -214,10 +214,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 2.000001, z: 1.0000005}
+  m_Center: {x: 0.0000005364418, y: -0.0000076293945, z: 0.000000029802301}
 --- !u!1 &2742694728345196701
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,7 +447,7 @@ GameObject:
   - component: {fileID: 1573138818678859062}
   - component: {fileID: 655244358627625795}
   - component: {fileID: 4644473426436079357}
-  m_Layer: 29
+  m_Layer: 27
   m_Name: Director_Example_Ahmet
   m_TagString: Interactable
   m_Icon: {fileID: 0}
@@ -481,18 +480,28 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6660402588309008870}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e23836ba6d090c438ef62706f7a233d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ReflectLight: {fileID: 7393061488836799219}
   Type: 00000000
-  RotateAngel: 0
+  RotateAngel: 2
   RotateSpeed: 0.5
   CurrentSources:
     Sources: []
-  ColorsOnReflect: []
+  ColorsOnReflect:
+  - ColorOnSurface: 6
+    LifeInSeconds: 2366.6409
+  - ColorOnSurface: 1
+    LifeInSeconds: 2366.6409
+  - ColorOnSurface: 3
+    LifeInSeconds: 2366.6409
+  - ColorOnSurface: 5
+    LifeInSeconds: 2366.6409
+  - ColorOnSurface: 2
+    LifeInSeconds: 2366.6409
 --- !u!114 &655244358627625795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -505,7 +514,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b20818671d882144c8d62afd6a816492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RotateObject: {fileID: 8152555920744371538}
+  RotateObject: {fileID: 5052266999289018601}
 --- !u!65 &4644473426436079357
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -644,7 +653,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1896028841740966264}
-  - component: {fileID: 8152555920744371538}
+  - component: {fileID: 5052266999289018601}
   m_Layer: 29
   m_Name: RootMesh
   m_TagString: Untagged
@@ -669,7 +678,7 @@ Transform:
   - {fileID: 2892045597198763520}
   m_Father: {fileID: 4910863144107441788}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8152555920744371538
+--- !u!114 &5052266999289018601
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -819,6 +828,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mesh
       objectReference: {fileID: 0}
+    - target: {fileID: 7400212704945583041, guid: 014927768df3fa74da61959d880e1335, type: 3}
+      propertyPath: m_Layer
+      value: 29
+      objectReference: {fileID: 0}
     - target: {fileID: 7924372251492575611, guid: 014927768df3fa74da61959d880e1335, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.3
@@ -879,7 +892,9 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8185160838942666004, guid: 014927768df3fa74da61959d880e1335, type: 3}
+    - {fileID: 7346658052883160621, guid: 014927768df3fa74da61959d880e1335, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -1009,6 +1024,10 @@ PrefabInstance:
     - target: {fileID: 8861738028683314929, guid: f45ba0b2a7bf30b4fafd2c3365dd699c, type: 3}
       propertyPath: m_Name
       value: BarCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8861738028683314929, guid: f45ba0b2a7bf30b4fafd2c3365dd699c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

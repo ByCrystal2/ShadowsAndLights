@@ -205,7 +205,28 @@ public class LightPuzzleHandler : MonoBehaviour
     {
         return Arrows[Random.Range(0, Arrows.Count)];
     }
-    public enum LightColor
+
+
+    public static class LayerMaskHelper
+    {
+        private const string LayerToExclude = "Director";
+        private const string DirectorLayer = "Director";
+        public static LayerMask LightLayer { get; private set; }
+        public static LayerMask CarryLayer { get; private set; }
+
+        static LayerMaskHelper()
+        {
+            int excludeLayer = LayerMask.NameToLayer(LayerToExclude);
+            int excludeLayerMask = 1 << excludeLayer;
+            LightLayer = ~excludeLayerMask;
+
+            int directorLayer = LayerMask.NameToLayer(DirectorLayer);
+            CarryLayer = 1 << directorLayer;
+        }
+    }
+
+
+public enum LightColor
     {
         White,
         Red,

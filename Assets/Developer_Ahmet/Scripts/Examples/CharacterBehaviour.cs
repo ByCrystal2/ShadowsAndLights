@@ -9,8 +9,10 @@ public class CharacterBehaviour : MonoBehaviour
     StateMachine stateMachine;
     [SerializeField] Transform collectableItemsContent;
     
+    [SerializeField] private CarryState carryState;
     private void Awake()
     {
+        carryState = CarryState.PlayerFree;
         stateMachine = new StateMachine();
         playerUI = GetComponent<PlayerUI>();
         
@@ -90,7 +92,8 @@ public class CharacterBehaviour : MonoBehaviour
         }
         if (Input.touchCount > 0 && waitSecondProcess <= 0)
         {
-            HandleTouchInput();
+            if(carryState != CarryState.PlayerRotate && carryState != CarryState.PlayerMove)
+                HandleTouchInput();
         }
         else
         {
@@ -104,37 +107,37 @@ public class CharacterBehaviour : MonoBehaviour
         {
             Touch touch = Input.GetTouch(0);
             Ray ray = Camera.main.ScreenPointToRay(touch.position);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+            if (Physics.Raycast(ray, out RaycastHit hit, 100, LightPuzzleHandler.LayerMaskHelper.CarryLayer, QueryTriggerInteraction.Ignore))
             {
                 GameObject hitObject = hit.collider.gameObject;
-                if (hitObject.CompareTag("Interactable"))
+                if (currentHandObject != null)
                 {
-                    if (currentHandObject != null)
+                    if (currentHandObject is ICollectHand handler)
                     {
-                        if (currentHandObject is ICollectHand handler)
+                        if (hitObject.GetInstanceID() == handler.HandObject.GetInstanceID())
                         {
-                            if (hitObject.GetInstanceID() == handler.HandObject.GetInstanceID())
-                            {
-                                currentRotatingObject = hitObject.GetComponent<IRotateAnObject>();
-                                Debug.Log("currentRotatingObject = hitObject.GetComponent<IRotateAnObject>();");
-                            }
+                            currentRotatingObject = hitObject.GetComponent<IRotateAnObject>();
+                            SetStateForce(CarryState.PlayerRotate);
+                            Debug.Log("currentRotatingObject = hitObject.GetComponent<IRotateAnObject>();");
                         }
                     }
-
                 }
             }
         }
         else if (Input.touchCount <= 0 && HandsFull())
         {
             currentRotatingObject = null;
+            SetStateForce(carryState = CarryState.PlayerCarry);
             Debug.Log("currentRotatingObject = null;");
         }
         if (isRotatableObjRotating && HandsFull() && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
         {
+            Debug.Log("Here?");
             Touch touch = Input.GetTouch(0);
             Ray ray = Camera.main.ScreenPointToRay(touch.position);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+            if (Physics.Raycast(ray, out RaycastHit hit, 100))
             {
+                Debug.Log("Touch object");
                 GameObject hitObject = hit.collider.gameObject;
                 if (currentHandObject is ICollectHand handler)
                 {
@@ -152,26 +155,24 @@ public class CharacterBehaviour : MonoBehaviour
     {
         Touch touch = Input.GetTouch(0);
         Ray ray = Camera.main.ScreenPointToRay(touch.position);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100, LightPuzzleHandler.LayerMaskHelper.CarryLayer, QueryTriggerInteraction.Ignore))
         {
             GameObject hitObject = hit.collider.gameObject;
             if (Vector3.Distance(transform.position, hitObject.transform.position) > 3f) return;
-            if (hitObject.CompareTag("Interactable"))
+            Debug.Log("Interactable object name => " + hitObject.name);
+
+            currentTouchTime += Time.deltaTime;
+            IInteractable interact = hitObject.GetComponent<IInteractable>();
+            if (interact != null)
             {
-                Debug.Log("Interactable object name => " + hitObject.name);
-                currentTouchTime += Time.deltaTime;
-                IInteractable interact = hitObject.GetComponent<IInteractable>();
-                if (interact != null)
-                {
-                    lastInteractObject = interact;
-                    HandleInteractableObject(interact, touch);
-                }
+                SetStateForce(CarryState.PlayerCarryBegin);
+                lastInteractObject = interact;
+                HandleInteractableObject(interact, touch);
             }
-            else
-            {
-                ResetTouchState();
-                
-            }
+        }
+        else
+        {
+            SetStateForce(carryState == CarryState.PlayerMove ? CarryState.PlayerMove : CarryState.PlayerFree);
         }
     }
 
@@ -199,7 +200,7 @@ public class CharacterBehaviour : MonoBehaviour
                 waitSecondProcess = 1f;
             }
         }        
-            CollectHandControl(interact);
+        CollectHandControl(interact);
         
     }
     public void CollectHandControl(IInteractable interact)
@@ -258,6 +259,7 @@ public class CharacterBehaviour : MonoBehaviour
 
     private void PickUpObject(IInteractable interact)
     {
+        SetStateForce(CarryState.PlayerCarry);
         isRotatableObjRotating = false;
         interact.Interact(InteractType.Pickable);
         currentHandObject = interact;
@@ -267,6 +269,7 @@ public class CharacterBehaviour : MonoBehaviour
 
     private void DropObject(IInteractable interact)
     {
+        SetStateForce(carryState == CarryState.PlayerMove ? CarryState.PlayerMove : CarryState.PlayerFree);
         isRotatableObjRotating = false;
         interact.Interact(InteractType.Dropable);
         currentHandObject = interact;
@@ -278,6 +281,7 @@ public class CharacterBehaviour : MonoBehaviour
     {
         if (currentRotatingObject != null)
         {
+            //MainUIManager.instance.LockPlayer();
             Debug.Log(currentRotatingObject + " adli obje'nin " + currentRotatingObject.RotatableObject + " adli rotate objesi donduruluyor...");
             Vector2 deltaPosition = touch.position - lastTouchPosition;
 
@@ -291,7 +295,8 @@ public class CharacterBehaviour : MonoBehaviour
     }
 
     private void ResetTouchState()
-    {        
+    {
+        SetStateForce(carryState == CarryState.PlayerMove ? CarryState.PlayerMove : CarryState.PlayerFree);
         if (lastInteractObject is ICollectHand collectHand)
         {
             if (collectHand.barHandler.gameObject.activeSelf)
@@ -327,5 +332,58 @@ public class CharacterBehaviour : MonoBehaviour
             playerUI.CurrentInteract = null;
         triggerInteracts.Remove(other.gameObject);
     }
-    
+
+    public void SetState(bool _free)
+    {
+        if (_free && carryState != CarryState.PlayerMove)
+        {
+            Debug.Log("State degistirme basarisiz, Player nesne tasiyorken freeye gecilemez.");
+            return;
+        }
+        if (!_free && carryState != CarryState.PlayerFree)
+        {
+            Debug.Log("State degistirme basarisiz, Player nesne tasiyorken freeye gecilemez.");
+            return;
+        }
+
+        if (_free)
+        {
+            CancelInvoke(nameof(InvokeSetPlayerFree));
+            CancelInvoke(nameof(InvokeSetPlayerMove));
+            Invoke(nameof(InvokeSetPlayerFree), 0.2f);
+        }
+        else
+        {
+            CancelInvoke(nameof(InvokeSetPlayerFree));
+            CancelInvoke(nameof(InvokeSetPlayerMove));
+            Invoke(nameof(InvokeSetPlayerMove), 0.2f);
+        }
+    }
+
+    public void SetStateForce(CarryState _newState)
+    {
+        carryState = _newState;
+    }
+
+    void InvokeSetPlayerFree()
+    {
+        if (carryState == CarryState.PlayerMove)
+            carryState = CarryState.PlayerFree;
+    }
+
+    void InvokeSetPlayerMove()
+    {
+        if (carryState == CarryState.PlayerFree)
+            carryState = CarryState.PlayerMove;
+    }
+
+    public enum CarryState
+    {
+        PlayerFree,
+        PlayerMove,
+        PlayerCarryBegin,
+        PlayerCarry,
+        PlayerCarryEnd,
+        PlayerRotate,
+    }
 }

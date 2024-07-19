@@ -139,7 +139,7 @@ public class LightBehaviour : MonoBehaviour
         RaycastHit hit;
 
         lineRenderer.positionCount =_bounces + 1;
-        if (_bounces < 6 && Physics.Raycast(ray, out hit, LengthPerLight))
+        if (_bounces < 6 && Physics.Raycast(ray, out hit, LengthPerLight, LayerMaskHelper.LightLayer, QueryTriggerInteraction.Ignore))
         {
             lineRenderer.SetPosition(_bounces, ray.origin);
             if (hit.transform.gameObject.CompareTag("Reflect"))

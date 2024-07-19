@@ -92,9 +92,7 @@ public class DirectorBehaviour : MonoBehaviour
         var reflect = LightPuzzleHandler.GetMixedColor(mixes);
         if (!reflect._hasMix)
         {
-            //Debug.Log("No mix, original color is: " + LightPuzzleHandler.GetColorByLight(_HitColor).ToString());
-            //Debug.Log("No mix, original LightColor is: " + reflect._lightColor.ToString());
-            //Debug.Log("No mix, original target is: " + reflect._target.ToString());
+            //Debug.Log("original color: " + _HitColor.ToString() + " / overridedColor: " + LightPuzzleHandler.GetColorByLight(_HitColor));
         }
         return (reflect._hasMix ? reflect._target : LightPuzzleHandler.GetColorByLight(_HitColor), reflect._lightColor, reflect._coreColors);
     }
@@ -322,7 +320,10 @@ public class DirectorBehaviour : MonoBehaviour
             }
         }
 
-        
+        int totalLights = yellowLights.Count + cyanLights.Count + purpleLights.Count + whiteLights.Count;
+        if (totalLights <= 1)
+            return Vector3.zero;
+
         if (masterYellowLight.Index >= 0 && _lightColor == LightPuzzleHandler.LightColor.Yellow)
         {
             if (masterYellowLight.LightSource == null)
@@ -356,7 +357,6 @@ public class DirectorBehaviour : MonoBehaviour
 
             Vector3 averageDirection = GetAverageDirection(incomingDirections, mirrorNormals);
             masterCyanLight.LightSource.SetBlockedByMixUntil(Time.time + 2f, true, masterCyanLight.CurrentBounce, averageDirection);
-            Debug.Log("Cyan average direction: " + averageDirection);
             return averageDirection;
         }
 
