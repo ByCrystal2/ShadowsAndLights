@@ -117,7 +117,6 @@ public class CharacterBehaviour : MonoBehaviour
                         if (hitObject.GetInstanceID() == handler.HandObject.GetInstanceID())
                         {
                             currentRotatingObject = hitObject.GetComponent<IRotateAnObject>();
-                            SetStateForce(CarryState.PlayerRotate);
                             Debug.Log("currentRotatingObject = hitObject.GetComponent<IRotateAnObject>();");
                         }
                     }
@@ -132,20 +131,19 @@ public class CharacterBehaviour : MonoBehaviour
         }
         if (isRotatableObjRotating && HandsFull() && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
         {
-            Debug.Log("Here?");
             Touch touch = Input.GetTouch(0);
             Ray ray = Camera.main.ScreenPointToRay(touch.position);
             if (Physics.Raycast(ray, out RaycastHit hit, 100))
             {
-                Debug.Log("Touch object");
                 GameObject hitObject = hit.collider.gameObject;
                 if (currentHandObject is ICollectHand handler)
                 {
                     //Debug.Log("for Rotate hitObject name => " + hitObject.name);
                     if (hitObject.GetInstanceID() != handler.HandObject.GetInstanceID())
                     {
+                        SetStateForce(CarryState.PlayerRotate);
                         RotateObject(touch);
-                        Debug.Log("RotateObject(touch);");
+                        handler.barHandler.gameObject.SetActive(false);
                     }
                 }
             }

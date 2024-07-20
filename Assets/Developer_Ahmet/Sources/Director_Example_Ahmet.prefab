@@ -216,7 +216,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.0000002, y: 2.000001, z: 1.0000005}
-  m_Center: {x: 0.0000005364418, y: -0.0000076293945, z: 0.000000029802301}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2742694728345196701
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 2738788578880847057}
   - component: {fileID: 2766847336783655747}
   - component: {fileID: 2758078446075152043}
-  - component: {fileID: 3274002661314845029}
+  - component: {fileID: 2095862990936555270}
   m_Layer: 29
   m_Name: Blocker
   m_TagString: Untagged
@@ -304,8 +304,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3274002661314845029
-MeshCollider:
+--- !u!65 &2095862990936555270
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -322,10 +322,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 2.0000012, z: 1.0000005}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &5102228148396957900
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,7 +479,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6660402588309008870}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e23836ba6d090c438ef62706f7a233d, type: 3}
   m_Name: 
@@ -490,18 +489,28 @@ MonoBehaviour:
   RotateAngel: 2
   RotateSpeed: 0.5
   CurrentSources:
-    Sources: []
+    Sources:
+    - Index: -1
+      LightSource: {fileID: 0}
+      ColorOnSurface: 5
+      CurrentBounce: 0
+      LifeInSeconds: 233.01009
+      nextDirection: {x: 0.49086636, y: -0.00000017633835, z: 0.8712351}
+      mirrorNormal: {x: 0.9494188, y: -0.00000011920929, z: 0.314013}
+    - Index: -1
+      LightSource: {fileID: 0}
+      ColorOnSurface: 5
+      CurrentBounce: 0
+      LifeInSeconds: 233.01009
+      nextDirection: {x: 0.95425355, y: -0.00000019361882, z: -0.29899955}
+      mirrorNormal: {x: 0.9494188, y: -0.00000011920929, z: 0.314013}
   ColorsOnReflect:
-  - ColorOnSurface: 6
-    LifeInSeconds: 2366.6409
-  - ColorOnSurface: 1
-    LifeInSeconds: 2366.6409
   - ColorOnSurface: 3
-    LifeInSeconds: 2366.6409
-  - ColorOnSurface: 5
-    LifeInSeconds: 2366.6409
+    LifeInSeconds: 420.99265
+  - ColorOnSurface: 1
+    LifeInSeconds: 420.9927
   - ColorOnSurface: 2
-    LifeInSeconds: 2366.6409
+    LifeInSeconds: 420.99274
 --- !u!114 &655244358627625795
 MonoBehaviour:
   m_ObjectHideFlags: 0
