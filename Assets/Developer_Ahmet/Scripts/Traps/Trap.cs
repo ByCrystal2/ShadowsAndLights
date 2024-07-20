@@ -66,10 +66,11 @@ public class ArrowDispenser : Trap, ICanHoldMultipleObjects<ArrowBehaviour>
         DefaultRotate = defaultRotate;
         ExtinctionValue = extinctionValue;
     }
-    public bool AllArrowsShot()
+    public bool AllObjectShoot()
     {
         return Objects.Count <= 0 ? true : false;
     }
+
     public Quaternion DefaultRotate { get; set; }
     public Transform ArrowShootingContent;
     public float ArrowsSpeed{ get; set; }
@@ -78,6 +79,7 @@ public class ArrowDispenser : Trap, ICanHoldMultipleObjects<ArrowBehaviour>
     public int HowMany { get; set; }
     public List<ArrowBehaviour> Objects { get; set; } = new List<ArrowBehaviour>();
 }
+
 [System.Serializable]
 public struct TrapEffectHelper
 {
@@ -98,7 +100,7 @@ public enum TrapType
     MouseTrap,
     ArrowDispenser,
     Arrow,
-    Burning,
+    Breathing,
     PosionWater,
 }
 public enum EffectType
@@ -117,7 +119,8 @@ public interface ICanDamage
 public interface ICanHoldMultipleObjects<T> where T : Component
 {
     public int HowMany { get; set; }
-    public List<T> Objects {  get; set; } 
+    public List<T> Objects {  get; set; }
+    bool AllObjectShoot();
 }
 public interface ITrapMovable
 {

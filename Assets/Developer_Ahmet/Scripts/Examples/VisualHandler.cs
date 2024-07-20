@@ -65,6 +65,10 @@ public class VisualHandler : MonoBehaviour
             StartCoroutine(EffectDamage(particleEffect,haveVisualEffect));
             
         }
+        else if (haveVisualEffect is BreathingBehaviour _breathing)
+        {
+
+        }
             Debug.Log(haveVisualEffect.ParticleObject.name + " adli particle effect instantiate edildi. Gonderilen obje:" + name);
     }
     IEnumerator EffectDamage(GameObject particleObj,IHaveVisualEffect visualEffect)

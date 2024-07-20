@@ -38,7 +38,7 @@ public partial class ArrowDispenserBehaviour : TrapBehaviour
     Coroutine shotArrowsCoroutine;
     private void OnTriggerEnter(Collider other)
     {
-        if (m_ArrowDispenser.AllArrowsShot()) return;
+        if (m_ArrowDispenser.AllObjectShoot()) return;
         if (other.CompareTag("Animal"))
         {
             Debug.Log($"This ArrowDispenser ({name}) trigged the target ({other.name}).");
