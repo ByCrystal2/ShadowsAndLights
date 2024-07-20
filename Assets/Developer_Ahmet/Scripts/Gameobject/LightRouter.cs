@@ -53,44 +53,36 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
         {
             barHandler.gameObject.SetActive(false);
             player.CollectObject(this, HandObject);
-            int layer = LayerMask.NameToLayer("PlayerCarry");
-            Transform[] ts = transform.GetComponentsInChildren<Transform>();
-            List<Transform> all = new();
-            //all.Add(transform);
-            SetObjectOutlined(true, all);
+            IsCollected = true;
         }
         else if (_interactType == InteractType.Dropable)
         {
-            //birakme islemleri...
+            //birakma islemleri...
             int _currentLv = 1; //Diger objeler icin onlarin classlarindan leveline erisebilirsin sonrasinda. su an tek tasinabilir obje Director.
             if(transform.TryGetComponent(out DirectorBehaviour b))
                 _currentLv = b.GetLevelID();
 
             transform.SetParent(LightPuzzleHandler.instance.GetDirectorsParent(_currentLv));
             barHandler.gameObject.SetActive(false);
-            transform.localPosition = new Vector3(transform.localPosition.x, GetFloorHeight(), transform.localPosition.z);
-            //transform.localPosition = new Vector3();
             IsCollected = false;
             player.playerUI.CloseInteractUIS();
-            Debug.Log(name + " adli obje birakildi..");
-            int layer = LayerMask.NameToLayer("PlayerIgnore");
-            Transform[] ts = transform.GetComponentsInChildren<Transform>();
-            List<Transform> all = new();
-            //all.Add(transform);
-            SetObjectOutlined(false, all);
         }
     }
-    
-    public float GetFloorHeight()
+
+    private void FixedUpdate()
     {
-        return 0;
+        if(IsCollected)
+            PlaceOnGround();
     }
 
-    public void SetObjectOutlined(bool _outlineActive, List<Transform> _gameObjects)
+    void PlaceOnGround()
     {
-        int newLayer = _outlineActive ? LayerMask.NameToLayer("PlayerCarry") : LayerMask.NameToLayer("PlayerIgnore");
-        foreach (var item in _gameObjects)
-            item.gameObject.layer = newLayer;
+        Ray ray = new Ray(new Vector3(transform.position.x, transform.position.y + 5, transform.position.z), Vector3.down);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 30, LightPuzzleHandler.LayerMaskHelper.DirectorFloor))
+            transform.position = new Vector3(transform.position.x, hit.point.y + 0.75f, transform.position.z);
+        
     }
 }
 public interface ICollectable

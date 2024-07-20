@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using StateMachineSystem;
 using System.Collections;
 using System.Collections.Generic;
@@ -173,9 +174,18 @@ public class CharacterBehaviour : MonoBehaviour
             IInteractable interact = hitObject.GetComponent<IInteractable>();
             if (interact != null)
             {
-                transform.LookAt(hitNew.transform);
-                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-                SetStateForce(CarryState.PlayerCarryBegin);
+                if (HandsFull())
+                {
+                    SetStateForce(CarryState.PlayerCarryEnd);
+                }
+                else
+                {
+                    Vector3 direction = hitNew.collider.transform.position - transform.position;
+                    direction.y = 0; 
+                    Quaternion targetRotation = Quaternion.LookRotation(direction);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2);
+                    SetStateForce(CarryState.PlayerCarryBegin);
+                }
                 lastInteractObject = interact;
                 HandleInteractableObject(interact, touch);
             }
@@ -271,6 +281,12 @@ public class CharacterBehaviour : MonoBehaviour
         isRotatableObjRotating = false;
         interact.Interact(InteractType.Pickable);
         currentHandObject = interact;
+        if (currentHandObject is ICollectHand handler)
+        {
+            Renderer[] childRenderers = handler.HandObject.GetComponentsInChildren<Renderer>();
+            foreach (var item in childRenderers)
+                item.gameObject.layer = LayerMask.NameToLayer("PlayerCarry");
+        }
         ResetTouchState();
         MainUIManager.instance.UnLockPlayer();
     }
@@ -280,6 +296,12 @@ public class CharacterBehaviour : MonoBehaviour
         SetStateForce(carryState == CarryState.PlayerMove ? CarryState.PlayerMove : CarryState.PlayerFree);
         isRotatableObjRotating = false;
         interact.Interact(InteractType.Dropable);
+        if (currentHandObject is ICollectHand handler)
+        {
+            Renderer[] childRenderers = handler.HandObject.GetComponentsInChildren<Renderer>();
+            foreach (var item in childRenderers)
+                item.gameObject.layer = LayerMask.NameToLayer("PlayerIgnore");
+        }
         currentHandObject = null;
         ResetTouchState();
         MainUIManager.instance.UnLockPlayer();

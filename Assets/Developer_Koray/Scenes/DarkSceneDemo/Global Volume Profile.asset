@@ -700,7 +700,7 @@ MonoBehaviour:
     m_Value: {r: 0.3660378, g: 0.3660378, b: 0.3660378, a: 0.8}
   outlineThreshold:
     m_OverrideState: 1
-    m_Value: 0.125
+    m_Value: 0.189
   outlineMinDepthThreshold:
     m_OverrideState: 0
     m_Value: 0
