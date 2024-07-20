@@ -37,6 +37,8 @@ public class LightBehaviour : MonoBehaviour
 
     public BlockedData BlockByMix;
 
+    private Vector3 OverridedStartDirection = Vector3.zero;
+
     void FixedUpdate()
     {
         UpdateLight();
@@ -105,7 +107,11 @@ public class LightBehaviour : MonoBehaviour
         if (!isActive)
             return;
 
-        Vector3 direction = Quaternion.Euler(0, rotationAngle, 0) * Vector3.forward;
+        Vector3 direction = Vector3.zero;
+        if (OverridedStartDirection == Vector3.zero)
+            direction = Quaternion.Euler(0, rotationAngle, 0) * Vector3.forward;
+        else
+            direction = OverridedStartDirection;
 
         if (lineRenderer.positionCount < 2)
             lineRenderer.positionCount = 2;
@@ -130,6 +136,11 @@ public class LightBehaviour : MonoBehaviour
             {
                 //direction = BlockByMix.OverridedDirection;
             }
+            if (BlockByMix.Seperated && BlockByMix.bounceAfter < _bounces)
+            {
+                Debug.Log("Color has been seperated.");
+                return;
+            }
         }
         else
         {
@@ -148,15 +159,10 @@ public class LightBehaviour : MonoBehaviour
                 DirectorBehaviour director = hit.collider.transform.GetComponentInParent<DirectorBehaviour>();
                 var nextColorHolder = director.ActivateReflectLight(OverridedColor);
                 Vector3 overridedDir = Vector3.zero;
-                if (OverridedColor == LightPuzzleHandler.LightColor.Red ||
-                OverridedColor == LightPuzzleHandler.LightColor.Blue ||
-                OverridedColor == LightPuzzleHandler.LightColor.Green ||
-                OverridedColor == LightPuzzleHandler.LightColor.Close ||
-                OverridedColor == LightPuzzleHandler.LightColor.DeadWhite ||
-                OverridedColor == LightPuzzleHandler.LightColor.Impostor)
-                {
-                    overridedDir = director.AddColorToTheSource(this, nextColorHolder._lightColor, _bounces, newDirection, hit.normal);
-                }
+
+                overridedDir = director.AddColorToTheSource(this, nextColorHolder._lightColor, _bounces, newDirection, hit.normal, OverridedColor, hit.point);
+                if (OverridedColor == LightColor.Cyan || OverridedColor == LightColor.Yellow || OverridedColor == LightColor.Purple)
+                    overridedDir = Vector2.zero;
 
                 if (overridedDir != Vector3.zero)
                     newDirection = overridedDir;
@@ -484,6 +490,24 @@ public class LightBehaviour : MonoBehaviour
         BlockByMix.blockedUntil = _time;
         BlockByMix.bounceAfter = _bounceAfter;
         BlockByMix.OverridedDirection = _OverridedDirection;
+        BlockByMix.Seperated = false;
+    }
+    
+    public void SetBlockedBySeperateUntil(float _time, int _bounceAfter, Vector3 _OverridedDirection)
+    {
+        BlockByMix = new();
+        BlockByMix.masterMixed = false;
+        BlockByMix.blockedUntil = _time;
+        BlockByMix.bounceAfter = _bounceAfter;
+        BlockByMix.OverridedDirection = _OverridedDirection;
+        BlockByMix.Seperated = true;
+    }
+
+    public void SetSeperatedOptions(Vector3 _direction, LightColor _lightColor)
+    {
+        OverridedStartDirection = _direction;
+        TypeOfLights.Clear();
+        TypeOfLights.Add(_lightColor);
     }
 
     [System.Serializable]
@@ -503,6 +527,8 @@ public class LightBehaviour : MonoBehaviour
         public float blockedUntil;
         public float bounceAfter;
         public Vector3 OverridedDirection;
+
+        public bool Seperated;
     }
 
 #if UNITY_EDITOR

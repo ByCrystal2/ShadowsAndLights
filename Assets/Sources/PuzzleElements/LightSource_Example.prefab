@@ -292,6 +292,12 @@ MonoBehaviour:
     _startPos: {x: 0, y: 0, z: 0}
     _direction: {x: 0, y: 0, z: 0}
     _hitDirector: {fileID: 0}
+  BlockByMix:
+    masterMixed: 0
+    blockedUntil: 0
+    bounceAfter: 0
+    OverridedDirection: {x: 0, y: 0, z: 0}
+    Seperated: 0
 --- !u!120 &5181988204482171066
 LineRenderer:
   serializedVersion: 2
@@ -348,7 +354,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.2486496
+        value: 0.07935069
         inSlope: 0
         outSlope: 0
         tangentMode: 0

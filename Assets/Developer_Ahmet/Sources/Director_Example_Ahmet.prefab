@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &546897200640739932
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1217538625157585105}
+  m_Layer: 27
+  m_Name: LightPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1217538625157585105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546897200640739932}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4910863144107441788}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &819456770255996099
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,6 +501,7 @@ Transform:
   - {fileID: 6526570426391435582}
   - {fileID: 7934803301741109232}
   - {fileID: 7240817663594305512}
+  - {fileID: 1217538625157585105}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -156.378, z: 0}
 --- !u!114 &1573138818678859062
@@ -492,18 +524,22 @@ MonoBehaviour:
     Sources:
     - Index: -1
       LightSource: {fileID: 0}
+      OriginalColor: 0
       ColorOnSurface: 5
       CurrentBounce: 0
       LifeInSeconds: 233.01009
       nextDirection: {x: 0.49086636, y: -0.00000017633835, z: 0.8712351}
       mirrorNormal: {x: 0.9494188, y: -0.00000011920929, z: 0.314013}
+      hitPoint: {x: 0, y: 0, z: 0}
     - Index: -1
       LightSource: {fileID: 0}
+      OriginalColor: 0
       ColorOnSurface: 5
       CurrentBounce: 0
       LifeInSeconds: 233.01009
       nextDirection: {x: 0.95425355, y: -0.00000019361882, z: -0.29899955}
       mirrorNormal: {x: 0.9494188, y: -0.00000011920929, z: 0.314013}
+      hitPoint: {x: 0, y: 0, z: 0}
   ColorsOnReflect:
   - ColorOnSurface: 3
     LifeInSeconds: 420.99265
@@ -511,6 +547,8 @@ MonoBehaviour:
     LifeInSeconds: 420.9927
   - ColorOnSurface: 2
     LifeInSeconds: 420.99274
+  LightPoolParent: {fileID: 1217538625157585105}
+  PooledLights: []
 --- !u!114 &655244358627625795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -543,8 +581,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 2.3191168, z: 0.34187546}
-  m_Center: {x: -5.4925703e-10, y: 0.659559, z: -0.079062246}
+  m_Size: {x: 1.2487836, y: 2.3191168, z: 1.2292308}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &6718380152607537409
 GameObject:
   m_ObjectHideFlags: 0
