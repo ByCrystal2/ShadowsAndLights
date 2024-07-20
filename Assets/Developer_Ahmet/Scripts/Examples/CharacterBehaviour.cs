@@ -153,9 +153,19 @@ public class CharacterBehaviour : MonoBehaviour
     {
         Touch touch = Input.GetTouch(0);
         Ray ray = Camera.main.ScreenPointToRay(touch.position);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100, LightPuzzleHandler.LayerMaskHelper.CarryLayer, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out RaycastHit hitNew, 100, LightPuzzleHandler.LayerMaskHelper.CarryLayer, QueryTriggerInteraction.Ignore))
         {
-            GameObject hitObject = hit.collider.gameObject;
+            GameObject hitObject = hitNew.collider.gameObject;
+            if (currentHandObject is ICollectHand handler)
+            {
+                if (handler.HandObject.GetInstanceID() != hitObject.GetInstanceID())
+                {
+                    Debug.Log($"Hit object: {hitObject.name} on layer {hitObject.layer}");
+                    Debug.Log("handler.HandObject: " + handler.HandObject.name + " / hit: " + hitObject.name);
+                    Debug.Log("Zaten bir obje tasiyorken, farkli bir objeye dokunuldu.");
+                    return;
+                }
+            }
             if (Vector3.Distance(transform.position, hitObject.transform.position) > 3f) return;
             Debug.Log("Interactable object name => " + hitObject.name);
 
@@ -163,6 +173,8 @@ public class CharacterBehaviour : MonoBehaviour
             IInteractable interact = hitObject.GetComponent<IInteractable>();
             if (interact != null)
             {
+                transform.LookAt(hitNew.transform);
+                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
                 SetStateForce(CarryState.PlayerCarryBegin);
                 lastInteractObject = interact;
                 HandleInteractableObject(interact, touch);
@@ -182,21 +194,19 @@ public class CharacterBehaviour : MonoBehaviour
         }
         MainUIManager.instance.LockPlayer();
         if (touch.phase == TouchPhase.Moved) return;
-        if (currentTouchTime >= targetTouchTime)
+        if (!HandsFull() && currentTouchTime >= targetTouchTime)
         {
-            if (!HandsFull())
-            {
-                PickUpObject(interact);
-                waitSecondProcess = 1f;
-            }
+            PickUpObject(interact);
+            waitSecondProcess = 1f;
+            Handheld.Vibrate();
+            Debug.Log("Telefon obje alindigi icin titredi.");
         }
-        else if (currentTouchTime >= targetTouchTime / 2)
+        else if (HandsFull() && currentTouchTime >= targetTouchTime / 2)
         {
-            if (HandsFull())
-            {
-                DropObject(interact);
-                waitSecondProcess = 1f;
-            }
+            DropObject(interact);
+            waitSecondProcess = 1f;
+            Handheld.Vibrate();
+            Debug.Log("Telefon obje birakildigi icin titredi.");
         }        
         CollectHandControl(interact);
         
@@ -270,7 +280,7 @@ public class CharacterBehaviour : MonoBehaviour
         SetStateForce(carryState == CarryState.PlayerMove ? CarryState.PlayerMove : CarryState.PlayerFree);
         isRotatableObjRotating = false;
         interact.Interact(InteractType.Dropable);
-        currentHandObject = interact;
+        currentHandObject = null;
         ResetTouchState();
         MainUIManager.instance.UnLockPlayer();
     }

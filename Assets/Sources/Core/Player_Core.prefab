@@ -2379,6 +2379,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerUI: {fileID: 0}
   collectableItemsContent: {fileID: 2701773944742762563}
+  carryState: 0
   triggerInteracts: []
 --- !u!114 &9015313275802314646
 MonoBehaviour:
@@ -44122,7 +44123,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2701773944742762563}
-  m_Layer: 20
+  m_Layer: 0
   m_Name: CollectedHandObjContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
