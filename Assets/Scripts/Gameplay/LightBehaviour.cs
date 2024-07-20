@@ -142,10 +142,10 @@ public class LightBehaviour : MonoBehaviour
         if (_bounces < 6 && Physics.Raycast(ray, out hit, LengthPerLight, LayerMaskHelper.LightLayer, QueryTriggerInteraction.Ignore))
         {
             lineRenderer.SetPosition(_bounces, ray.origin);
-            if (hit.transform.gameObject.CompareTag("Reflect"))
+            if (hit.collider.transform.gameObject.CompareTag("Reflect"))
             {
                 Vector3 newDirection = Vector3.Reflect(direction, hit.normal);
-                DirectorBehaviour director = hit.transform.GetComponentInParent<DirectorBehaviour>();
+                DirectorBehaviour director = hit.collider.transform.GetComponentInParent<DirectorBehaviour>();
                 var nextColorHolder = director.ActivateReflectLight(OverridedColor);
                 Vector3 overridedDir = Vector3.zero;
                 if (OverridedColor == LightPuzzleHandler.LightColor.Red ||

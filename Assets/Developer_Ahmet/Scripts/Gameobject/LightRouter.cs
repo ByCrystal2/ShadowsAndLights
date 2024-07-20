@@ -66,22 +66,23 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
             barHandler.gameObject.SetActive(false);
             IsCollected = false;
             player.playerUI.CloseInteractUIS();
+            PlaceOnGround(false);
         }
     }
 
     private void FixedUpdate()
     {
         if(IsCollected)
-            PlaceOnGround();
+            PlaceOnGround(true);
     }
 
-    void PlaceOnGround()
+    void PlaceOnGround(bool _useOffset)
     {
         Ray ray = new Ray(new Vector3(transform.position.x, transform.position.y + 5, transform.position.z), Vector3.down);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, 30, LightPuzzleHandler.LayerMaskHelper.DirectorFloor))
-            transform.position = new Vector3(transform.position.x, hit.point.y + 0.75f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, hit.point.y + (_useOffset ? 0.75f : 0), transform.position.z);
         
     }
 }

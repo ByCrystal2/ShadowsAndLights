@@ -65,8 +65,8 @@ public class CharacterBehaviour : MonoBehaviour
         {
             _obj.transform.SetParent(collectableItemsContent);
             Transform objTrans = _obj.transform;
-            objTrans.localPosition = new Vector3();
-            objTrans.localRotation = new Quaternion(objTrans.rotation.x,Vector3.forward.z, objTrans.rotation.z, objTrans.localRotation.w);
+            objTrans.localPosition = Vector3.zero;
+            //objTrans.localRotation = new Quaternion(objTrans.rotation.x,Vector3.forward.z, objTrans.rotation.z, objTrans.localRotation.w);
             playerUI.CloseInteractUIS();
             playerUI.ShowDropable();
             Debug.Log(_obj.name + " adli obje alindi.");
