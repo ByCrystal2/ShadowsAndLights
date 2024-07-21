@@ -128,8 +128,11 @@ public class LightBehaviour : MonoBehaviour
     {
         if (BlockByMix.blockedUntil > Time.time)
         {
+            //Debug.Log("BlockByMix.bounceAfter: " + BlockByMix.bounceAfter + " / _bounces: " + _bounces);
             if (!BlockByMix.masterMixed && BlockByMix.bounceAfter < _bounces)
             {
+                Debug.Log("Bounces: " + _bounces + " / name: " + transform.name);
+                lineRenderer.positionCount = _bounces + 1;
                 //Debug.Log("Light is blocked by mix. Because other light created combined mix.");
                 return;
             }
@@ -201,6 +204,19 @@ public class LightBehaviour : MonoBehaviour
                 segmentColors.Add(segmentColour);
                 OverridedColor = coreColor ? nextColorHolder._lightColor : OverridedColor;
                 SendRay(hit.point, newDirection, _bounces + 1);
+            }
+            else if (hit.collider.transform.gameObject.CompareTag("Reflect"))
+            {
+                TargetBehaviour target = hit.collider.transform.GetComponentInParent<TargetBehaviour>();
+                target.AddLightsOn(OverridedColor, transform);
+
+                SegmentColour finalSegment = new();
+                finalSegment._color = Color.black;
+                finalSegment._direction = direction;
+                finalSegment._startPos = origin;
+                finalSegment._hitEndPos = hit.point;
+                finalSegment._hitDirector = null;
+                segmentColors.Add(finalSegment);
             }
             else
             {
@@ -531,7 +547,7 @@ public class LightBehaviour : MonoBehaviour
     {
         public bool masterMixed;
         public float blockedUntil;
-        public float bounceAfter;
+        public int bounceAfter;
         public Vector3 OverridedDirection;
 
         public bool Seperated;

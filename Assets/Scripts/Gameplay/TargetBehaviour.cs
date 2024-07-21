@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class TargetBehaviour : MonoBehaviour
@@ -9,9 +8,58 @@ public class TargetBehaviour : MonoBehaviour
     public List<ActiveSourceOn> ActiveSources = new();
 
     private int Level;
+    public void AddLightsOn(LightPuzzleHandler.LightColor _hitLight, Transform _lightOwner)
+    {
+        bool containsOwner = false;
+        int length = ActiveSources.Count;
+        for (int i = length - 1; i >= 0; i--)
+        {
+            if (ActiveSources[i].Source == _lightOwner)
+            {
+                containsOwner = true;
+                ActiveSources[i] = new()
+                {
+                    LifeTime = Time.time + 0.2f,
+                    LightColor = _hitLight,
+                    Source = _lightOwner
+                };
+            }
+        }
+
+        if (!containsOwner)
+        {
+            ActiveSources.Add(new()
+            {
+                LifeTime = Time.time + 0.2f,
+                LightColor = _hitLight,
+                Source = _lightOwner
+            });
+        }
+
+        LightPuzzleHandler.instance.GetLevelBehaviour(Level).CheckLevelCompleted();
+    }
+
     public void UpdateLightsOn()
     {
+        int length = ActiveSources.Count;
+        for (int i = length - 1; i >= 0; i--)
+        {
+            if (ActiveSources[i].LifeTime < Time.time)
+            {
+                ActiveSources.RemoveAt(i);
+                UpdateUI();
+            }
+        }
+    }
 
+    public void UpdateUI()
+    {
+
+    }
+
+    private void FixedUpdate()
+    {
+        UpdateLightsOn();
     }
 
     public bool IsCompleted()
