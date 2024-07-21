@@ -10,10 +10,7 @@ public class LightPuzzleHandler : MonoBehaviour
     [SerializeField] List<TrapEffectHelper> TargetEffectMaterials = new List<TrapEffectHelper>();
     [SerializeField] List<TrapSoundHelper> TargetEffectSounds = new List<TrapSoundHelper>();
     [SerializeField] List<ArrowHelper> Arrows = new List<ArrowHelper>();
-    public List<LightsHolder> LightsParents;
-    public List<DirectorsHolder> DirectorsParents;
-    public List<TrapsHolder> TrapsParents;
-    public List<TargetHolder> TargetsParents;
+    public List<LevelBehaviour> Levels;
 
     public static List<LightData> LightsOfLevel = new() {
         new(){ lightType = LightColor.White ,ColorOfLight = new() { r = 1, b = 1, g = 1, a = 1} },
@@ -38,47 +35,44 @@ public class LightPuzzleHandler : MonoBehaviour
 
         instance = this;
 
-        LightsParents = FindObjectsByType<LightsHolder>(FindObjectsSortMode.InstanceID).ToList();
-        DirectorsParents = FindObjectsByType<DirectorsHolder>(FindObjectsSortMode.InstanceID).ToList();
-        TrapsParents = FindObjectsByType<TrapsHolder>(FindObjectsSortMode.InstanceID).ToList();
-        TargetsParents = FindObjectsByType<TargetHolder>(FindObjectsSortMode.InstanceID).ToList();
+        Levels = FindObjectsByType<LevelBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID).ToList();
     }
 
-    public Transform GetLightsParent(int _level)
+    public LightsHolder GetLightsParent(int _level)
     {
-        foreach (var item in LightsParents)
+        foreach (var item in Levels)
             if (item.LevelID == _level)
-                return item.transform;
+                return item.GetLightsParent();
 
         Debug.LogError("Id mevcut degil! Tekrar check et.");
         return null;
     }
 
-    public Transform GetDirectorsParent(int _level)
+    public DirectorsHolder GetDirectorsParent(int _level)
     {
-        foreach (var item in DirectorsParents)
+        foreach (var item in Levels)
             if (item.LevelID == _level)
-                return item.transform;
+                return item.GetDirectorsParent();
 
         Debug.LogError("Id mevcut degil! Tekrar check et.");
         return null;
     }
 
-    public Transform GetTrapsParent(int _level)
+    public TrapsHolder GetTrapsParent(int _level)
     {
-        foreach (var item in TrapsParents)
+        foreach (var item in Levels)
             if (item.LevelID == _level)
-                return item.transform;
+                return item.GetTrapsHolder();
 
         Debug.LogError("Id mevcut degil! Tekrar check et.");
         return null;
     }
     
-    public Transform GetTargetsParent(int _level)
+    public TargetHolder GetTargetsParent(int _level)
     {
-        foreach (var item in TargetsParents)
+        foreach (var item in Levels)
             if (item.LevelID == _level)
-                return item.transform;
+                return item.GetTargetsParent();
 
         Debug.LogError("Id mevcut degil! Tekrar check et.");
         return null;
@@ -211,7 +205,6 @@ public class LightPuzzleHandler : MonoBehaviour
     public static class LayerMaskHelper
     {
         private const string PlayerLayer = "Animal";
-        private const string LayerToExclude = "Director";
         private const string DirectorLayer = "Director";
         private const string PlayerIgnoreLayer = "PlayerIgnore";
         private const string PlayerCarryLayer = "PlayerCarry";
@@ -223,7 +216,7 @@ public class LightPuzzleHandler : MonoBehaviour
 
         static LayerMaskHelper()
         {
-            int excludeLayer = LayerMask.NameToLayer(LayerToExclude);
+            int excludeLayer = LayerMask.NameToLayer(DirectorLayer);
             int playerLayer = LayerMask.NameToLayer(PlayerLayer);
             int excludeLayerMask = (1 << excludeLayer) | ( 1 << playerLayer );
             LightLayer = ~excludeLayerMask;

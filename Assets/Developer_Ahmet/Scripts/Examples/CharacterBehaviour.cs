@@ -85,7 +85,7 @@ public class CharacterBehaviour : MonoBehaviour
     bool isRotatableObjRotating = true;
     float waitSecondProcess = 2f;
     private void Update()
-    {        
+    {
         if (waitSecondProcess > 0)
         {
             waitSecondProcess -= Time.deltaTime;
@@ -139,13 +139,9 @@ public class CharacterBehaviour : MonoBehaviour
                 GameObject hitObject = hit.collider.gameObject;
                 if (currentHandObject is ICollectHand handler)
                 {
-                    //Debug.Log("for Rotate hitObject name => " + hitObject.name);
-                    if (hitObject.GetInstanceID() != handler.HandObject.GetInstanceID())
-                    {
-                        SetStateForce(CarryState.PlayerRotate);
-                        RotateObject(touch);
-                        handler.barHandler.gameObject.SetActive(false);
-                    }
+                    SetStateForce(CarryState.PlayerRotate);
+                    RotateObject(touch);
+                    handler.barHandler.gameObject.SetActive(false);
                 }
             }
         }

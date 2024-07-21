@@ -45,7 +45,6 @@ public class GameManager : MonoBehaviour
         if (File.Exists(Application.persistentDataPath + "/" + FileName + fileExtension)) //Check the save name is exist
             File.Delete(Application.persistentDataPath + "/" + FileName + fileExtension);
 
-        Debug.Log("Save Game: " + currentActiveSaveData.SaveName + "");
 
         long unixTimestamp = ((System.DateTimeOffset)System.DateTime.Now).ToUnixTimeSeconds();
 
@@ -56,11 +55,20 @@ public class GameManager : MonoBehaviour
         savedata.CreatedUID = currentActiveSaveData.CreatedUID != 0 ? currentActiveSaveData.CreatedUID : unixTimestamp;
         savedata.LastSave = unixTimestamp;
 
+        //Currencies
+        savedata.Gold = currentActiveSaveData.Gold;
+        savedata.Gem = currentActiveSaveData.Gem;
+
+        //Level
+        savedata.Level = currentActiveSaveData.Level;
+        savedata.FinishedLevels = currentActiveSaveData.FinishedLevels;
+
         currentActiveSaveData = savedata;
 
         string jsonString = JsonUtility.ToJson(savedata);
         byte[] encryptedData = EncryptStringToBytes(jsonString);
         File.WriteAllBytes(Application.persistentDataPath + "/" + savedata.SaveName + fileExtension, encryptedData);
+        Debug.Log("Save Game: " + currentActiveSaveData.SaveName + " / Saved successfully.");
     }
 
     public void LoadGame()
@@ -211,6 +219,14 @@ public class GameManager : MonoBehaviour
         return 10;
     }
 
+    public void AddALevelFinished(int _id)
+    {
+        if (!currentActiveSaveData.FinishedLevels.Contains(_id))
+        {
+            currentActiveSaveData.FinishedLevels.Add(_id);
+            SaveGame();
+        }
+    }
 }
 
 [System.Serializable]
@@ -226,7 +242,10 @@ public class PlayerSaveData
     [Header("Currencies")]
     public float Gold;
     public float Gem;
-    public int Level = 1;
+
+    [Header("Levels")]
+    public int Level; //Last level we entered.
+    public List<int> FinishedLevels;
 
     public void ResetSave()
     {
@@ -237,6 +256,6 @@ public class PlayerSaveData
         UniqueSaveFolderName = "";
         Gold = 0;
         Gem = 0;
-        Level = 1;
+        FinishedLevels = new();
     }
 }

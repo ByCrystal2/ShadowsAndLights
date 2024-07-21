@@ -24,18 +24,15 @@ public class DirectorBehaviour : MonoBehaviour
 
     public Transform LightPoolParent;
     public List<LightBehaviour> PooledLights = new();
+
+    public float nextUpdate = 0;
+
+    private int Level;
     void Awake()
     {
         CurrentSources = new();
         CurrentSources.Sources = new();
         rotateAnObject = GetComponent<IRotateAnObject>();
-        if (transform.parent.TryGetComponent(out DirectorsHolder d))
-            LevelID = d.LevelID;
-        else
-        {
-            Debug.Log("Transform name: " + transform.name + " does not placed into the true parent object is destroyed.");
-            Destroy(gameObject);
-        }
     }
 
     private void Start()
@@ -55,8 +52,6 @@ public class DirectorBehaviour : MonoBehaviour
 #if UNITY_EDITOR
     private EditorCoroutine currentEditorCoroutine;
 #endif
-
-    private int LevelID;
 
     public (Color _color, LightPuzzleHandler.LightColor _lightColor, List<LightPuzzleHandler.LightColor> _coreColors) ActivateReflectLight(LightPuzzleHandler.LightColor _HitColor)
     {
@@ -126,11 +121,21 @@ public class DirectorBehaviour : MonoBehaviour
     void CheckLight()
     {
         int length = ColorsOnReflect.Count;
+        int length2 = CurrentSources.Sources.Count;
         if (Application.isPlaying)
         {
             for (int i = length - 1; i >= 0; i--)
                 if (ColorsOnReflect[i].LifeInSeconds < Time.time)
                     ColorsOnReflect.RemoveAt(i);
+            if (nextUpdate < Time.time)
+            {
+                for (int i = length2 - 1; i >= 0; i--)
+                    if (CurrentSources.Sources[i].LifeInSeconds < Time.time)
+                        CurrentSources.Sources.RemoveAt(i);
+
+                nextUpdate = Time.time + 0.1f;
+                UpdateTheSources(LightPuzzleHandler.LightColor.Close);
+            }
         }
         else
         {
@@ -138,6 +143,16 @@ public class DirectorBehaviour : MonoBehaviour
             for (int i = length - 1; i >= 0; i--)
                 if (ColorsOnReflect[i].LifeInSeconds < EditorApplication.timeSinceStartup)
                     ColorsOnReflect.RemoveAt(i);
+
+            if (nextUpdate < EditorApplication.timeSinceStartup)
+            {
+                for (int i = length2 - 1; i >= 0; i--)
+                    if (CurrentSources.Sources[i].LifeInSeconds < EditorApplication.timeSinceStartup)
+                        CurrentSources.Sources.RemoveAt(i);
+
+                nextUpdate = (float)EditorApplication.timeSinceStartup + 0.1f;
+                UpdateTheSources(LightPuzzleHandler.LightColor.Close);
+            }
 #endif
         }
 
@@ -220,7 +235,7 @@ public class DirectorBehaviour : MonoBehaviour
 
     public int GetLevelID()
     {
-        return LevelID;
+        return Level;
     }
 
     public Vector3 AddColorToTheSource(LightBehaviour _source, LightPuzzleHandler.LightColor _currentColor, int _currentBounce, Vector3 _nextDirection, Vector3 _mirrorNormal, LightPuzzleHandler.LightColor _originalColor, Vector3 _hitPoint)
@@ -246,7 +261,11 @@ public class DirectorBehaviour : MonoBehaviour
             newLight.LightSource = _source;
             newLight.ColorOnSurface = _currentColor;
             newLight.OriginalColor = _originalColor;
-            newLight.LifeInSeconds = Time.time + 1f;
+            newLight.LifeInSeconds = Time.time + 0.1f;
+#if UNITY_EDITOR
+            if(!Application.isPlaying)
+                newLight.LifeInSeconds = (float)EditorApplication.timeSinceStartup + 0.1f;
+#endif
             newLight.CurrentBounce = _currentBounce;
             newLight.Index = -1;
             newLight.nextDirection = _nextDirection;
@@ -360,17 +379,22 @@ public class DirectorBehaviour : MonoBehaviour
                     if (Masters[i].lightSourceHold.LightSource == null)
                         return Vector3.zero;
 
+                    float currentTime = Time.time + 0.5f;
+#if UNITY_EDITOR
+                    if (!Application.isPlaying)
+                        currentTime = (float)EditorApplication.timeSinceStartup + 0.5f;
+#endif
                     List<Vector3> incomingDirections = new();
                     List<Vector3> mirrorNormals = new();
                     foreach (var item2 in allLights[i])
                     {
-                        item2.LightSource.SetBlockedByMixUntil(Time.time + 0.5f, false, item2.CurrentBounce, Vector3.zero);
+                        item2.LightSource.SetBlockedByMixUntil(currentTime, false, item2.CurrentBounce, Vector3.zero);
                         incomingDirections.Add(item2.nextDirection);
                         mirrorNormals.Add(item2.mirrorNormal);
                     }
 
                     Vector3 averageDirection = GetAverageDirection(incomingDirections, mirrorNormals);
-                    Masters[i].lightSourceHold.LightSource.SetBlockedByMixUntil(Time.time + 0.5f, true, Masters[i].lightSourceHold.CurrentBounce, averageDirection);
+                    Masters[i].lightSourceHold.LightSource.SetBlockedByMixUntil(currentTime, true, Masters[i].lightSourceHold.CurrentBounce, averageDirection);
 
                     return averageDirection;
                 }
@@ -378,12 +402,17 @@ public class DirectorBehaviour : MonoBehaviour
         }
         else if (Type[0] == DirectorType.Mix_Seperated)
         {
+            float currentTime = Time.time;
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+                currentTime = (float)EditorApplication.timeSinceStartup;
+#endif
             int currentUseLightCount = 0;
             int lightsOnPool = LightPoolParent.childCount;
             int length = CurrentSources.Sources.Count;
             for (int i = length - 1; i >= 0; i--)
             {
-                if (CurrentSources.Sources[i].LifeInSeconds < Time.time)
+                if (CurrentSources.Sources[i].LifeInSeconds < currentTime)
                 {
                     CurrentSources.Sources.RemoveAt(i);
                     continue;
@@ -427,76 +456,58 @@ public class DirectorBehaviour : MonoBehaviour
                             masterLight.Index = z;
                         }
                     }
-                    
-                    //if (u == 0)
-                    //    masterYellowLight = masterLight;
-                    //else if (u == 1)
-                    //    masterCyanLight = masterLight;
-                    //else if (u == 2)
-                    //    masterPurpleLight = masterLight;
-                    //else
-                    //    masterWhiteLight = masterLight;
                 }
             }
 
-            //Masters.Add(new() { lightSourceHold = masterYellowLight, lightColor = LightPuzzleHandler.LightColor.Yellow });
-            //Masters.Add(new() { lightSourceHold = masterCyanLight, lightColor = LightPuzzleHandler.LightColor.Cyan });
-            //Masters.Add(new() { lightSourceHold = masterPurpleLight, lightColor = LightPuzzleHandler.LightColor.Purple });
-            //Masters.Add(new() { lightSourceHold = masterWhiteLight, lightColor = LightPuzzleHandler.LightColor.White });
-
             int totalLights = cyanLights.Count + purpleLights.Count + yellowLights.Count + whiteLights.Count;
             if (totalLights <= 0)
+            {
+                for (int t = 0; t < lightsOnPool; t++)
+                    LightPoolParent.GetChild(t).gameObject.SetActive(false);
                 return Vector3.zero;
+            }
 
-            Debug.Log("cyanLights.Count: " + cyanLights.Count + " / purpleLights.Count: " + purpleLights.Count + " / yellowLights.Count: " + yellowLights.Count + " / whiteLights.Count: " + whiteLights.Count);
-            Debug.Log("Start!");
             int masterLightsLength = Masters.Count;
             for (int i = 0; i < 4; i++)
             {
-                //Debug.Log("Masters[i].lightColor: " + Masters[i].lightColor);
-                //if (Masters[i].lightSourceHold.Index >= 0 && _lightColor == Masters[i].lightColor)
-                //{
-                //    Debug.Log("Masters[i].lightColor entered: " + Masters[i].lightColor);
-                //    if (Masters[i].lightSourceHold.LightSource == null)
-                //        return Vector3.zero;
-
-                //    Debug.Log("Current Light: " + Masters[i].lightColor + " - " + i);
-                    List<Vector3> seperatedDirections = new List<Vector3>();
-                    foreach (var item2 in allLights[i])
+                List<Vector3> seperatedDirections = new List<Vector3>();
+                foreach (var item2 in allLights[i])
+                {
+                    float time = Time.time + 0.5f;
+#if UNITY_EDITOR
+                    if(!Application.isPlaying)
+                        time = (float)EditorApplication.timeSinceStartup + 0.5f;
+#endif
+                    item2.LightSource.SetBlockedBySeperateUntil(time, item2.CurrentBounce, Vector3.zero);
+                    var currents = GetAverageSeperatedDirection(item2.nextDirection, item2.mirrorNormal, item2.ColorOnSurface);
+                    int index = 0;
+                    foreach (var item in currents.directions)
                     {
-                        item2.LightSource.SetBlockedBySeperateUntil(Time.time + 0.5f, item2.CurrentBounce, Vector3.zero);
-                        var currents = GetAverageSeperatedDirection(item2.nextDirection, item2.mirrorNormal, item2.ColorOnSurface);
-                        int index = 0;
-                        foreach (var item in currents.directions)
+                        if (lightsOnPool <= currentUseLightCount)
                         {
-                            Debug.Log(item2.ColorOnSurface + " / " + item + " / " + index + " / " + currentUseLightCount);
-                            if (lightsOnPool <= currentUseLightCount)
-                            {
-                                GameObject newLightToPool = Instantiate(Resources.Load<GameObject>("Prefabs/ExtractedLight"), LightPoolParent);
-                                newLightToPool.transform.position = item2.hitPoint;
-                                lightsOnPool = LightPoolParent.childCount;
-                                newLightToPool.GetComponent<LightBehaviour>().SetSeperatedOptions(item, currents._colors[index]);
-                            }
-                            else
-                            {
-                                GameObject LightFromPool = LightPoolParent.GetChild(currentUseLightCount).gameObject;
-                                LightFromPool.gameObject.SetActive(true);
-                                LightFromPool.transform.position = item2.hitPoint;
-                                LightFromPool.GetComponent<LightBehaviour>().SetSeperatedOptions(item, currents._colors[index]);
-                            }
-                            index++;
-                            currentUseLightCount++;
-                            seperatedDirections.Add(item);
+                            GameObject newLightToPool = Instantiate(Resources.Load<GameObject>("Prefabs/ExtractedLight"), LightPoolParent);
+                            newLightToPool.transform.position = item2.hitPoint;
+                            lightsOnPool = LightPoolParent.childCount;
+                            newLightToPool.GetComponent<LightBehaviour>().SetSeperatedOptions(item, currents._colors[index]);
                         }
+                        else
+                        {
+                            GameObject LightFromPool = LightPoolParent.GetChild(currentUseLightCount).gameObject;
+                            LightFromPool.gameObject.SetActive(true);
+                            LightFromPool.transform.position = item2.hitPoint;
+                            LightFromPool.GetComponent<LightBehaviour>().SetSeperatedOptions(item, currents._colors[index]);
+                        }
+                        index++;
+                        currentUseLightCount++;
+                        seperatedDirections.Add(item);
                     }
+                }
 
-                    lightsOnPool = LightPoolParent.childCount;
-                    for (int t = currentUseLightCount; t < lightsOnPool; t++)
-                        LightPoolParent.GetChild(t).gameObject.SetActive(false);
-                    
-                    //return Vector3.zero;
-                //}
             }
+
+            lightsOnPool = LightPoolParent.childCount;
+            for (int t = currentUseLightCount; t < lightsOnPool; t++)
+                LightPoolParent.GetChild(t).gameObject.SetActive(false);
         }
 
         return Vector3.zero;
@@ -520,7 +531,6 @@ public class DirectorBehaviour : MonoBehaviour
         Vector3 rotationAxis = Vector3.Cross(incomingDirection, mirroredNormal).normalized;
         float mainReflectionAngle = Vector3.Angle(incomingDirection, mirroredNormal);
         float splitAngle = Mathf.Clamp(mainReflectionAngle / 2, 3, 90) / 2; // Adjust the range as needed
-        Debug.Log("angle: " + splitAngle);
         if (_ownerColor == LightPuzzleHandler.LightColor.White)
         {
             // Rotate around the calculated axis
@@ -560,6 +570,11 @@ public class DirectorBehaviour : MonoBehaviour
         }
 
         return (reflections, colors);
+    }
+
+    public void SetLevel(int _level)
+    {
+        Level = _level;
     }
 
     public Vector3 ReflectRay(Vector3 incomingDirection, Vector3 normal)
@@ -607,79 +622,4 @@ public class DirectorBehaviour : MonoBehaviour
         public LightSourceHold lightSourceHold;
         public LightPuzzleHandler.LightColor lightColor;
     }
-
-#if UNITY_EDITOR
-    void EskiKodYedekEgerLazimOlursaDiye()
-    {
-        //if (masterYellowLight.Index >= 0 && _lightColor == LightPuzzleHandler.LightColor.Yellow)
-        //{
-        //    if (masterYellowLight.LightSource == null)
-        //        return Vector3.zero;
-
-        //    List<Vector3> incomingDirections = new();
-        //    List<Vector3> mirrorNormals = new();
-        //    foreach (var item2 in allLights[0])
-        //    {
-        //        item2.LightSource.SetBlockedByMixUntil(Time.time + 2f, false, item2.CurrentBounce, Vector3.zero);
-        //        incomingDirections.Add(item2.nextDirection);
-        //        mirrorNormals.Add(item2.mirrorNormal);
-        //    }
-
-        //    Vector3 averageDirection = GetAverageDirection(incomingDirections, mirrorNormals);
-        //    masterYellowLight.LightSource.SetBlockedByMixUntil(Time.time + 2f, true, masterYellowLight.CurrentBounce, averageDirection);
-
-        //    return averageDirection;
-        //}
-
-        //if (masterCyanLight.Index >= 0 && _lightColor == LightPuzzleHandler.LightColor.Cyan)
-        //{
-        //    List<Vector3> incomingDirections = new();
-        //    List<Vector3> mirrorNormals = new();
-        //    foreach (var item2 in allLights[1])
-        //    {
-        //        item2.LightSource.SetBlockedByMixUntil(Time.time + 2f, false, item2.CurrentBounce, Vector3.zero);
-        //        incomingDirections.Add(item2.nextDirection);
-        //        mirrorNormals.Add(item2.mirrorNormal);
-        //    }
-
-        //    Vector3 averageDirection = GetAverageDirection(incomingDirections, mirrorNormals);
-        //    masterCyanLight.LightSource.SetBlockedByMixUntil(Time.time + 2f, true, masterCyanLight.CurrentBounce, averageDirection);
-        //    return averageDirection;
-        //}
-
-        //if (masterPurpleLight.Index >= 0 && _lightColor == LightPuzzleHandler.LightColor.Purple)
-        //{
-        //    List<Vector3> incomingDirections = new();
-        //    List<Vector3> mirrorNormals = new();
-        //    foreach (var item2 in allLights[2])
-        //    {
-        //        item2.LightSource.SetBlockedByMixUntil(Time.time + 2f, false, item2.CurrentBounce, Vector3.zero);
-        //        incomingDirections.Add(item2.nextDirection);
-        //        mirrorNormals.Add(item2.mirrorNormal);
-        //    }
-
-        //    Vector3 averageDirection = GetAverageDirection(incomingDirections, mirrorNormals);
-        //    masterPurpleLight.LightSource.SetBlockedByMixUntil(Time.time + 2f, true, masterPurpleLight.CurrentBounce, averageDirection);
-
-        //    return averageDirection;
-        //}
-
-        //if (masterWhiteLight.Index >= 0 && _lightColor == LightPuzzleHandler.LightColor.White)
-        //{
-        //    List<Vector3> incomingDirections = new();
-        //    List<Vector3> mirrorNormals = new();
-        //    foreach (var item2 in allLights[3])
-        //    {
-        //        item2.LightSource.SetBlockedByMixUntil(Time.time + 2f, false, item2.CurrentBounce, Vector3.zero);
-        //        incomingDirections.Add(item2.nextDirection);
-        //        mirrorNormals.Add(item2.mirrorNormal);
-        //    }
-
-        //    Vector3 averageDirection = GetAverageDirection(incomingDirections, mirrorNormals);
-        //    masterWhiteLight.LightSource.SetBlockedByMixUntil(Time.time + 2f, true, masterWhiteLight.CurrentBounce, averageDirection);
-
-        //    return averageDirection;
-        //}
-    }
-#endif
 }

@@ -37,6 +37,7 @@ public class LightBehaviour : MonoBehaviour
 
     public BlockedData BlockByMix;
 
+    private int Level;
     private Vector3 OverridedStartDirection = Vector3.zero;
 
     void FixedUpdate()
@@ -508,6 +509,11 @@ public class LightBehaviour : MonoBehaviour
         OverridedStartDirection = _direction;
         TypeOfLights.Clear();
         TypeOfLights.Add(_lightColor);
+    }
+
+    public void SetLevel(int _level)
+    {
+        Level = _level;
     }
 
     [System.Serializable]

@@ -57,12 +57,11 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
         }
         else if (_interactType == InteractType.Dropable)
         {
-            //birakma islemleri...
             int _currentLv = 1; //Diger objeler icin onlarin classlarindan leveline erisebilirsin sonrasinda. su an tek tasinabilir obje Director.
             if(transform.TryGetComponent(out DirectorBehaviour b))
                 _currentLv = b.GetLevelID();
 
-            transform.SetParent(LightPuzzleHandler.instance.GetDirectorsParent(_currentLv));
+            transform.SetParent(LightPuzzleHandler.instance.GetDirectorsParent(_currentLv).transform);
             barHandler.gameObject.SetActive(false);
             IsCollected = false;
             player.playerUI.CloseInteractUIS();
@@ -72,8 +71,10 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
 
     private void FixedUpdate()
     {
-        if(IsCollected)
+        if (IsCollected)
+        {
             PlaceOnGround(true);
+        }
     }
 
     void PlaceOnGround(bool _useOffset)

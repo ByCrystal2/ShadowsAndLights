@@ -28,6 +28,7 @@ public abstract class Trap : IHaveVisualEffect
 public class TrapBehaviour : MonoBehaviour
 {
     [SerializeField] protected int ID;
+    [SerializeField] protected int Level;
     [SerializeField] protected TrapType TrapType;
     [SerializeField] protected EffectType EffectType;
     [SerializeField,Range(0, 5)] protected float ChangeTime;
@@ -38,6 +39,11 @@ public class TrapBehaviour : MonoBehaviour
     private void Awake()
     {
         AudioSourceHelper.Position = transform.position;
+    }
+
+    public void SetLevel(int _level)
+    {
+        Level = _level;
     }
     //[SerializeField] protected AudioSource AudioSource;
 }
