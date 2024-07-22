@@ -366,18 +366,18 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0.84
   anamorphicFlaresExcludeLayers:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   anamorphicFlaresExclusionLayerMask:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value:
       serializedVersion: 2
-      m_Bits: 1082163255
+      m_Bits: 32
   anamorphicFlaresAntiflicker:
     m_OverrideState: 0
     m_Value: 1
   anamorphicFlaresResolution:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   anamorphicFlaresQuickerBlur:
     m_OverrideState: 0

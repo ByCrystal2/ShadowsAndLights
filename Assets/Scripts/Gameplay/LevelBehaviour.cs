@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using Unity.Mathematics;
 
 public class LevelBehaviour : MonoBehaviour
 {
     public int LevelID;
+    public Transform Spawnpoint;
 
     private LightsHolder MyLightHolder;
     private DirectorsHolder MyDirectorHolder;
@@ -40,6 +42,8 @@ public class LevelBehaviour : MonoBehaviour
 
     public void CheckLevelCompleted()
     {
+        if (isCompleted)
+            return;
         bool allCompleted = true;
         foreach (Transform item in MyTargetHolder.transform)
         {
@@ -52,27 +56,58 @@ public class LevelBehaviour : MonoBehaviour
 
         if (allCompleted)
         {
+            isCompleted = true;
             EndLevel();
-            GameManager.instance.AddALevelFinished(LevelID);
+#if UNITY_EDITOR
+            if (GameManager.instance == null)
+                Debug.LogError("Save alinamadi. => GameManager instance sahnede mevcut degil.");
+#endif
+            GameManager.instance?.AddALevelFinished(LevelID);
         }
     }
 
-    private void Update()
+    public void OpenExitGate()
     {
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            EndLevel();
-            isCompleted = true;
-        }
+        //ExitGate child index = 2;
+        Transform exitGateHolder = transform.GetChild(2);
+        List<Transform> Doors = new() { exitGateHolder.GetChild(0).GetChild(0), exitGateHolder.GetChild(0).GetChild(1)};
+
+        StopAllCoroutines();
+        StartCoroutine(DoorsCoroutine(Doors, 0, 90, 3));
+    }
+
+    public void OpenEnterGate()
+    {
+        //EnterGate child index = 1;
+        Transform exitGateHolder = transform.GetChild(1);
+        List<Transform> Doors = new() { exitGateHolder.GetChild(0).GetChild(0), exitGateHolder.GetChild(0).GetChild(1) };
+
+        StopAllCoroutines();
+        StartCoroutine(DoorsCoroutine(Doors, 0, 90, 3));
+    }
+
+    public void CloseExitGate()
+    {
+        Transform exitGateHolder = transform.GetChild(2);
+        List<Transform> Doors = new() { exitGateHolder.GetChild(0).GetChild(0), exitGateHolder.GetChild(0).GetChild(1) };
+
+        StopAllCoroutines();
+        StartCoroutine(DoorsCoroutine(Doors, 90, 0, 1));
+    }
+
+    public void CloseEnterGate()
+    {
+        Transform exitGateHolder = transform.GetChild(1);
+        List<Transform> Doors = new() { exitGateHolder.GetChild(0).GetChild(0), exitGateHolder.GetChild(0).GetChild(1) };
+
+        StopAllCoroutines();
+        StartCoroutine(DoorsCoroutine(Doors, 90, 0, 1));
     }
 
     public void EndLevel()
     {
-        if (isCompleted)
-            return;
-
         //LevelObjemizin Ilk Childi EndGame Effectlerimiz icin gerekli olup, indexleri onemlidir.
-        StopAllCoroutines();
+        OpenExitGate();
 
         //EffectObjesini ac.
         StartCoroutine(PlayEffect());
@@ -107,6 +142,30 @@ public class LevelBehaviour : MonoBehaviour
         EffectParent.GetChild(0).GetComponent<Magio.MagioObjectEffect>().beginEffectOnStart = true;
         yield return null;
         EffectParent.gameObject.SetActive(true);
+    }
+
+    IEnumerator DoorsCoroutine(List<Transform> transforms, float startAngle, float endAngle, float duration)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float currentAngle = Mathf.Lerp(startAngle, endAngle, elapsedTime / duration);
+            int index = 0;
+            foreach (Transform t in transforms)
+            {
+                t.localRotation = Quaternion.Euler(0, index % 2 == 0 ? -currentAngle : currentAngle, 0);
+                index++;
+            }
+            yield return null;
+        }
+
+        int indexFinal = 0;
+        foreach (Transform t in transforms)
+        {
+            t.localRotation = Quaternion.Euler(0, indexFinal % 2 == 0 ? -endAngle : endAngle, 0);
+            indexFinal++;
+        }
     }
 
     public LightsHolder GetLightsParent()

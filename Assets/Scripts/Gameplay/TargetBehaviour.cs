@@ -7,9 +7,16 @@ using UnityEditor;
 #endif
 public class TargetBehaviour : MonoBehaviour
 {
+    [Header("Red/Green/Blue Only")]
     public List<LightPuzzleHandler.LightColor> RequiredColors = new();
+
+    [Header("UI/Canvas")]
+    public TargetBarHandler TargetBar;
+
+    [Header("Runtime Datas")]
     public List<ActiveSourceOn> ActiveSources = new();
 
+    private float WaitUntil = 3f;
     private int Level;
     public void AddLightsOn(LightPuzzleHandler.LightColor _hitLight, Transform _lightOwner)
     {
@@ -57,17 +64,17 @@ public class TargetBehaviour : MonoBehaviour
         int length = ActiveSources.Count;
         for (int i = length - 1; i >= 0; i--)
         {
-            if (ActiveSources[i].LifeTime < Time.time)
+            if (ActiveSources[i].LifeTime < timer)
             {
                 ActiveSources.RemoveAt(i);
-                UpdateUI();
+                IsCompleted();
             }
         }
     }
 
-    public void UpdateUI()
+    public void UpdateUI(float _r, float _g, float _b)
     {
-
+        TargetBar.SetColorPercents(_r, _g, _b);
     }
 
     private void FixedUpdate()
@@ -77,25 +84,121 @@ public class TargetBehaviour : MonoBehaviour
 
     public bool IsCompleted()
     {
-        List<int> requirementCount = new List<int>(20);
+        float redRequired = 0;
+        float greenRequired = 0;
+        float blueRequired = 0;
+        
+        float redAmount = 0;
+        float greenAmount = 0;
+        float blueAmount = 0;
+
         foreach (var item in RequiredColors)
-            requirementCount[(int)item] += 1;
+        {
+            if (item == LightPuzzleHandler.LightColor.Red)
+                redRequired++;
+            else if (item == LightPuzzleHandler.LightColor.Green)
+                greenRequired++;
+            else if (item == LightPuzzleHandler.LightColor.Blue)
+                blueRequired++;
+        }
 
-        List<int> sourcesCount = new List<int>(20);
         foreach (var item in ActiveSources)
-            sourcesCount[(int)item.LightColor] += 1;
+        {
+            if (item.LightColor == LightPuzzleHandler.LightColor.Red)
+                redAmount++;
+            else if (item.LightColor == LightPuzzleHandler.LightColor.Green)
+                greenAmount++;
+            else if (item.LightColor == LightPuzzleHandler.LightColor.Blue)
+                blueAmount++;
+            else if (item.LightColor == LightPuzzleHandler.LightColor.Yellow)
+            {
+                greenAmount++;
+                redAmount++;
+            }
+            else if (item.LightColor == LightPuzzleHandler.LightColor.Purple)
+            {
+                blueAmount++;
+                redAmount++;
+            }
+            else if (item.LightColor == LightPuzzleHandler.LightColor.Cyan)
+            {
+                blueAmount++;
+                greenAmount++;
+            }
+            else if (item.LightColor == LightPuzzleHandler.LightColor.White)
+            {
+                blueAmount++;
+                greenAmount++;
+                redAmount++;
+            }
+        }
 
-        int final = requirementCount.Count;
-        for (int i = 0; i < final; i++)
-            if (requirementCount[i] != sourcesCount[i])
-                return false;
+        //Debug.Log("redAmount/redRequired: " + redAmount + "/" + redRequired + " - greenAmount/greenRequired: " + greenAmount + "/" + greenRequired + " - blueAmount/blueRequired: " + blueAmount + "/" + blueRequired + " ---- WaitUntil: " + WaitUntil);
+        bool puzzleCompleted = redRequired == redAmount && greenRequired == greenAmount && blueRequired == blueAmount;
+        if (puzzleCompleted)
+        {
+            if (WaitUntil > 0)
+                WaitUntil -= Time.deltaTime;
+            else
+                WaitUntil = 0;
+        }
+        else
+            WaitUntil = 3;
 
-        return true;
+        float r = 0;
+        if (redRequired == 0)
+        {
+            r = 1;
+            if (redAmount > 0)
+                r = 2;
+        }
+        else
+            r = redAmount / redRequired;
+
+        float g = 0;
+        if (greenRequired == 0)
+        {
+            g = 1;
+            if (greenAmount > 0)
+                g = 2;
+        }
+        else
+            g = greenAmount / greenRequired;
+
+        float b = 0;
+        if (blueRequired == 0)
+        {
+            b = 1;
+            if (blueAmount > 0)
+                b = 2;
+        }
+        else
+            b = blueAmount / blueRequired;
+
+        UpdateUI(r, g, b);
+
+        return puzzleCompleted && WaitUntil <= 0;
     }
 
     public void SetLevel(int _level)
     {
         Level = _level;
+
+        int r = 0;
+        int g = 0;
+        int b = 0;
+
+        foreach (var item in RequiredColors)
+        {
+            if (item == LightPuzzleHandler.LightColor.Red)
+                r++;
+            else if (item == LightPuzzleHandler.LightColor.Green)
+                g++;
+            else if (item == LightPuzzleHandler.LightColor.Blue)
+                b++;
+        }
+
+        TargetBar.InitRequirements(r,g,b);
     }
 
     [System.Serializable]

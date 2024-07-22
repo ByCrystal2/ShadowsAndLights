@@ -218,7 +218,7 @@ public class LightBehaviour : MonoBehaviour
 
                 if (!Application.isPlaying)
                 {
-                    Debug.Log("Target datalarini degistirmek level dizaynina zarar verebilecegi icin target islemesi yalnizca Playtimeda calismaktadir.");
+                    //Debug.Log("Target datalarini degistirmek level dizaynina zarar verebilecegi icin target islemesi yalnizca Playtimeda calismaktadir.");
                     return;
                 }
                 TargetBehaviour target = hit.collider.transform.GetComponentInParent<TargetBehaviour>();

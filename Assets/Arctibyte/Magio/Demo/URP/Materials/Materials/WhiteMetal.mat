@@ -197,7 +197,7 @@ Material:
     - _LifelineMultiplier: 1
     - _Mat_Alpha: 1
     - _MaterialAlpha: 1
-    - _Metallic: 1
+    - _Metallic: 0.807
     - _Mode: 0
     - _NormalStrength: 0
     - _NullifySpread: 0
