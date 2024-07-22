@@ -28,6 +28,7 @@ public class DirectorBehaviour : MonoBehaviour
     public float nextUpdate = 0;
 
     private int Level;
+    private float SoundTimer;
     void Awake()
     {
         nextUpdate = 0;
@@ -117,6 +118,11 @@ public class DirectorBehaviour : MonoBehaviour
     public void FixedUpdate()
     {
         CheckLight();
+        if (SoundTimer < Time.time && ColorsOnReflect.Count > 0)
+        {
+            SoundTimer = Time.time + 6;
+            GameAudioManager.instance.PlayLightReflectSound(transform.position);
+        }
     }
 
     void CheckLight()

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
@@ -54,6 +55,9 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
             barHandler.gameObject.SetActive(false);
             player.CollectObject(this, HandObject);
             IsCollected = true;
+            List<Collider> colliders = transform.GetComponentsInChildren<Collider>().ToList();
+            foreach (var item in colliders)
+                item.enabled = false;
         }
         else if (_interactType == InteractType.Dropable)
         {
@@ -66,6 +70,10 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
             IsCollected = false;
             player.playerUI.CloseInteractUIS();
             PlaceOnGround(false);
+
+            List<Collider> colliders = transform.GetComponentsInChildren<Collider>().ToList();
+            foreach (var item in colliders)
+                item.enabled = true;
         }
     }
 
@@ -73,7 +81,7 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
     {
         if (IsCollected)
         {
-            PlaceOnGround(true);
+            PlaceOnGround(false);
         }
     }
 

@@ -39,6 +39,8 @@ public class LightBehaviour : MonoBehaviour
 
     private int Level;
     private Vector3 OverridedStartDirection = Vector3.zero;
+    private float SoundTimer;
+
     private void Awake()
     {
         BlockByMix.blockedUntil = 0;
@@ -51,6 +53,11 @@ public class LightBehaviour : MonoBehaviour
     void FixedUpdate()
     {
         UpdateLight();
+        if(SoundTimer < Time.time)
+        {
+            SoundTimer = Time.time + 4;
+            GameAudioManager.instance.PlayLightSourceSound(transform.position);
+        }
     }
 
     void UpdateLight()
