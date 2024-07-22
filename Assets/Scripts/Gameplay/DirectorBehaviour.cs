@@ -30,6 +30,7 @@ public class DirectorBehaviour : MonoBehaviour
     private int Level;
     void Awake()
     {
+        nextUpdate = 0;
         CurrentSources = new();
         CurrentSources.Sources = new();
         rotateAnObject = GetComponent<IRotateAnObject>();

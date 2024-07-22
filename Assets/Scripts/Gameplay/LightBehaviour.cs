@@ -39,6 +39,14 @@ public class LightBehaviour : MonoBehaviour
 
     private int Level;
     private Vector3 OverridedStartDirection = Vector3.zero;
+    private void Awake()
+    {
+        BlockByMix.blockedUntil = 0;
+        BlockByMix.Seperated = false;
+        BlockByMix.OverridedDirection = Vector3.zero;
+        BlockByMix.masterMixed = false;
+        BlockByMix.bounceAfter = 0;
+    }
 
     void FixedUpdate()
     {
@@ -114,11 +122,6 @@ public class LightBehaviour : MonoBehaviour
         else
             direction = OverridedStartDirection;
 
-        if (lineRenderer.positionCount < 2)
-            lineRenderer.positionCount = 2;
-        lineRenderer.SetPosition(0, PointLight.transform.position);
-        lineRenderer.SetPosition(1, PointLight.transform.position + direction * LengthPerLight);
-
         segmentColors.Clear();
         OverridedColor = TypeOfLights[0];
         SendRay(PointLight.transform.position, direction, 0);
@@ -131,8 +134,6 @@ public class LightBehaviour : MonoBehaviour
             //Debug.Log("BlockByMix.bounceAfter: " + BlockByMix.bounceAfter + " / _bounces: " + _bounces);
             if (!BlockByMix.masterMixed && BlockByMix.bounceAfter < _bounces)
             {
-                Debug.Log("Bounces: " + _bounces + " / name: " + transform.name);
-                lineRenderer.positionCount = _bounces + 1;
                 //Debug.Log("Light is blocked by mix. Because other light created combined mix.");
                 return;
             }
@@ -153,10 +154,8 @@ public class LightBehaviour : MonoBehaviour
         Ray ray = new Ray(origin, direction);
         RaycastHit hit;
 
-        lineRenderer.positionCount =_bounces + 1;
         if (_bounces < 6 && Physics.Raycast(ray, out hit, LengthPerLight, LayerMaskHelper.LightLayer, QueryTriggerInteraction.Ignore))
         {
-            lineRenderer.SetPosition(_bounces, ray.origin);
             if (hit.collider.transform.gameObject.CompareTag("Reflect"))
             {
                 Vector3 newDirection = Vector3.Reflect(direction, hit.normal);
@@ -205,18 +204,26 @@ public class LightBehaviour : MonoBehaviour
                 OverridedColor = coreColor ? nextColorHolder._lightColor : OverridedColor;
                 SendRay(hit.point, newDirection, _bounces + 1);
             }
-            else if (hit.collider.transform.gameObject.CompareTag("Reflect"))
+            else if (hit.collider.transform.gameObject.CompareTag("Target"))
             {
+                SegmentColour segmentColour = new SegmentColour()
+                {
+                    _color = LightPuzzleHandler.GetColorByLight(OverridedColor),
+                    _startPos = ray.origin,
+                    _hitEndPos = hit.point,
+                    _direction = ray.direction,
+                    _hitDirector = null,
+                };
+                segmentColors.Add(segmentColour);
+
+                if (!Application.isPlaying)
+                {
+                    Debug.Log("Target datalarini degistirmek level dizaynina zarar verebilecegi icin target islemesi yalnizca Playtimeda calismaktadir.");
+                    return;
+                }
                 TargetBehaviour target = hit.collider.transform.GetComponentInParent<TargetBehaviour>();
                 target.AddLightsOn(OverridedColor, transform);
 
-                SegmentColour finalSegment = new();
-                finalSegment._color = Color.black;
-                finalSegment._direction = direction;
-                finalSegment._startPos = origin;
-                finalSegment._hitEndPos = hit.point;
-                finalSegment._hitDirector = null;
-                segmentColors.Add(finalSegment);
             }
             else
             {
@@ -243,16 +250,13 @@ public class LightBehaviour : MonoBehaviour
 
     void UpdateGradient(Vector3 endPoint, Vector3 startPoint)
     {
+        lineRenderer.positionCount = 0;
         if (!isActive)
             return;
 
         int l = segmentColors.Count;
         if (l == 0)
             return;        
-
-        lineRenderer.SetPosition(lineRenderer.positionCount - 1, segmentColors[segmentColors.Count - 1]._startPos);
-        lineRenderer.positionCount++;
-        lineRenderer.SetPosition(lineRenderer.positionCount - 1, segmentColors[segmentColors.Count - 1]._hitEndPos);
 
         Gradient gradient = new Gradient();
         List<GradientColorKey> colorKeys = new List<GradientColorKey>();
@@ -261,6 +265,8 @@ public class LightBehaviour : MonoBehaviour
         float totalDistance = 0;
         List<float> distances = new List<float>();
 
+        lineRenderer.positionCount++;
+        lineRenderer.SetPosition(0, segmentColors[0]._startPos);
         // Calculate the distances and total distance
         for (int i = 1; i <= l; i++)
         {
@@ -269,6 +275,11 @@ public class LightBehaviour : MonoBehaviour
             distance = Vector3.Distance(segmentColors[i - 1]._startPos, endPos);
             distances.Add(distance);
             totalDistance += distance;
+            if(i <= 6)
+            {
+                lineRenderer.positionCount++;
+                lineRenderer.SetPosition(i, segmentColors[i - 1]._hitEndPos);
+            }
         }
 
         float cumulativeDistance = distances[0];
@@ -306,7 +317,6 @@ public class LightBehaviour : MonoBehaviour
                     float secT = 1;
                     colorKeys.Add(new GradientColorKey(segmentColors[i]._color, secT));
                     alphaKeys.Add(new GradientAlphaKey(1.0f, secT));
-                    lineRenderer.SetPosition(lineRenderer.positionCount - 2, segmentColors[i]._startPos + segmentColors[i]._direction * (LengthPerLight / 2));
                 }
             }
             else

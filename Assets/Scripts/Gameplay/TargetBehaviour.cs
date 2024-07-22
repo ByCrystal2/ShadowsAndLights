@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 public class TargetBehaviour : MonoBehaviour
 {
     public List<LightPuzzleHandler.LightColor> RequiredColors = new();
@@ -10,6 +13,11 @@ public class TargetBehaviour : MonoBehaviour
     private int Level;
     public void AddLightsOn(LightPuzzleHandler.LightColor _hitLight, Transform _lightOwner)
     {
+        float timer = Time.time;
+#if UNITY_EDITOR
+        if(!Application.isPlaying)
+            timer = (float)EditorApplication.timeSinceStartup;
+#endif
         bool containsOwner = false;
         int length = ActiveSources.Count;
         for (int i = length - 1; i >= 0; i--)
@@ -19,7 +27,7 @@ public class TargetBehaviour : MonoBehaviour
                 containsOwner = true;
                 ActiveSources[i] = new()
                 {
-                    LifeTime = Time.time + 0.2f,
+                    LifeTime = timer + 0.2f,
                     LightColor = _hitLight,
                     Source = _lightOwner
                 };
@@ -30,7 +38,7 @@ public class TargetBehaviour : MonoBehaviour
         {
             ActiveSources.Add(new()
             {
-                LifeTime = Time.time + 0.2f,
+                LifeTime = timer + 0.2f,
                 LightColor = _hitLight,
                 Source = _lightOwner
             });
@@ -41,6 +49,11 @@ public class TargetBehaviour : MonoBehaviour
 
     public void UpdateLightsOn()
     {
+        float timer = Time.time;
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+            timer = (float)EditorApplication.timeSinceStartup;
+#endif
         int length = ActiveSources.Count;
         for (int i = length - 1; i >= 0; i--)
         {
