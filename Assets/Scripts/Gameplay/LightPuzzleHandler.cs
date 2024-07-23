@@ -11,7 +11,7 @@ public class LightPuzzleHandler : MonoBehaviour
     [SerializeField] List<TrapSoundHelper> TargetEffectSounds = new List<TrapSoundHelper>();
     [SerializeField] List<ArrowHelper> Arrows = new List<ArrowHelper>();
     public List<LevelBehaviour> Levels;
-
+    public int PuzzleRoomCount {get=>Levels.Count;}
     public static List<LightData> LightsOfLevel = new() {
         new(){ lightType = LightColor.White ,ColorOfLight = new() { r = 1, b = 1, g = 1, a = 1} },
         new(){ lightType = LightColor.Red ,ColorOfLight = new() { r = 1, b = 0.2f, g = 0.2f, a = 1} },
@@ -24,7 +24,7 @@ public class LightPuzzleHandler : MonoBehaviour
         new(){ lightType = LightColor.DeadWhite ,ColorOfLight = new() { r = 0.3f, b = 0.3f, g = 0.3f, a = 0.3f} },
         new(){ lightType = LightColor.Close ,ColorOfLight = new() { r = 0, b = 0, g = 0, a = 0 } },
     };
-
+    public LevelBehaviour CurrentLevelHandler { get; set; }
     private void Awake()
     {
         if (instance)

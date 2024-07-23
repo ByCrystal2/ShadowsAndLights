@@ -7,7 +7,7 @@ public partial class ArrowDispenserBehaviour : TrapBehaviour
    ArrowDispenser m_ArrowDispenser;
     private void Start()
     {
-        m_ArrowDispenser = new ArrowDispenser(ID, HowMuchArrow, TrapType, EffectType, ChangeTime, ArrowShootingContent, ArrowsDamage, ArrowsSpeed, ArrowDefaultRotate, ExtinctionValue);
+        m_ArrowDispenser = new ArrowDispenser(ID, HowMuchArrow, TrapType, EffectType, ChangeTime, MinActiveLevel, MaxActiveLevel, ArrowShootingContent, ArrowsDamage, ArrowsSpeed, ArrowDefaultRotate, ExtinctionValue);
         for (int i = 0; i < HowMuchArrow; i++)
         {
             GameObject arrow = Instantiate(LightPuzzleHandler.instance.GetArrow(ArrowType), m_ArrowDispenser.ArrowShootingContent);
@@ -17,6 +17,7 @@ public partial class ArrowDispenserBehaviour : TrapBehaviour
             arrow.SetActive(false);
             m_ArrowDispenser.Objects.Add(arrowBehaviour);
         }
+        SetTrap(m_ArrowDispenser);
         //InvokeRepeating(nameof(ShootNewArrow), 2,4);
     }    
     IEnumerator ShootArrows()

@@ -11,8 +11,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
     public PlayerSaveData currentActiveSaveData;
-    public bool isLoadedGame;
-    
+    public bool isLoadedGame;    
     private const string encryptionKey = "ShadowsAndLightsKosippy";
     private const string fileExtension = ".shadow";
     private void Awake()

@@ -5,6 +5,9 @@ using UnityEngine;
 public abstract class Trap : IHaveVisualEffect
 {
     public int ID;
+    public bool IsActive { get; private set; }
+    public int MinActiveLevel { get; set; }
+    public int MaxActiveLevel { get; set; }
     public TrapType TrapType { get; set; }
     public Material Material { get; set; }
     public float ChangeTime { get; set; }
@@ -13,22 +16,32 @@ public abstract class Trap : IHaveVisualEffect
     public float EffectDamage { get; set; }
     public float EffectChangeTime { get; set; }
 
-    protected Trap(int _id, TrapType _trapType, EffectType _effectType,float _changeTime, GameObject particleObject = null, float effectDamage = 0, float effectChangeTime = 0)
+    protected Trap(int _id, TrapType _trapType, EffectType _effectType,float _changeTime,int _minActiveLevel,int _maxActiveLevel, GameObject particleObject = null, float effectDamage = 0, float effectChangeTime = 0)
     {
         ID = _id;
         TrapType = _trapType;
         EffectType = _effectType;
         Material = LightPuzzleHandler.instance.GetMaterialInEffectOnTarget(TrapType, EffectType);
         ChangeTime = _changeTime;
+        MinActiveLevel = _minActiveLevel;
+        MaxActiveLevel = _maxActiveLevel;
         ParticleObject = particleObject;
         EffectDamage = effectDamage;
         EffectChangeTime = effectChangeTime;
     }
+    public void TrapCheck(int _currentLevel)
+    {
+        TrapActivation(_currentLevel < MaxActiveLevel ||  _currentLevel > MinActiveLevel);
+    }
+    private void TrapActivation(bool _active) => IsActive = _active;
+
 }
 public class TrapBehaviour : MonoBehaviour
 {
     [SerializeField] protected int ID;
     [SerializeField] protected int Level;
+    [SerializeField] protected int MinActiveLevel;
+    [SerializeField] protected int MaxActiveLevel;
     [SerializeField] protected TrapType TrapType;
     [SerializeField] protected EffectType EffectType;
     [SerializeField,Range(0, 5)] protected float ChangeTime;
@@ -36,21 +49,27 @@ public class TrapBehaviour : MonoBehaviour
     [SerializeField] protected GameObject ParticleObject;
     [SerializeField] protected float EffectDamage;
     [SerializeField] protected float EffectChangeTime;
+    protected Trap trap;
     private void Awake()
     {
         AudioSourceHelper.Position = transform.position;
     }
-
+    public void SetTrap(Trap _trap) => trap = _trap;
+    public Trap GetTrap() => trap;
     public void SetLevel(int _level)
     {
         Level = _level;
+        trap.MinActiveLevel = _level - MinActiveLevel > 0 ? _level - MinActiveLevel : 0;
+        trap.MaxActiveLevel = _level + MaxActiveLevel < LightPuzzleHandler.instance.PuzzleRoomCount ? _level + MaxActiveLevel : LightPuzzleHandler.instance.PuzzleRoomCount;
     }
+
+    
     //[SerializeField] protected AudioSource AudioSource;
 }
 public class MouseTrap : Trap, ICanDamage
 {
     public float Damage { get; set; }
-    public MouseTrap(int _id, float _damage, TrapType _trapType, EffectType _effectType, float _changeTime) : base(_id, _trapType,_effectType, _changeTime)
+    public MouseTrap(int _id, float _damage, TrapType _trapType, EffectType _effectType, float _changeTime, int _minActiveLevel, int _maxActiveLevel) : base(_id, _trapType,_effectType, _changeTime,_minActiveLevel,_maxActiveLevel)
     {
         Damage = _damage;
     }
@@ -63,7 +82,7 @@ public class MouseTrap : Trap, ICanDamage
 }
 public class ArrowDispenser : Trap, ICanHoldMultipleObjects<ArrowBehaviour>
 {
-    public ArrowDispenser(int _id,int _howManyArrows, TrapType _trapType,EffectType _effectType, float _changeTime, Transform arrowShootingContent, float arrowsDamage, float arrowsSpeed, Quaternion defaultRotate, float extinctionValue) : base(_id, _trapType,_effectType, _changeTime)
+    public ArrowDispenser(int _id,int _howManyArrows, TrapType _trapType,EffectType _effectType, float _changeTime, int _minActiveLevel, int _maxActiveLevel, Transform arrowShootingContent, float arrowsDamage, float arrowsSpeed, Quaternion defaultRotate, float extinctionValue) : base(_id, _trapType,_effectType, _changeTime,_minActiveLevel,_maxActiveLevel)
     {
         HowMany = _howManyArrows;
         ArrowShootingContent = arrowShootingContent;

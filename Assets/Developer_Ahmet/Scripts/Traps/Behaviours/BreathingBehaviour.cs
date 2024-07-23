@@ -21,13 +21,13 @@ public partial class BreathingBehaviour : TrapBehaviour, ICanDamage
                 myBreathing = null;
                 break;
             case EffectType.Fiery:
-                myBreathing = new FireBreathing(ID,HowMoneyBreathing,TrapType,EffectType,ChangeTime,BreathShootingContent,BreathDamage,BreathSpeed,BreathDefaultRotate,ExtinctionValue,collider);
+                myBreathing = new FireBreathing(ID,HowMoneyBreathing,TrapType,EffectType,ChangeTime,MinActiveLevel,MaxActiveLevel,BreathShootingContent,BreathDamage,BreathSpeed,BreathDefaultRotate,ExtinctionValue,collider);
                 break;
             case EffectType.Freezer:
-                myBreathing = new FreezeBreathing(ID, HowMoneyBreathing, TrapType, EffectType, ChangeTime, BreathShootingContent, BreathDamage, BreathSpeed, BreathDefaultRotate, ExtinctionValue, collider);
+                myBreathing = new FreezeBreathing(ID, HowMoneyBreathing, TrapType, EffectType, ChangeTime, MinActiveLevel, MaxActiveLevel, BreathShootingContent, BreathDamage, BreathSpeed, BreathDefaultRotate, ExtinctionValue, collider);
                 break;
             case EffectType.Posion:
-                myBreathing = new PosionBreathing(ID, HowMoneyBreathing, TrapType, EffectType, ChangeTime, BreathShootingContent, BreathDamage, BreathSpeed, BreathDefaultRotate, ExtinctionValue, collider);
+                myBreathing = new PosionBreathing(ID, HowMoneyBreathing, TrapType, EffectType, ChangeTime, MinActiveLevel, MaxActiveLevel, BreathShootingContent, BreathDamage, BreathSpeed, BreathDefaultRotate, ExtinctionValue, collider);
                 break;
             case EffectType.Slowdown:
                 //myBreathing = new SlowdownArrow();
@@ -36,6 +36,7 @@ public partial class BreathingBehaviour : TrapBehaviour, ICanDamage
                 break;
         }
         ParticleObject.GetComponent<ParticleSystem>().Stop();
+        SetTrap(myBreathing);
     }
 
     public Breathing GetBreathing()
@@ -128,7 +129,7 @@ public partial class BreathingBehaviour : TrapBehaviour
     public abstract class Breathing : Trap, ICanHoldMultipleObjects<BreathingParticleBehaviour>, ITrapMovable
     {
         public abstract GameObject EffectTheTarget(GameObject _arrow, Transform _targetTransform);
-        public Breathing(int _id, int _howManyBreaths, TrapType _trapType, EffectType _effectType, float _changeTime, Transform breathContent, float breathDamage, float breathSpeed, Quaternion defaultRotate, float extinctionValue, CapsuleCollider myCollider) : base(_id, _trapType, _effectType, _changeTime)
+        public Breathing(int _id, int _howManyBreaths, TrapType _trapType, EffectType _effectType, float _changeTime,int _minActiveLevel,int _maxActiveLevel, Transform breathContent, float breathDamage, float breathSpeed, Quaternion defaultRotate, float extinctionValue, CapsuleCollider myCollider) : base(_id, _trapType, _effectType, _changeTime,_minActiveLevel,_maxActiveLevel)
         {
             HowMany = _howManyBreaths;
             BreathContent = breathContent;
@@ -157,7 +158,7 @@ public partial class BreathingBehaviour : TrapBehaviour
     }
     public class FireBreathing : Breathing
     {
-        public FireBreathing(int _id, int _howManyBreaths, TrapType _trapType, EffectType _effectType, float _changeTime, Transform breathContent, float breathDamage, float breathSpeed, Quaternion defaultRotate, float extinctionValue, CapsuleCollider capsuleCollider) : base(_id, _howManyBreaths, _trapType, _effectType, _changeTime, breathContent, breathDamage, breathSpeed, defaultRotate, extinctionValue,capsuleCollider)
+        public FireBreathing(int _id, int _howManyBreaths, TrapType _trapType, EffectType _effectType, float _changeTime, int _minActiveLevel, int _maxActiveLevel, Transform breathContent, float breathDamage, float breathSpeed, Quaternion defaultRotate, float extinctionValue, CapsuleCollider capsuleCollider) : base(_id, _howManyBreaths, _trapType, _effectType, _changeTime,_minActiveLevel,_maxActiveLevel, breathContent, breathDamage, breathSpeed, defaultRotate, extinctionValue,capsuleCollider)
         {
         }
         public void Burn(VisualHandler _visualHandler)
@@ -173,7 +174,7 @@ public partial class BreathingBehaviour : TrapBehaviour
     }
     public class FreezeBreathing : Breathing
     {
-        public FreezeBreathing(int _id, int _howManyBreaths, TrapType _trapType, EffectType _effectType, float _changeTime, Transform breathContent, float breathDamage, float breathSpeed, Quaternion defaultRotate, float extinctionValue, CapsuleCollider capsuleCollider) : base(_id, _howManyBreaths, _trapType, _effectType, _changeTime, breathContent, breathDamage, breathSpeed, defaultRotate, extinctionValue, capsuleCollider)
+        public FreezeBreathing(int _id, int _howManyBreaths, TrapType _trapType, EffectType _effectType, float _changeTime, int _minActiveLevel,int _maxActiveLevel, Transform breathContent, float breathDamage, float breathSpeed, Quaternion defaultRotate, float extinctionValue, CapsuleCollider capsuleCollider) : base(_id, _howManyBreaths, _trapType, _effectType, _changeTime,_minActiveLevel,_maxActiveLevel, breathContent, breathDamage, breathSpeed, defaultRotate, extinctionValue, capsuleCollider)
         {
         }
 
@@ -190,7 +191,7 @@ public partial class BreathingBehaviour : TrapBehaviour
     }
     public class PosionBreathing : Breathing
     {
-        public PosionBreathing(int _id, int _howManyBreaths, TrapType _trapType, EffectType _effectType, float _changeTime, Transform breathContent, float breathDamage, float breathSpeed, Quaternion defaultRotate, float extinctionValue, CapsuleCollider capsuleCollider) : base(_id, _howManyBreaths, _trapType, _effectType, _changeTime, breathContent, breathDamage, breathSpeed, defaultRotate, extinctionValue, capsuleCollider)
+        public PosionBreathing(int _id, int _howManyBreaths, TrapType _trapType, EffectType _effectType, float _changeTime,int _minActiveLevel,int _maxActiveLevel, Transform breathContent, float breathDamage, float breathSpeed, Quaternion defaultRotate, float extinctionValue, CapsuleCollider capsuleCollider) : base(_id, _howManyBreaths, _trapType, _effectType, _changeTime,_minActiveLevel,_maxActiveLevel, breathContent, breathDamage, breathSpeed, defaultRotate, extinctionValue, capsuleCollider)
         {
         }
 

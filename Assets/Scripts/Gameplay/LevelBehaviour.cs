@@ -5,7 +5,7 @@ using Unity.Mathematics;
 
 public class LevelBehaviour : MonoBehaviour
 {
-    public int LevelID;
+    public int LevelID;    
     public Transform Spawnpoint;
 
     private LightsHolder MyLightHolder;
@@ -109,11 +109,15 @@ public class LevelBehaviour : MonoBehaviour
         //LevelObjemizin Ilk Childi EndGame Effectlerimiz icin gerekli olup, indexleri onemlidir.
         OpenExitGate();
 
+
         //EffectObjesini ac.
         StartCoroutine(PlayEffect());
 
         //Smooth sekilde isigi ac.
         StartCoroutine(IncreaseLightIntensity(transform.GetChild(0).GetChild((int)EndIndex.Light).GetComponent<Light>(), 200, 5));
+
+        //foreach (Transform item in MyTrapHolder.transform)
+        //    item.GetComponent<TrapBehaviour>().GetTrap().TrapCheck(LevelID + 1); => Trap min/max active Checking...
     }
 
     IEnumerator IncreaseLightIntensity(Light light, float targetValue, float time)

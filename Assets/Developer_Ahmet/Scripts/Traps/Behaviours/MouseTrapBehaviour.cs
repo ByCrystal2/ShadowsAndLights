@@ -6,7 +6,8 @@ public partial class MouseTrapBehaviour : TrapBehaviour
     MouseTrap Me;
     void Start()
     {
-        Me = new MouseTrap(ID, Damage, TrapType, EffectType, ChangeTime);
+        Me = new MouseTrap(ID, Damage, TrapType, EffectType, ChangeTime,MinActiveLevel,MaxActiveLevel);
+        SetTrap(Me);
     }
     private void OnTriggerEnter(Collider other)
     {
