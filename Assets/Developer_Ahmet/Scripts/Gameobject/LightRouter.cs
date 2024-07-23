@@ -55,9 +55,9 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
             barHandler.gameObject.SetActive(false);
             player.CollectObject(this, HandObject);
             IsCollected = true;
-            List<Collider> colliders = transform.GetComponentsInChildren<Collider>().ToList();
-            foreach (var item in colliders)
-                item.enabled = false;
+            //List<Collider> colliders = transform.GetComponentsInChildren<Collider>().ToList();
+            //foreach (var item in colliders)
+            //    item.enabled = false;
         }
         else if (_interactType == InteractType.Dropable)
         {
@@ -71,9 +71,9 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
             player.playerUI.CloseInteractUIS();
             PlaceOnGround(false);
 
-            List<Collider> colliders = transform.GetComponentsInChildren<Collider>().ToList();
-            foreach (var item in colliders)
-                item.enabled = true;
+            //List<Collider> colliders = transform.GetComponentsInChildren<Collider>().ToList();
+            //foreach (var item in colliders)
+            //    item.enabled = true;
         }
     }
 
