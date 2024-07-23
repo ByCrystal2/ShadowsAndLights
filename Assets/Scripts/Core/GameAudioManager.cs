@@ -29,11 +29,49 @@ public class GameAudioManager : MonoBehaviour
         AudioClip clip = Resources.Load<AudioClip>("Sounds/ButtonClick");
 
         AudioSource source = GetFreeAudioSource(true);
-        source.volume = volFinal;
-        source.pitch = 1f;
+        SetSourceDatas(source, volFinal, Vector3.zero, 1, 1.5f);
         source.PlayOneShot(clip);
 
         StartCoroutine(ReturnToPool(source, clip.length + 1));
+    }
+
+    public void PlayLightSourceSound(Vector3 _pos)
+    {
+        float targetVol = 0.3f;
+        float volGeneral = CalculateSoundPercentGeneral(targetVol);
+        float volFinal = CalculateSoundPercentSfx(volGeneral);
+
+        AudioClip clip = Resources.Load<AudioClip>("Sounds/LightSource");
+
+        AudioSource source = GetFreeAudioSource(false);
+        SetSourceDatas(source, volFinal, _pos, 1, 3f);
+        source.PlayOneShot(clip);
+
+        StartCoroutine(ReturnToPool(source, clip.length + 1));
+    }
+
+    public void PlayLightReflectSound(Vector3 _pos)
+    {
+        float targetVol = 0.5f;
+        float volGeneral = CalculateSoundPercentGeneral(targetVol);
+        float volFinal = CalculateSoundPercentSfx(volGeneral);
+
+        AudioClip clip = Resources.Load<AudioClip>("Sounds/LightReflect");
+
+        AudioSource source = GetFreeAudioSource(false);
+        SetSourceDatas(source, volFinal, _pos, 1, 3f);
+
+        source.PlayOneShot(clip);
+
+        StartCoroutine(ReturnToPool(source, clip.length + 1));
+    }
+
+    void SetSourceDatas(AudioSource source, float volFinal, Vector3 _pos, float _pitch, float _maxDistance)
+    {
+        source.transform.position = _pos;
+        source.maxDistance = _maxDistance;
+        source.volume = volFinal;
+        source.pitch = _pitch;
     }
 
     float CalculateSoundPercentGeneral(float _vol)
@@ -95,6 +133,7 @@ public class GameAudioManager : MonoBehaviour
         _s.outputAudioMixerGroup = null;
         _s.gameObject.SetActive(false);
     }
+
     public void PlayTrapSound(AudioSourceHelper _audioSourceHelper)
     {
         float targetVol = _audioSourceHelper.Volume; //0.75f;
@@ -104,9 +143,8 @@ public class GameAudioManager : MonoBehaviour
         AudioClip clip = Resources.Load<AudioClip>("Sounds/Traps/Trap_" + _audioSourceHelper.id.ToString());
 
         AudioSource source = GetFreeAudioSource(false);
-        source.transform.position = _audioSourceHelper.Position;
-        source.volume = volFinal;
-        source.pitch = _audioSourceHelper.Pitch;
+        SetSourceDatas(source, volFinal, _audioSourceHelper.Position, _audioSourceHelper.Pitch, 1);
+
         source.PlayOneShot(clip);
 
         StartCoroutine(ReturnToPool(source, clip.length + 1));

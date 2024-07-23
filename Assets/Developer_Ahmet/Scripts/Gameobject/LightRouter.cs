@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
@@ -54,26 +55,34 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
             barHandler.gameObject.SetActive(false);
             player.CollectObject(this, HandObject);
             IsCollected = true;
+            List<Collider> colliders = transform.GetComponentsInChildren<Collider>().ToList();
+            foreach (var item in colliders)
+                item.enabled = false;
         }
         else if (_interactType == InteractType.Dropable)
         {
-            //birakma islemleri...
             int _currentLv = 1; //Diger objeler icin onlarin classlarindan leveline erisebilirsin sonrasinda. su an tek tasinabilir obje Director.
             if(transform.TryGetComponent(out DirectorBehaviour b))
                 _currentLv = b.GetLevelID();
 
-            transform.SetParent(LightPuzzleHandler.instance.GetDirectorsParent(_currentLv));
+            transform.SetParent(LightPuzzleHandler.instance.GetDirectorsParent(_currentLv).transform);
             barHandler.gameObject.SetActive(false);
             IsCollected = false;
             player.playerUI.CloseInteractUIS();
             PlaceOnGround(false);
+
+            List<Collider> colliders = transform.GetComponentsInChildren<Collider>().ToList();
+            foreach (var item in colliders)
+                item.enabled = true;
         }
     }
 
     private void FixedUpdate()
     {
-        if(IsCollected)
-            PlaceOnGround(true);
+        if (IsCollected)
+        {
+            PlaceOnGround(false);
+        }
     }
 
     void PlaceOnGround(bool _useOffset)
