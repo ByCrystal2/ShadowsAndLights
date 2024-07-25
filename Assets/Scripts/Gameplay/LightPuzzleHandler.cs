@@ -38,6 +38,11 @@ public class LightPuzzleHandler : MonoBehaviour
         Levels = FindObjectsByType<LevelBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID).ToList();
     }
 
+    public void SetCurrentLevelThis(LevelBehaviour _level)
+    {
+        CurrentLevelHandler = _level;
+    }
+
     public LightsHolder GetLightsParent(int _level)
     {
         foreach (var item in Levels)

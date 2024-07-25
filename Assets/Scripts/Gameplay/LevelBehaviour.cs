@@ -62,8 +62,20 @@ public class LevelBehaviour : MonoBehaviour
             if (GameManager.instance == null)
                 Debug.LogError("Save alinamadi. => GameManager instance sahnede mevcut degil.");
 #endif
-            GameManager.instance?.AddALevelFinished(LevelID);
+            LevelSaveData saveLevel = new();
+            saveLevel.LevelID = LevelID;
+            saveLevel.isCompleted = true;
+            saveLevel.isChestOpened = true;
+            saveLevel.ObscurityPlaced = true;
+            saveLevel.levelObjects = GetCurrentObjectsWithStates();
+
+            GameManager.instance?.UpdateALevel(saveLevel, true);
         }
+    }
+
+    public void OnPlayerEnteredLevel()
+    {
+        LightPuzzleHandler.instance.SetCurrentLevelThis(this);
     }
 
     public void OpenExitGate()
@@ -192,10 +204,92 @@ public class LevelBehaviour : MonoBehaviour
         return MyTargetHolder;
     }
 
+    public List<LevelObject> GetCurrentObjectsWithStates()
+    {
+        List<LevelObject> _levelObjects = new();
+        //foreach (Transform item in MyLightHolder.transform)
+        //{
+        //    LightBehaviour currentLight = item.GetComponent<LightBehaviour>();
+        //    LevelObject theObject = new();
+        //    theObject.LevelID = LevelID;
+        //    theObject.ObjectID = currentLight.GetID();
+        //    theObject.TypeID = (int)ObjectType.LightSource;
+        //    theObject.Position = item.position;
+        //    theObject.Rotation = item.eulerAngles;
+        //    theObject.Scale = item.localScale;
+
+        //    _levelObjects.Add(theObject);
+        //}
+
+        foreach (Transform item in MyDirectorHolder.transform)
+        {
+            DirectorBehaviour currentLight = item.GetComponent<DirectorBehaviour>();
+            LevelObject theObject = new();
+            theObject.LevelID = LevelID;
+            theObject.ObjectID = currentLight.GetID();
+            theObject.TypeID = (int)ObjectType.Director;
+            theObject.Position = item.position;
+            theObject.Rotation = item.eulerAngles;
+            theObject.Scale = item.localScale;
+
+            _levelObjects.Add(theObject);
+        }
+
+        foreach (Transform item in MyTrapHolder.transform)
+        {
+            TrapBehaviour currentLight = item.GetComponent<TrapBehaviour>();
+            LevelObject theObject = new();
+            theObject.LevelID = LevelID;
+            theObject.ObjectID = currentLight.GetID();
+            theObject.TypeID = (int)ObjectType.Trap;
+            theObject.Position = item.position;
+            theObject.Rotation = item.eulerAngles;
+            theObject.Scale = item.localScale;
+
+            _levelObjects.Add(theObject);
+        }
+
+        //foreach (Transform item in MyTargetHolder.transform)
+        //{
+        //    TargetBehaviour currentLight = item.GetComponent<TargetBehaviour>();
+        //    LevelObject theObject = new();
+        //    theObject.LevelID = LevelID;
+        //    theObject.ObjectID = currentLight.GetID();
+        //    theObject.TypeID = (int)ObjectType.Target;
+        //    theObject.Position = item.position;
+        //    theObject.Rotation = item.eulerAngles;
+        //    theObject.Scale = item.localScale;
+
+        //    _levelObjects.Add(theObject);
+        //}
+
+        return _levelObjects;
+    }
+
+    public void OnLevelObjectChanged()
+    {
+        LevelSaveData saveLevel = new();
+        saveLevel.LevelID = LevelID;
+        saveLevel.isCompleted = true;
+        saveLevel.isChestOpened = true;
+        saveLevel.ObscurityPlaced = true;
+        saveLevel.levelObjects = GetCurrentObjectsWithStates();
+
+        GameManager.instance?.UpdateALevel(saveLevel, false);
+    }
+
     public enum EndIndex
     {
         FloorObject,
         EffectParent,
         Light,
+    }
+
+    public enum ObjectType
+    {
+        LightSource,
+        Director,
+        Trap,
+        Target,
     }
 }

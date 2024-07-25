@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,11 +55,17 @@ public class TrapBehaviour : MonoBehaviour
     {
         AudioSourceHelper.Position = transform.position;
     }
+    public int GetID()
+    {
+        return ID;
+    }
+
     public void SetTrap(Trap _trap) => trap = _trap;
     public Trap GetTrap() => trap;
     public void SetLevel(int _level)
     {
         Level = _level;
+        ID = transform.GetSiblingIndex();
         trap.MinActiveLevel = _level - MinActiveLevel > 0 ? _level - MinActiveLevel : 0;
         trap.MaxActiveLevel = _level + MaxActiveLevel < LightPuzzleHandler.instance.PuzzleRoomCount ? _level + MaxActiveLevel : LightPuzzleHandler.instance.PuzzleRoomCount;
     }

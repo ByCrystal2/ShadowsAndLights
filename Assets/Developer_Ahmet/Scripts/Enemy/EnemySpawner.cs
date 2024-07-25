@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public int LevelID;
     public List<Enemy> Enemys = new List<Enemy>();
     public static EnemySpawner instance { get; private set; }
     private void Awake()
@@ -33,7 +34,7 @@ public class EnemySpawner : MonoBehaviour
     }
     public (float health, int level, float deathGold) CalculateEnemyValues(float _health, int _level, float _deathGold)
     {
-        int gameLevel = GameManager.instance.currentActiveSaveData.Level;
+        int gameLevel = LevelID;
         return ((_health * gameLevel), (_level * gameLevel), (_deathGold + gameLevel));
     }
 }

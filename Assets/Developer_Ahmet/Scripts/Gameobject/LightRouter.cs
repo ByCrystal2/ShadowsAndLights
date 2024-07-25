@@ -71,6 +71,7 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
             player.playerUI.CloseInteractUIS();
             PlaceOnGround(false);
 
+            LightPuzzleHandler.instance.CurrentLevelHandler.OnLevelObjectChanged();
             //List<Collider> colliders = transform.GetComponentsInChildren<Collider>().ToList();
             //foreach (var item in colliders)
             //    item.enabled = true;

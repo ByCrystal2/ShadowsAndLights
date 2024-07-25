@@ -28,6 +28,7 @@ public class DirectorBehaviour : MonoBehaviour
     public float nextUpdate = 0;
 
     private int Level;
+    private int ObjectID;
     private float SoundTimer;
     void Awake()
     {
@@ -582,6 +583,7 @@ public class DirectorBehaviour : MonoBehaviour
     public void SetLevel(int _level)
     {
         Level = _level;
+        ObjectID = transform.GetSiblingIndex();
     }
 
     public Vector3 ReflectRay(Vector3 incomingDirection, Vector3 normal)
@@ -628,5 +630,10 @@ public class DirectorBehaviour : MonoBehaviour
     {
         public LightSourceHold lightSourceHold;
         public LightPuzzleHandler.LightColor lightColor;
+    }
+
+    public int GetID()
+    {
+        return ObjectID;
     }
 }

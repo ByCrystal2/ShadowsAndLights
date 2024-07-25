@@ -18,6 +18,7 @@ public class TargetBehaviour : MonoBehaviour
 
     private float WaitUntil = 3f;
     private int Level;
+    private int ObjectID;
     public void AddLightsOn(LightPuzzleHandler.LightColor _hitLight, Transform _lightOwner)
     {
         float timer = Time.time;
@@ -183,7 +184,7 @@ public class TargetBehaviour : MonoBehaviour
     public void SetLevel(int _level)
     {
         Level = _level;
-
+        ObjectID = transform.GetSiblingIndex();
         int r = 0;
         int g = 0;
         int b = 0;
@@ -207,6 +208,11 @@ public class TargetBehaviour : MonoBehaviour
         public Transform Source;
         public LightPuzzleHandler.LightColor LightColor;
         public float LifeTime;
+    }
+
+    public int GetID()
+    {
+        return ObjectID;
     }
 }
 

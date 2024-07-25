@@ -14591,8 +14591,7 @@ MonoBehaviour:
     LastSave: 0
     Gold: 0
     Gem: 0
-    Level: 1
-    FinishedLevels: 
+    LevelDatas: []
   isLoadedGame: 0
   LoadCompleted: 0
 --- !u!4 &866729983
@@ -20085,11 +20084,11 @@ MonoBehaviour:
     _direction: {x: -0.07263398, y: -0.00000023930295, z: -0.9973587}
     _hitDirector: {fileID: 6635828165442978084}
   BlockByMix:
-    masterMixed: 1
-    blockedUntil: 793.73126
-    bounceAfter: 0
-    OverridedDirection: {x: -0.07263398, y: -0.00000023930295, z: -0.9973587}
-    Seperated: 0
+    masterMixed: 0
+    blockedUntil: 7321.3535
+    bounceAfter: 1
+    OverridedDirection: {x: 0, y: 0, z: 0}
+    Seperated: 1
 --- !u!120 &1273125901
 LineRenderer:
   serializedVersion: 2
@@ -30678,7 +30677,7 @@ MonoBehaviour:
     _hitDirector: {fileID: 862949125}
   BlockByMix:
     masterMixed: 0
-    blockedUntil: 793.73126
+    blockedUntil: 7321.3535
     bounceAfter: 1
     OverridedDirection: {x: 0, y: 0, z: 0}
     Seperated: 0

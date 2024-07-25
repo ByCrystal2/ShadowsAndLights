@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -59,8 +60,7 @@ public class GameManager : MonoBehaviour
         savedata.Gem = currentActiveSaveData.Gem;
 
         //Level
-        savedata.Level = currentActiveSaveData.Level;
-        savedata.FinishedLevels = currentActiveSaveData.FinishedLevels;
+        savedata.LevelDatas = currentActiveSaveData.LevelDatas;
 
         currentActiveSaveData = savedata;
 
@@ -218,13 +218,30 @@ public class GameManager : MonoBehaviour
         return 10;
     }
 
-    public void AddALevelFinished(int _id)
+    public void UpdateALevel(LevelSaveData _levelData, bool _endLevel)
     {
-        if (!currentActiveSaveData.FinishedLevels.Contains(_id))
+        if (_levelData == null || _levelData.LevelID <= 0)
         {
-            currentActiveSaveData.FinishedLevels.Add(_id);
-            SaveGame();
+            Debug.LogError("Kaydedilmeye calisan leveldata verileri yanlis. Kaydetme basarisiz.");
+            return;
         }
+
+        bool contains = false;
+        int length = currentActiveSaveData.LevelDatas.Count;
+        for (int i = 0; i < length; i++)
+        {
+            if (currentActiveSaveData.LevelDatas[i].LevelID == _levelData.LevelID)
+            {
+                contains = true; //Eger zaten listede var ise update et, yok ise ekle.
+                currentActiveSaveData.LevelDatas[i] = new(_levelData);
+            }
+        }
+
+        if (!contains) //Eger listede mevcut degil ise yeni save datalari ekle.
+            currentActiveSaveData.LevelDatas.Add(_levelData); 
+
+        if(_endLevel)
+            SaveGame();
     }
 }
 
@@ -243,8 +260,7 @@ public class PlayerSaveData
     public float Gem;
 
     [Header("Levels")]
-    public int Level; //Last level we entered.
-    public List<int> FinishedLevels;
+    public List<LevelSaveData> LevelDatas;
 
     public void ResetSave()
     {
@@ -255,6 +271,60 @@ public class PlayerSaveData
         UniqueSaveFolderName = "";
         Gold = 0;
         Gem = 0;
-        FinishedLevels = new();
+        LevelDatas = new();
+    }
+}
+
+[System.Serializable]
+public class LevelSaveData
+{
+    public int LevelID;
+    public bool isCompleted; //Kapi acik,
+    public bool isChestOpened; //Sandik toplandi eger varsa
+    public bool ObscurityPlaced; //Aku objesi bu levele yerlestirildi. // eger hic bir levelde degil ise envanterdedir seklinde denetlenebilir.
+
+    public List<LevelObject> levelObjects;
+
+    public LevelSaveData()
+    {
+
+    }
+
+    public LevelSaveData(LevelSaveData _levelSaveData)
+    {
+        LevelID = _levelSaveData.LevelID;
+        isCompleted = _levelSaveData.isCompleted;
+        isChestOpened = _levelSaveData.isChestOpened;
+        ObscurityPlaced = _levelSaveData.ObscurityPlaced;
+
+        levelObjects = new();
+        if(_levelSaveData.levelObjects != null)
+            foreach (var item in _levelSaveData.levelObjects)
+                levelObjects.Add(new LevelObject(item));
+    }
+}
+
+[System.Serializable]
+public class LevelObject
+{
+    public int LevelID;
+    public int ObjectID;
+    public int TypeID; //0 Isik kaynagi /-/ 1 Yonlendirici /-/ 2 Tuzaklar /-/ 3 Hedefler
+    public Vector3 Position;
+    public Vector3 Rotation;
+    public Vector3 Scale;
+
+    public LevelObject()
+    {
+
+    }
+
+    public LevelObject(LevelObject _levelObject)
+    {
+        LevelID = _levelObject.LevelID;
+        TypeID = _levelObject.TypeID;
+        Position = _levelObject.Position;
+        Rotation = _levelObject.Rotation;
+        Scale = _levelObject.Scale;
     }
 }

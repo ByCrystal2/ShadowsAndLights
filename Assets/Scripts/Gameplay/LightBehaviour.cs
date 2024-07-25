@@ -38,6 +38,7 @@ public class LightBehaviour : MonoBehaviour
     public BlockedData BlockByMix;
 
     private int Level;
+    private int ObjectID;
     private Vector3 OverridedStartDirection = Vector3.zero;
     private float SoundTimer;
 
@@ -547,6 +548,7 @@ public class LightBehaviour : MonoBehaviour
     public void SetLevel(int _level)
     {
         Level = _level;
+        ObjectID = transform.GetSiblingIndex();
     }
 
     [System.Serializable]
@@ -642,6 +644,11 @@ public class LightBehaviour : MonoBehaviour
         }
     }
 #endif
+
+    public int GetID()
+    {
+        return ObjectID;
+    }
 }
 
 
