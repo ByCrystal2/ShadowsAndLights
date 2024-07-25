@@ -3,7 +3,7 @@ using StateMachineSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[RequireComponent(typeof(PlayerUI))]
+[RequireComponent(typeof(PlayerUI),typeof(InventoryHandler))]
 public class CharacterBehaviour : MonoBehaviour
 {
     [HideInInspector] public PlayerUI playerUI;
@@ -11,12 +11,13 @@ public class CharacterBehaviour : MonoBehaviour
     [SerializeField] Transform collectableItemsContent;
     
     [SerializeField] private CarryState carryState;
+    InventoryHandler inventory;
     private void Awake()
     {
         carryState = CarryState.PlayerFree;
         stateMachine = new StateMachine();
-        playerUI = GetComponent<PlayerUI>();
-        
+        playerUI = GetComponent<PlayerUI>();    
+        inventory = GetComponent<InventoryHandler>();
     }
     public void StatesInit()
     {
@@ -55,7 +56,7 @@ public class CharacterBehaviour : MonoBehaviour
     }
     public void CollectObject(ICollectable _collectableObj, GameObject _obj)
     {
-        if (HandsFull()) return;
+        
         if (_collectableObj.IsCollected)
         {
             Debug.Log("Obje zaten alinmis. Obje Name => " + _obj.name);
@@ -63,6 +64,7 @@ public class CharacterBehaviour : MonoBehaviour
         }
         if (_collectableObj is ICollectHand)
         {
+            if (HandsFull()) return;
             _obj.transform.SetParent(collectableItemsContent);
             Transform objTrans = _obj.transform;
             objTrans.localPosition = Vector3.zero;
@@ -70,6 +72,11 @@ public class CharacterBehaviour : MonoBehaviour
             playerUI.CloseInteractUIS();
             playerUI.ShowDropable();
             Debug.Log(_obj.name + " adli obje alindi.");
+        }
+        else if (_collectableObj is ICollectInventory inventoryObj)
+        {
+            inventory.AddInventory(inventoryObj);
+            _obj.gameObject.SetActive(false);
         }
         _collectableObj.IsCollected = true;
     }
@@ -80,7 +87,7 @@ public class CharacterBehaviour : MonoBehaviour
     float targetTouchTime = 1.5f, currentTouchTime = 0;
     private Vector2 lastTouchPosition;
     IInteractable lastInteractObject;
-    IInteractable currentHandObject;
+    IInteractable currentInteractObject;
     IRotateAnObject currentRotatingObject;
     bool isRotatableObjRotating = true;
     float waitSecondProcess = 2f;
@@ -94,7 +101,10 @@ public class CharacterBehaviour : MonoBehaviour
         if (Input.touchCount > 0 && waitSecondProcess <= 0)
         {
             if(carryState != CarryState.PlayerRotate && carryState != CarryState.PlayerMove)
+            {
                 HandleTouchInput();
+                CollectInventoryTouchInput();
+            }
         }
         else
         {
@@ -111,9 +121,9 @@ public class CharacterBehaviour : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, 100, LightPuzzleHandler.LayerMaskHelper.CarryLayer, QueryTriggerInteraction.Ignore))
             {
                 GameObject hitObject = hit.collider.gameObject;
-                if (currentHandObject != null)
+                if (currentInteractObject != null)
                 {
-                    if (currentHandObject is ICollectHand handler)
+                    if (currentInteractObject is ICollectHand handler)
                     {
                         if (hitObject.GetInstanceID() == handler.HandObject.GetInstanceID())
                         {
@@ -137,11 +147,12 @@ public class CharacterBehaviour : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, 100))
             {
                 GameObject hitObject = hit.collider.gameObject;
-                if (currentHandObject is ICollectHand handler)
+                if (currentInteractObject is ICollectHand handler)
                 {
                     SetStateForce(CarryState.PlayerRotate);
                     RotateObject(touch);
-                    handler.barHandler.gameObject.SetActive(false);
+                    ICollectable collectable = (ICollectable)handler;
+                    collectable.barHandler.gameObject.SetActive(false);
                 }
             }
         }
@@ -153,7 +164,7 @@ public class CharacterBehaviour : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hitNew, 100, LightPuzzleHandler.LayerMaskHelper.CarryLayer, QueryTriggerInteraction.Ignore))
         {
             GameObject hitObject = hitNew.collider.gameObject;
-            if (currentHandObject is ICollectHand handler)
+            if (currentInteractObject is ICollectHand handler)
             {
                 if (handler.HandObject.GetInstanceID() != hitObject.GetInstanceID())
                 {
@@ -214,15 +225,81 @@ public class CharacterBehaviour : MonoBehaviour
             Handheld.Vibrate();
             Debug.Log("Telefon obje birakildigi icin titredi.");
         }        
-        CollectHandControl(interact);
+        CollectControl(interact);
         
     }
-    public void CollectHandControl(IInteractable interact)
+    private void CollectInventoryTouchInput()
     {
-        if (interact is ICollectHand collectHand)
+        Touch touch = Input.GetTouch(0);
+        Ray ray = Camera.main.ScreenPointToRay(touch.position);
+        if (Physics.Raycast(ray, out RaycastHit hitNew, 100, LightPuzzleHandler.LayerMaskHelper.CarryLayer, QueryTriggerInteraction.Ignore))
         {
-            if (!collectHand.barHandler.gameObject.activeSelf)
-                collectHand.barHandler.gameObject.SetActive(true);
+            GameObject hitObject = hitNew.collider.gameObject;
+            //if (currentInteractObject is ICollectInventory handler)
+            //{
+            //    if (handler..GetInstanceID() != hitObject.GetInstanceID())
+            //    {
+            //        Debug.Log($"Hit object: {hitObject.name} on layer {hitObject.layer}");
+            //        Debug.Log("handler.HandObject: " + handler.HandObject.name + " / hit: " + hitObject.name);
+            //        Debug.Log("Zaten bir obje tasiyorken, farkli bir objeye dokunuldu.");
+            //        return;
+            //    }
+            //}
+            if (Vector3.Distance(transform.position, hitObject.transform.position) > 3f) return;
+            Debug.Log("Interactable object name => " + hitObject.name);
+
+            currentTouchTime += Time.deltaTime;
+            IInteractable interact = hitObject.GetComponent<IInteractable>();
+            if (interact != null)
+            {
+                if (HaveItemInInventory((ICollectInventory)interact))
+                {
+                    SetStateForce(CarryState.PlayerCarryEnd);
+                }
+                else
+                {
+                    Vector3 direction = hitNew.collider.transform.position - transform.position;
+                    direction.y = 0;
+                    Quaternion targetRotation = Quaternion.LookRotation(direction);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2);
+                    SetStateForce(CarryState.PlayerCarryBegin);
+                }
+                lastInteractObject = interact;
+                InventoryInteractableObject(interact, touch);
+            }
+        }
+        else
+        {
+            SetStateForce(carryState == CarryState.PlayerMove ? CarryState.PlayerMove : CarryState.PlayerFree);
+        }
+    }
+    private void InventoryInteractableObject(IInteractable interact, Touch touch)
+    {
+        MainUIManager.instance.LockPlayer();
+        if (touch.phase == TouchPhase.Moved) return;
+        if (!HaveItemInInventory((ICollectInventory)interact) && currentTouchTime >= targetTouchTime)
+        {
+            PickUpObject(interact);
+            waitSecondProcess = 1f;
+            Handheld.Vibrate();
+            Debug.Log("Telefon obje alindigi icin titredi.");
+        }
+        //else if (HaveItemInInventory((ICollectInventory)interact) && currentTouchTime >= targetTouchTime / 2)
+        //{
+        //    DropObject(interact);
+        //    waitSecondProcess = 1f;
+        //    Handheld.Vibrate();
+        //    Debug.Log("Telefon obje birakildigi icin titredi.");
+        //}
+        //CollectControl(interact);
+
+    }
+    public void CollectControl(IInteractable interact)
+    {
+        if (interact is ICollectable collect)
+        {
+            if (!collect.barHandler.gameObject.activeSelf)
+                collect.barHandler.gameObject.SetActive(true);
 
             float percentage = 0;
             int barValue = Mathf.RoundToInt(percentage * 100);
@@ -230,7 +307,7 @@ public class CharacterBehaviour : MonoBehaviour
             Color bgColor = Color.white;
             Color fillerColor = Color.green;
             float speed;
-            if (!HandsFull())
+            if (!HandsFull() || !HaveItemInInventory((ICollectInventory)interact))
             {
                 speed = 5;
                 percentage = Mathf.Clamp01(currentTouchTime / targetTouchTime);
@@ -254,7 +331,7 @@ public class CharacterBehaviour : MonoBehaviour
             }
 
             // Set the bar smoothly
-            collectHand.barHandler.SetBar(bgColor, fillerColor, percentage, speed);
+            collect.barHandler.SetBar(bgColor, fillerColor, percentage, speed);
         }
     }
     private void HandleRotatableObject(IRotateAnObject rotateObj)
@@ -270,15 +347,19 @@ public class CharacterBehaviour : MonoBehaviour
             //}
         }
     }
-
+    bool HaveItemInInventory(ICollectInventory _item)
+    {
+        if (_item == null) return true;
+        return inventory.IsItemInInventory(_item);
+    }
     private void PickUpObject(IInteractable interact)
     {
         SetStateForce(CarryState.PlayerCarry);
-        isRotatableObjRotating = false;
         interact.Interact(InteractType.Pickable);
-        currentHandObject = interact;
-        if (currentHandObject is ICollectHand handler)
+        currentInteractObject = interact;
+        if (currentInteractObject is ICollectHand handler)
         {
+            isRotatableObjRotating = false;
             Renderer[] childRenderers = handler.HandObject.GetComponentsInChildren<Renderer>();
             foreach (var item in childRenderers)
                 item.gameObject.layer = LayerMask.NameToLayer("PlayerCarry");
@@ -292,13 +373,13 @@ public class CharacterBehaviour : MonoBehaviour
         SetStateForce(carryState == CarryState.PlayerMove ? CarryState.PlayerMove : CarryState.PlayerFree);
         isRotatableObjRotating = false;
         interact.Interact(InteractType.Dropable);
-        if (currentHandObject is ICollectHand handler)
+        if (currentInteractObject is ICollectHand handler)
         {
             Renderer[] childRenderers = handler.HandObject.GetComponentsInChildren<Renderer>();
             foreach (var item in childRenderers)
                 item.gameObject.layer = LayerMask.NameToLayer("PlayerIgnore");
         }
-        currentHandObject = null;
+        currentInteractObject = null;
         ResetTouchState();
         MainUIManager.instance.UnLockPlayer();
     }
@@ -323,7 +404,7 @@ public class CharacterBehaviour : MonoBehaviour
     private void ResetTouchState()
     {
         SetStateForce(carryState == CarryState.PlayerMove ? CarryState.PlayerMove : CarryState.PlayerFree);
-        if (lastInteractObject is ICollectHand collectHand)
+        if (lastInteractObject is ICollectable collectHand)
         {
             if (collectHand.barHandler.gameObject.activeSelf)
             {

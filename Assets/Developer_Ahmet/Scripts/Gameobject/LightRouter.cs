@@ -6,13 +6,13 @@ using UnityEngine;
 public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectHand, IRotateAnObject
 {
     [SerializeField] RotateHandler RotateObject;
-    public CollectType CollectType { get; set; }
+    public CollectHandType CollectType { get; set; }
     public GameObject HandObject { get; set; }
     public bool IsCollected { get; set; }
     public IRotatable RotatableObject { get { return RotateObject; } set { } }
 
     public List<InteractType> InteractTypes { get; set; } = new List<InteractType>();
-    public DirectorBarHandler barHandler { get; set; }
+    public InteractableBarHandler barHandler { get; set; }
 
     CharacterBehaviour player;
     private void Awake()
@@ -20,7 +20,7 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
         player = GameObject.FindWithTag("Animal").GetComponent<CharacterBehaviour>();
         HandObject = gameObject;
         InteractTypes = new List<InteractType> { InteractType.Pickable, InteractType.Dropable, InteractType.Rotatable };
-        barHandler = GetComponentInChildren<DirectorBarHandler>();
+        barHandler = GetComponentInChildren<InteractableBarHandler>();
         barHandler.gameObject.SetActive(false);
     }
 
@@ -71,7 +71,7 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
             player.playerUI.CloseInteractUIS();
             PlaceOnGround(false);
 
-            LightPuzzleHandler.instance.CurrentLevelHandler.OnLevelObjectChanged();
+            //LightPuzzleHandler.instance.CurrentLevelHandler.OnLevelObjectChanged(); // => null hatasý geliyor diye yorum satiri yaptim. #Ahmet
             //List<Collider> colliders = transform.GetComponentsInChildren<Collider>().ToList();
             //foreach (var item in colliders)
             //    item.enabled = true;
@@ -98,28 +98,37 @@ public class LightRouter : MonoBehaviour, ICollectable, IInteractable, ICollectH
 }
 public interface ICollectable
 {
-    public CollectType CollectType { get; set; }
+    public CollectHandType CollectType { get; set; }
     public bool IsCollected { get; set; }
     void Collect();
-}
-public interface ICollectInventory
-{
-
+    public InteractableBarHandler barHandler { get; set; }
 }
 public interface ICollectHand
 {
-    public GameObject HandObject { get; set; }
-    public DirectorBarHandler barHandler { get; set; }
+    public GameObject HandObject { get; set; }    
 }
-
+public interface ICollectInventory
+{
+    CollectInventoryType InventoryType { get; set; }
+    void AddInventory(InventoryHandler inventoryHandler);
+}
 public interface IInteractable
 {
     public List<InteractType> InteractTypes { get; set; }
     void Interact(InteractType _interactType);
 }
-public enum CollectType
+public interface IEnterAnySlotable
 {
-    LightRouter
+    void EnterSlot(SlotHandler _slotHandler);
+}
+public enum CollectHandType
+{
+    LightRouter,
+    Battery
+}
+public enum CollectInventoryType
+{
+    Battery
 }
 public enum InteractType
 {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DirectorBarHandler : MonoBehaviour
+public class InteractableBarHandler : MonoBehaviour
 {
     [SerializeField] Image bg;
     [SerializeField] Image filler;

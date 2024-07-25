@@ -421,7 +421,7 @@ GameObject:
   - component: {fileID: 3634733817554195219}
   - component: {fileID: 6635372091089334557}
   - component: {fileID: 8516046480286191358}
-  - component: {fileID: 140202519720668810}
+  - component: {fileID: 8317885845434159053}
   m_Layer: 29
   m_Name: BarCanvas
   m_TagString: Untagged
@@ -512,7 +512,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &140202519720668810
+--- !u!114 &8317885845434159053
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -521,7 +521,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8861738028683314929}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc2d190981462684785149d04d2bca15, type: 3}
+  m_Script: {fileID: 11500000, guid: ce6ac8c40fb6f14468a0a2922d7fbbf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bg: {fileID: 7608881570175469470}
