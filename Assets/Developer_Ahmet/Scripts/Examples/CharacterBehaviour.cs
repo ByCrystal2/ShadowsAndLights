@@ -57,7 +57,7 @@ public class CharacterBehaviour : MonoBehaviour
     public void CollectObject(ICollectable _collectableObj, GameObject _obj)
     {
         
-        if (_collectableObj.IsCollected)
+        if (_collectableObj is ICollectHand && _collectableObj.IsCollected)
         {
             Debug.Log("Obje zaten alinmis. Obje Name => " + _obj.name);
             return;
@@ -179,6 +179,7 @@ public class CharacterBehaviour : MonoBehaviour
 
             currentTouchTime += Time.deltaTime;
             IInteractable interact = hitObject.GetComponent<IInteractable>();
+            if (interact is ICollectable collectable && collectable.IsCollected) return;
             if (interact != null)
             {
                 if (HandsFull())
@@ -250,9 +251,11 @@ public class CharacterBehaviour : MonoBehaviour
 
             currentTouchTime += Time.deltaTime;
             IInteractable interact = hitObject.GetComponent<IInteractable>();
+            if (interact is ICollectable collectable && collectable.IsCollected) return;
             if (interact != null)
             {
-                if (HaveItemInInventory((ICollectInventory)interact))
+                ICollectInventory inventoryInteract = interact as ICollectInventory;
+                if (inventoryInteract != null && HaveItemInInventory(inventoryInteract))
                 {
                     SetStateForce(CarryState.PlayerCarryEnd);
                 }
@@ -265,7 +268,7 @@ public class CharacterBehaviour : MonoBehaviour
                     SetStateForce(CarryState.PlayerCarryBegin);
                 }
                 lastInteractObject = interact;
-                InventoryInteractableObject(interact, touch);
+                InventoryInteractableObject(inventoryInteract, touch);
             }
         }
         else
@@ -273,13 +276,13 @@ public class CharacterBehaviour : MonoBehaviour
             SetStateForce(carryState == CarryState.PlayerMove ? CarryState.PlayerMove : CarryState.PlayerFree);
         }
     }
-    private void InventoryInteractableObject(IInteractable interact, Touch touch)
+    private void InventoryInteractableObject(ICollectInventory inventoryInteract, Touch touch)
     {
         MainUIManager.instance.LockPlayer();
         if (touch.phase == TouchPhase.Moved) return;
-        if (!HaveItemInInventory((ICollectInventory)interact) && currentTouchTime >= targetTouchTime)
+        if (!HaveItemInInventory(inventoryInteract) && currentTouchTime >= targetTouchTime)
         {
-            PickUpObject(interact);
+            PickUpObject(inventoryInteract as IInteractable);
             waitSecondProcess = 1f;
             Handheld.Vibrate();
             Debug.Log("Telefon obje alindigi icin titredi.");
@@ -307,7 +310,8 @@ public class CharacterBehaviour : MonoBehaviour
             Color bgColor = Color.white;
             Color fillerColor = Color.green;
             float speed;
-            if (!HandsFull() || !HaveItemInInventory((ICollectInventory)interact))
+
+            if (!HandsFull() || (interact is ICollectInventory s && !HaveItemInInventory(s)))
             {
                 speed = 5;
                 percentage = Mathf.Clamp01(currentTouchTime / targetTouchTime);

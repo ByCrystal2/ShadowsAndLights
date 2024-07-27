@@ -194,23 +194,24 @@ public class LightPuzzleHandler : MonoBehaviour
     {
         private const string PlayerLayer = "Animal";
         private const string DirectorLayer = "Director";
+        private const string BatteryLayer = "Battery";
         private const string PlayerIgnoreLayer = "PlayerIgnore";
         private const string PlayerCarryLayer = "PlayerCarry";
 
         public static LayerMask LightLayer { get; private set; }
         public static LayerMask CarryLayer { get; private set; }
-
         public static LayerMask DirectorFloor { get; private set; }
 
         static LayerMaskHelper()
         {
             int excludeLayer = LayerMask.NameToLayer(DirectorLayer);
             int playerLayer = LayerMask.NameToLayer(PlayerLayer);
-            int excludeLayerMask = (1 << excludeLayer) | ( 1 << playerLayer );
+            int excludeLayerMask = (1 << excludeLayer) | (1 << playerLayer);
             LightLayer = ~excludeLayerMask;
 
             int directorLayer = LayerMask.NameToLayer(DirectorLayer);
-            CarryLayer = 1 << directorLayer;
+            int batteryLayer = LayerMask.NameToLayer(BatteryLayer); // Yeni eklendi
+            CarryLayer = (1 << directorLayer) | (1 << batteryLayer); // Güncellendi
 
             int playerIgnoreLayer = LayerMask.NameToLayer(PlayerIgnoreLayer);
             int playerCarryLayer = LayerMask.NameToLayer(PlayerCarryLayer);
@@ -221,8 +222,7 @@ public class LightPuzzleHandler : MonoBehaviour
         }
     }
 
-
-public enum LightColor
+    public enum LightColor
     {
         White,
         Red,

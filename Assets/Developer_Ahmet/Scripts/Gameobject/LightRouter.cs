@@ -109,6 +109,7 @@ public interface ICollectHand
 }
 public interface ICollectInventory
 {
+    public Sprite MySprite { get; }
     CollectInventoryType InventoryType { get; set; }
     void AddInventory(InventoryHandler inventoryHandler);
 }
@@ -117,8 +118,8 @@ public interface IInteractable
     public List<InteractType> InteractTypes { get; set; }
     void Interact(InteractType _interactType);
 }
-public interface IEnterAnySlotable
-{
+public interface IEnterAnySlotable{
+    
     void EnterSlot(SlotHandler _slotHandler);
 }
 public enum CollectHandType

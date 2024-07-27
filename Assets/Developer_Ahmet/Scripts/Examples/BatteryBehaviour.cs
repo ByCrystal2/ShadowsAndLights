@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class BatteryBehaviour : MonoBehaviour, IInteractable, ICollectable, ICollectInventory, IEnterAnySlotable
 {
+    [SerializeField] Sprite mySprite;
     public List<InteractType> InteractTypes { get; set; } = new List<InteractType>() { InteractType.Pickable, InteractType.Dropable};
     public CollectHandType CollectType { get; set; } = CollectHandType.Battery;
     public bool IsCollected { get; set; }
     public InteractableBarHandler barHandler { get; set; }
     public CollectInventoryType InventoryType { get; set; } = CollectInventoryType.Battery;
+    public Sprite MySprite { get { return mySprite; } }
 
     CharacterBehaviour player;
     private void Awake()
@@ -29,6 +31,7 @@ public class BatteryBehaviour : MonoBehaviour, IInteractable, ICollectable, ICol
             Debug.LogError(_interactType + " etkilesimi " + gameObject.name + " adli bu objede bulunmamaktadir.");
             return;
         }
+        Debug.Log($"This object interacted({_interactType}). Object name is {name}");
         if (_interactType == InteractType.Pickable)
         {
             //barHandler.gameObject.SetActive(false);
@@ -38,6 +41,7 @@ public class BatteryBehaviour : MonoBehaviour, IInteractable, ICollectable, ICol
         else if (_interactType == InteractType.Dropable)
         {
             int _currentLv = 1; //Diger objeler icin onlarin classlarindan leveline erisebilirsin sonrasinda. su an tek tasinabilir obje Director.
+            IsCollected = false;    
 
         }
     }
