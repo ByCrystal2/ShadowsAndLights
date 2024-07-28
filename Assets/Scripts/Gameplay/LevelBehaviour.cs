@@ -12,7 +12,12 @@ public class LevelBehaviour : MonoBehaviour
     private DirectorsHolder MyDirectorHolder;
     private TrapsHolder MyTrapHolder;
     private TargetHolder MyTargetHolder;
+    private SlotHandler BatterySlot;
 
+    private BatteryBehaviour Battery;
+
+    private bool BatteryCharging;
+    private float batteryChargeAmount;
     private bool isCompleted;
 
     public void Start()
@@ -21,6 +26,9 @@ public class LevelBehaviour : MonoBehaviour
         MyDirectorHolder = GetComponentInChildren<DirectorsHolder>();
         MyTrapHolder = GetComponentInChildren<TrapsHolder>();
         MyTargetHolder = GetComponentInChildren<TargetHolder>();
+        BatterySlot = GetComponentInChildren<SlotHandler>();
+
+        BatterySlot.SetLevelID(LevelID);
 
         MyLightHolder.LevelID = LevelID;
         MyDirectorHolder.LevelID = LevelID;
@@ -54,19 +62,26 @@ public class LevelBehaviour : MonoBehaviour
             }
         }
 
-        if (allCompleted)
+        if (Battery != null)
         {
-            isCompleted = true;
-            EndLevel();
-#if UNITY_EDITOR
+            if (allCompleted)
+                ChargeBattery();
+            else
+                ResetCharge();
+        }
+        
+
+        if (isCompleted)
+        {
+            #if UNITY_EDITOR
             if (GameManager.instance == null)
                 Debug.LogError("Save alinamadi. => GameManager instance sahnede mevcut degil.");
-#endif
+            #endif
             LevelSaveData saveLevel = new();
             saveLevel.LevelID = LevelID;
-            saveLevel.isCompleted = true;
-            saveLevel.isChestOpened = true;
-            saveLevel.ObscurityPlaced = true;
+            saveLevel.isCompleted = isCompleted;
+            saveLevel.isChestOpened = false;
+            saveLevel.ObscurityPlaced = Battery != null;
             saveLevel.levelObjects = GetCurrentObjectsWithStates();
 
             GameManager.instance?.UpdateALevel(saveLevel, true);
@@ -114,6 +129,55 @@ public class LevelBehaviour : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(DoorsCoroutine(Doors, 90, 0, 1));
+    }
+
+    private void Update()
+    {
+        if (BatteryCharging && !isCompleted)
+        {
+            batteryChargeAmount += Time.deltaTime * 1f;
+            Debug.Log("Battery yukleniyor. " + batteryChargeAmount + " // battery Level: " + GameManager.instance.currentActiveSaveData.BatteryLevel);
+            float endAmount = LightPuzzleHandler.GetBatteryChargeByLevel(GameManager.instance.currentActiveSaveData.BatteryLevel);
+            MainUIManager.instance.GetBatteryUI().UpdateUI(batteryChargeAmount, endAmount);
+            if (batteryChargeAmount >= endAmount)
+            {
+                MainUIManager.instance.GetBatteryUI().Deactivate();
+                isCompleted = true;
+                Battery.GetComponentInChildren<Animator>().SetBool("Charging", false);
+                EndLevel();
+            }
+        }
+    }
+
+    public void ChargeBattery()
+    {
+        BatteryCharging = true;
+        if (batteryChargeAmount == 0)
+        {
+            MainUIManager.instance.GetBatteryUI().Activate();
+            Battery.GetComponentInChildren<Animator>().SetBool("Charging", true);
+        }
+    }
+
+    public void ResetCharge()
+    {
+        BatteryCharging = false;
+        if (batteryChargeAmount > 0)
+        {
+            MainUIManager.instance.GetBatteryUI().Deactivate();
+            batteryChargeAmount = 0;
+            Battery.GetComponentInChildren<Animator>().SetBool("Charging", false);
+        }
+    }
+
+    public void OnBatteryPlaced(BatteryBehaviour _battery)
+    {
+        Battery = _battery;
+    }
+
+    public void OnBatteryRemoved()
+    {
+        Battery = null;
     }
 
     public void EndLevel()
@@ -270,9 +334,9 @@ public class LevelBehaviour : MonoBehaviour
     {
         LevelSaveData saveLevel = new();
         saveLevel.LevelID = LevelID;
-        saveLevel.isCompleted = true;
-        saveLevel.isChestOpened = true;
-        saveLevel.ObscurityPlaced = true;
+        saveLevel.isCompleted = isCompleted;
+        saveLevel.isChestOpened = false;
+        saveLevel.ObscurityPlaced = Battery != null;
         saveLevel.levelObjects = GetCurrentObjectsWithStates();
 
         GameManager.instance?.UpdateALevel(saveLevel, false);

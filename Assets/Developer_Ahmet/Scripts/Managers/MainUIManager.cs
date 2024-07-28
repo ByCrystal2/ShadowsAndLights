@@ -3,6 +3,7 @@ using UnityEngine;
 public class MainUIManager : MonoBehaviour
 {
     [SerializeField] GameObject joyStickUI;
+    [SerializeField] BatteryUI batteryUI;
     public static MainUIManager instance {  get; private set; }
 
     private void Awake()
@@ -21,5 +22,10 @@ public class MainUIManager : MonoBehaviour
     public void UnLockPlayer()
     {
         joyStickUI.SetActive(true);
+    }
+
+    public BatteryUI GetBatteryUI()
+    {
+        return batteryUI;
     }
 }

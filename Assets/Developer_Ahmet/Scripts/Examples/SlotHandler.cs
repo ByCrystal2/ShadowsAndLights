@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SlotHandler : MonoBehaviour, ICollectable
 {
+    public int LevelID;
     [SerializeField] List<Transform> MySlots = new List<Transform>();
     [SerializeField] int SlotCapasity = 1;
     [SerializeField] List<Transform> targets = new List<Transform>();
@@ -13,6 +14,7 @@ public class SlotHandler : MonoBehaviour, ICollectable
     [SerializeField] SlotInventoryUI inventoryUI;
     [SerializeField] InteractableBarHandler bar;
     private bool control = false;
+
     private void OnValidate()
     {
         int length1 = targets.Count;
@@ -53,6 +55,12 @@ public class SlotHandler : MonoBehaviour, ICollectable
             }
         }
     }
+
+    public void SetLevelID(int _levelID)
+    {
+        LevelID = _levelID;
+    }
+
     private void Awake()
     {
         inventoryHandler = GameObject.FindWithTag("Animal").GetComponent<InventoryHandler>();
@@ -180,6 +188,7 @@ public class SlotHandler : MonoBehaviour, ICollectable
                     interact.Interact(InteractType.Pickable);
                     SlotCapasity++;
                     EndInteraction();
+                    LightPuzzleHandler.instance.GetLevelBehaviour(LevelID).OnBatteryRemoved();
                 }
             }
         }
@@ -253,6 +262,8 @@ public class SlotHandler : MonoBehaviour, ICollectable
             if (SlotCapasity <= 0)
             {
                 SlotCapasity = 0;
+                if(_object.TryGetComponent(out BatteryBehaviour BB))
+                    LightPuzzleHandler.instance.GetLevelBehaviour(LevelID).OnBatteryPlaced(BB);
                 Debug.Log("Tum slotlar doldu.");
                 return;
             }

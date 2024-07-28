@@ -189,7 +189,10 @@ public class LightPuzzleHandler : MonoBehaviour
         return randomArrows[Random.Range(0, randomArrows.Count)].Arrow;
     }
 
-
+    public static float GetBatteryChargeByLevel(int _level)
+    {
+        return 15f - (0.5f * (Mathf.Clamp(_level, 1, 20) - 1));
+    }
     public static class LayerMaskHelper
     {
         private const string PlayerLayer = "Animal";

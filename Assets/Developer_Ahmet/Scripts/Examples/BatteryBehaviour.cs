@@ -42,7 +42,6 @@ public class BatteryBehaviour : MonoBehaviour, IInteractable, ICollectable, ICol
         {
             int _currentLv = 1; //Diger objeler icin onlarin classlarindan leveline erisebilirsin sonrasinda. su an tek tasinabilir obje Director.
             IsCollected = false;    
-
         }
     }
 

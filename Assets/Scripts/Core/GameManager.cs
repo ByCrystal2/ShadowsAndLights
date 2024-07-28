@@ -62,6 +62,8 @@ public class GameManager : MonoBehaviour
         //Level
         savedata.LevelDatas = currentActiveSaveData.LevelDatas;
 
+        //Battery
+        savedata.BatteryLevel = currentActiveSaveData.BatteryLevel;
         currentActiveSaveData = savedata;
 
         string jsonString = JsonUtility.ToJson(savedata);
@@ -262,6 +264,9 @@ public class PlayerSaveData
     [Header("Levels")]
     public List<LevelSaveData> LevelDatas;
 
+    [Header("Battery")]
+    public int BatteryLevel;
+
     public void ResetSave()
     {
         CreatedUID = 0;
@@ -271,6 +276,7 @@ public class PlayerSaveData
         UniqueSaveFolderName = "";
         Gold = 0;
         Gem = 0;
+        BatteryLevel = 1;
         LevelDatas = new();
     }
 }
