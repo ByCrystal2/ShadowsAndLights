@@ -357,4 +357,13 @@ public enum Stat
     PatrifyImmune, //Purple Light
     FreezeImmune, //Cyan Light
     ShockImmune, //Yellow Light
+    PerBataryCapacity,
+    MaxBataryAmount,
+    WhiteLightConsume,
+    RedLightConsume,
+    GreenLightConsume,
+    BlueLightConsume,
+    PurpleLightConsume,
+    CyanLightConsume,
+    YellowLightConsume,
 }
