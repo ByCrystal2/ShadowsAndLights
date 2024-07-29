@@ -64,6 +64,10 @@ public class GameManager : MonoBehaviour
 
         //Battery
         savedata.BatteryLevel = currentActiveSaveData.BatteryLevel;
+
+        //Lights
+        savedata.Lights = currentActiveSaveData.Lights; 
+
         currentActiveSaveData = savedata;
 
         string jsonString = JsonUtility.ToJson(savedata);
@@ -267,6 +271,9 @@ public class PlayerSaveData
     [Header("Battery")]
     public int BatteryLevel;
 
+    [Header("Light Upgrade")]
+    public LightSaveData Lights;
+
     public void ResetSave()
     {
         CreatedUID = 0;
@@ -278,6 +285,16 @@ public class PlayerSaveData
         Gem = 0;
         BatteryLevel = 1;
         LevelDatas = new();
+        Lights = new()
+        {
+            WhiteLightLevel = 1,
+            RedLightLevel = 0,
+            BlueLightLevel = 0,
+            GreenLightLevel = 0,
+            PurpleLightLevel = 0,
+            CyanLightLevel = 0,
+            YellowLightLevel = 0,
+        };
     }
 }
 
@@ -333,6 +350,18 @@ public class LevelObject
         Rotation = _levelObject.Rotation;
         Scale = _levelObject.Scale;
     }
+}
+
+[System.Serializable]
+public class LightSaveData
+{
+    public int WhiteLightLevel;
+    public int RedLightLevel;
+    public int GreenLightLevel;
+    public int BlueLightLevel;
+    public int PurpleLightLevel;
+    public int CyanLightLevel;
+    public int YellowLightLevel;
 }
 
 [System.Serializable]
