@@ -35,6 +35,36 @@ public class GameAudioManager : MonoBehaviour
         StartCoroutine(ReturnToPool(source, clip.length + 1));
     }
 
+    public void PlayButtonFlashlightOnSound()
+    {
+        float targetVol = 0.6f;
+        float volGeneral = CalculateSoundPercentGeneral(targetVol);
+        float volFinal = CalculateSoundPercentSfx(volGeneral);
+
+        AudioClip clip = Resources.Load<AudioClip>("Sounds/Flashlight_On");
+
+        AudioSource source = GetFreeAudioSource(false);
+        SetSourceDatas(source, volFinal, Vector3.zero, 1, 100);
+        source.PlayOneShot(clip);
+
+        StartCoroutine(ReturnToPool(source, clip.length + 1));
+    }
+
+    public void PlayButtonFlashlightOffSound()
+    {
+        float targetVol = 1f;
+        float volGeneral = CalculateSoundPercentGeneral(targetVol);
+        float volFinal = CalculateSoundPercentSfx(volGeneral);
+
+        AudioClip clip = Resources.Load<AudioClip>("Sounds/Flashlight_Off");
+
+        AudioSource source = GetFreeAudioSource(false);
+        SetSourceDatas(source, volFinal, Vector3.zero, 1, 100);
+        source.PlayOneShot(clip);
+
+        StartCoroutine(ReturnToPool(source, clip.length + 1));
+    }
+
     public void PlayLightSourceSound(Vector3 _pos)
     {
         float targetVol = 0.3f;

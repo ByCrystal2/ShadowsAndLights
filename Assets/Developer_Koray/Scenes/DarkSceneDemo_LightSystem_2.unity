@@ -14770,6 +14770,14 @@ MonoBehaviour:
     Gem: 0
     LevelDatas: []
     BatteryLevel: 0
+    Lights:
+      WhiteLightLevel: 0
+      RedLightLevel: 0
+      GreenLightLevel: 0
+      BlueLightLevel: 0
+      PurpleLightLevel: 0
+      CyanLightLevel: 0
+      YellowLightLevel: 0
   isLoadedGame: 0
   LoadCompleted: 0
 --- !u!4 &866729983
@@ -20263,7 +20271,7 @@ MonoBehaviour:
     _hitDirector: {fileID: 6635828165442978084}
   BlockByMix:
     masterMixed: 1
-    blockedUntil: 9273.369
+    blockedUntil: 4833.6406
     bounceAfter: 0
     OverridedDirection: {x: -0.07263398, y: -0.00000023930295, z: -0.9973587}
     Seperated: 0
@@ -30833,7 +30841,7 @@ MonoBehaviour:
     _hitDirector: {fileID: 862949125}
   BlockByMix:
     masterMixed: 0
-    blockedUntil: 9273.369
+    blockedUntil: 4833.6406
     bounceAfter: 1
     OverridedDirection: {x: 0, y: 0, z: 0}
     Seperated: 0

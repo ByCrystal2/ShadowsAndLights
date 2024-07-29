@@ -13,7 +13,8 @@ public class LightSwitchUI : MonoBehaviour, IPointerDownHandler, IDragHandler, I
     [SerializeField] private float currentAngle = 0f;
 
     private Coroutine snapCoroutine;
-    //public bool Test;
+    private int LastSelectedIndex = -1;
+    private int selectedIndex = 0;
     void Start()
     {
         ArrangeElements();
@@ -46,6 +47,22 @@ public class LightSwitchUI : MonoBehaviour, IPointerDownHandler, IDragHandler, I
         startDragPosition = currentDragPosition;
     }
 
+    void DetermineSelectedElement()
+    {
+        float angleStep = 360f / elements.Length;
+        selectedIndex = Mathf.RoundToInt(currentAngle / angleStep) % elements.Length;
+        selectedIndex = elements.Length - selectedIndex;
+        if (selectedIndex < 0) selectedIndex += elements.Length;
+        if (selectedIndex >= elements.Length) selectedIndex -= elements.Length;
+
+        OnSelectedNewColor();
+    }
+
+    public LightPuzzleHandler.LightColor GetCurrentSelectedLight()
+    {
+        return (LightPuzzleHandler.LightColor)selectedIndex;
+    }
+
     void SnapToNearestAngle()
     {
         float angleStep = 360f / elements.Length;
@@ -57,9 +74,18 @@ public class LightSwitchUI : MonoBehaviour, IPointerDownHandler, IDragHandler, I
         snapCoroutine = StartCoroutine(SmoothSnap(targetAngle));
     }
 
+    void OnSelectedNewColor()
+    {
+        if (LastSelectedIndex == selectedIndex)
+            return;
+        Debug.Log("Color: " + ((LightPuzzleHandler.LightColor)selectedIndex).ToString());
+        MainUIManager.instance.GetFlashlight().ChangeLightColorTo((LightPuzzleHandler.LightColor)selectedIndex);
+        LastSelectedIndex = selectedIndex;
+    }
+
     IEnumerator SmoothSnap(float targetAngle)
     {
-        float duration = 0.5f;
+        float duration = 0.25f;
         float elapsed = 0f;
         float initialAngle = currentAngle;
 
@@ -73,6 +99,8 @@ public class LightSwitchUI : MonoBehaviour, IPointerDownHandler, IDragHandler, I
 
         currentAngle = targetAngle;
         ArrangeElements();
+
+        DetermineSelectedElement();
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -80,13 +108,16 @@ public class LightSwitchUI : MonoBehaviour, IPointerDownHandler, IDragHandler, I
         SnapToNearestAngle();
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    ArrangeElements();
-    //    if (Test)
-    //    {
-    //        Test = false;
-    //        SnapToNearestAngle();
-    //    }
-    //}
+#if UNITY_EDITOR
+    public bool Test;
+    private void OnDrawGizmos()
+    {
+        ArrangeElements();
+        if (Test)
+        {
+            Test = false;
+            SnapToNearestAngle();
+        }
+    }
+#endif
 }
