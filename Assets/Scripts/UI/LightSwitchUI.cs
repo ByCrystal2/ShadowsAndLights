@@ -1,9 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class LightSwitchUI : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
+    [Header("Main")]
     public RectTransform[] elements;
     public RectTransform mask;
     public float radius = 100f; 
@@ -13,8 +15,12 @@ public class LightSwitchUI : MonoBehaviour, IPointerDownHandler, IDragHandler, I
     [SerializeField] private float currentAngle = 0f;
 
     private Coroutine snapCoroutine;
-    private int LastSelectedIndex = -1;
+    private int LastSelectedIndex = 0;
     private int selectedIndex = 0;
+
+    [Header("Battery UI")]
+    [SerializeField] private Transform BatteryHolder;
+
     void Start()
     {
         ArrangeElements();
@@ -106,6 +112,23 @@ public class LightSwitchUI : MonoBehaviour, IPointerDownHandler, IDragHandler, I
     public void OnPointerUp(PointerEventData eventData)
     {
         SnapToNearestAngle();
+    }
+
+    public void SetBattery(int _maxBattery, int _batteryAmount)
+    {
+        Debug.Log("Max battery: " + _maxBattery + " / batteryAmount: " + _batteryAmount);
+        int x = BatteryHolder.childCount;
+        for (int i = 0; i < x; i++)
+        {
+            BatteryHolder.GetChild(i).gameObject.SetActive(i < _maxBattery);
+            BatteryHolder.GetChild(i).GetChild(0).GetComponent<Image>().fillAmount = i < _batteryAmount ? 0 : 1;
+        }
+    }
+
+    public void UpdateBatteriesUI(int _batteryAmount,float _currentBatteryLife)
+    {
+        if(_batteryAmount > 0)
+            BatteryHolder.GetChild(_batteryAmount - 1).GetChild(0).GetComponent<Image>().fillAmount = 1 - _currentBatteryLife;
     }
 
 #if UNITY_EDITOR

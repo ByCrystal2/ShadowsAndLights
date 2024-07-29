@@ -5,6 +5,7 @@ public class MainUIManager : MonoBehaviour
     [SerializeField] GameObject joyStickUI;
     [SerializeField] BatteryUI batteryUI;
     [SerializeField] FlashlightBehaviour flashlight;
+    [SerializeField] LightSwitchUI LightSwitch;
     public static MainUIManager instance {  get; private set; }
 
     private void Awake()
@@ -33,5 +34,10 @@ public class MainUIManager : MonoBehaviour
     public FlashlightBehaviour GetFlashlight()
     {
         return flashlight;
+    }
+    
+    public LightSwitchUI GetLightSwitch()
+    {
+        return LightSwitch;
     }
 }

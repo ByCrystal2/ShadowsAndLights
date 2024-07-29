@@ -68,6 +68,18 @@ public class GameManager : MonoBehaviour
         //Lights
         savedata.Lights = currentActiveSaveData.Lights; 
 
+        //Flashlight
+        if(MainUIManager.instance != null)
+        {
+            savedata.CurrentBatteryLife = MainUIManager.instance.GetFlashlight().CurrentBataryLife();
+            savedata.HoldBatary = MainUIManager.instance.GetFlashlight().CurrentBataryAmount();
+        }
+        else
+        {
+            savedata.CurrentBatteryLife = currentActiveSaveData.CurrentBatteryLife;
+            savedata.HoldBatary = currentActiveSaveData.HoldBatary;
+        }
+
         currentActiveSaveData = savedata;
 
         string jsonString = JsonUtility.ToJson(savedata);
@@ -268,11 +280,15 @@ public class PlayerSaveData
     [Header("Levels")]
     public List<LevelSaveData> LevelDatas;
 
-    [Header("Battery")]
+    [Header("Level Battery")]
     public int BatteryLevel;
 
     [Header("Light Upgrade")]
     public LightSaveData Lights;
+
+    [Header("Flashlight")]
+    public int HoldBatary;
+    public float CurrentBatteryLife;
 
     public void ResetSave()
     {
@@ -287,14 +303,13 @@ public class PlayerSaveData
         LevelDatas = new();
         Lights = new()
         {
-            WhiteLightLevel = 1,
-            RedLightLevel = 0,
-            BlueLightLevel = 0,
-            GreenLightLevel = 0,
-            PurpleLightLevel = 0,
-            CyanLightLevel = 0,
-            YellowLightLevel = 0,
+            RedLightLevel = 1,
+            BlueLightLevel = 1,
+            GreenLightLevel = 1,
         };
+
+        HoldBatary = LightPuzzleHandler.MaxBataryCapacityBase;
+        CurrentBatteryLife = LightPuzzleHandler.PerBataryCapacityBase;
     }
 }
 
@@ -355,13 +370,9 @@ public class LevelObject
 [System.Serializable]
 public class LightSaveData
 {
-    public int WhiteLightLevel;
     public int RedLightLevel;
     public int GreenLightLevel;
     public int BlueLightLevel;
-    public int PurpleLightLevel;
-    public int CyanLightLevel;
-    public int YellowLightLevel;
 }
 
 [System.Serializable]
@@ -395,4 +406,5 @@ public enum Stat
     PurpleLightConsume,
     CyanLightConsume,
     YellowLightConsume,
+
 }

@@ -225,6 +225,21 @@ public class LightPuzzleHandler : MonoBehaviour
         }
     }
 
+    public static List<float> MainBataryConsumesByLight = new()
+    {
+        0,
+        1.25f,
+        1.25f,
+        2.5f,
+        2.5f,
+        2.5f,
+        1.25f
+    };
+
+    public static float ConsumePercentPerLightLevel = 0.04f; //MaxLv 20 => %80 enerji tasarrufu, ornegin 1lv sari = 2.5f => 20lv sari => 0.5f
+    public static float PerBataryCapacityBase = 100f; //Yukseltmeler bunun uzerinden hesaplanacak.
+    public static int MaxBataryCapacityBase = 3; //Oyuncu baslangicta yalnizca 3 batarya tasiyabilir.
+
     public enum LightColor
     {
         White,
