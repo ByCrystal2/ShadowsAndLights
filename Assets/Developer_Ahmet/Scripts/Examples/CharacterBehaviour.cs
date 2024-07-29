@@ -137,10 +137,19 @@ public class CharacterBehaviour : MonoBehaviour
         else if (Input.touchCount <= 0 && HandsFull())
         {
             currentRotatingObject = null;
+            currentRotateTime = 0;
             SetStateForce(carryState = CarryState.PlayerCarry);
             Debug.Log("currentRotatingObject = null;");
+            return;
         }
-        if (isRotatableObjRotating && HandsFull() && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+        currentRotateTime += Time.deltaTime;
+        if (currentRotatingObject is ICollectHand hand)
+        {
+            ICollectable collectable = (ICollectable)hand;
+            if (Input.touchCount > 0 && (Input.GetTouch(0).phase == TouchPhase.Moved || Input.GetTouch(0).phase != TouchPhase.Stationary) && collectable.barHandler.gameObject.activeSelf)
+            collectable.barHandler.gameObject.SetActive(false);
+        }
+        if (isRotatableObjRotating && HandsFull() && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved && currentRotateTime >= targetTouchTime / 5f)
         {
             Touch touch = Input.GetTouch(0);
             Ray ray = Camera.main.ScreenPointToRay(touch.position);
@@ -151,8 +160,7 @@ public class CharacterBehaviour : MonoBehaviour
                 {
                     SetStateForce(CarryState.PlayerRotate);
                     RotateObject(touch);
-                    ICollectable collectable = (ICollectable)handler;
-                    collectable.barHandler.gameObject.SetActive(false);
+                    
                 }
             }
         }
@@ -179,7 +187,7 @@ public class CharacterBehaviour : MonoBehaviour
 
             currentTouchTime += Time.deltaTime;
             IInteractable interact = hitObject.GetComponent<IInteractable>();
-            if (interact is ICollectable collectable && collectable.IsCollected) return;
+            //if (interact is ICollectable collectable && collectable.IsCollected) return;
             if (interact != null)
             {
                 if (HandsFull())
@@ -211,7 +219,7 @@ public class CharacterBehaviour : MonoBehaviour
             HandleRotatableObject(rotateObj);
         }
         MainUIManager.instance.LockPlayer();
-        if (touch.phase == TouchPhase.Moved) return;
+        if (touch.phase == TouchPhase.Moved || touch.phase != TouchPhase.Stationary) return;
         if (!HandsFull() && currentTouchTime >= targetTouchTime)
         {
             PickUpObject(interact);
@@ -338,17 +346,14 @@ public class CharacterBehaviour : MonoBehaviour
             collect.barHandler.SetBar(bgColor, fillerColor, percentage, speed);
         }
     }
+    float currentRotateTime = 0f;
     private void HandleRotatableObject(IRotateAnObject rotateObj)
     {
         if (HandsFull() && !isRotatableObjRotating)
         {
-                MainUIManager.instance.LockPlayer();
-            //if (currentTouchTime >= targetTouchTime / 2.5f)
-            //{
-                currentRotatingObject = rotateObj;
-                isRotatableObjRotating = true;
-                lastTouchPosition = Input.GetTouch(0).position;
-            //}
+            currentRotatingObject = rotateObj;
+            isRotatableObjRotating = true;
+            lastTouchPosition = Input.GetTouch(0).position;
         }
     }
     bool HaveItemInInventory(ICollectInventory _item)
