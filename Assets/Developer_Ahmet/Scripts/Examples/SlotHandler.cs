@@ -188,7 +188,8 @@ public class SlotHandler : MonoBehaviour, ICollectable
                     interact.Interact(InteractType.Pickable);
                     SlotCapasity++;
                     EndInteraction();
-                    LightPuzzleHandler.instance.GetLevelBehaviour(LevelID).OnBatteryRemoved();
+                    if(interact is BatteryBehaviour mono)
+                        LightPuzzleHandler.instance.GetLevelBehaviour(LevelID).OnBatteryRemoved();
                 }
             }
         }

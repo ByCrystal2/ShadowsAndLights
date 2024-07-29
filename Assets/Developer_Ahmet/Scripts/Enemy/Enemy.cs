@@ -9,12 +9,7 @@ public abstract class Enemy : MonoBehaviour, IIDle, IMovable, IAttackable, IDama
 
     public EnemyState currentState;
 
-    void FixedUpdate()
-    {
-        HandleState();
-    }
-
-    private void HandleState()
+    public void HandleState()
     {
         switch (currentState)
         {
@@ -31,7 +26,7 @@ public abstract class Enemy : MonoBehaviour, IIDle, IMovable, IAttackable, IDama
                 Attack();
                 break;
             case EnemyState.TakeDamage:
-                TakeDamage();
+                TakeDamage(0);
                 break;
             case EnemyState.Die:
                 Die();
@@ -46,8 +41,7 @@ public abstract class Enemy : MonoBehaviour, IIDle, IMovable, IAttackable, IDama
     public abstract void Move();
     public abstract void Patrol();
     public abstract void Attack();
-    public abstract void TakeDamage();
-    public abstract void TakeDamage(int amount);
+    public abstract void TakeDamage(float amount);
     public abstract void Die();
     public abstract void Escape();
 }
@@ -57,17 +51,17 @@ public class EnemyData
 {
     public int id;
     public string enemyName;
-    public float health;
+    public List<EnemyStat> Stats;
     public int level;
     public float deathGold;
     public float escapeGold;
     public EnemyType enemyType;
 
-    public EnemyData(int _id, string name, float health, int level, float deathGold, float escapeGold, EnemyType enemyType)
+    public EnemyData(int _id, string name, List<EnemyStat> Stats, int level, float deathGold, float escapeGold, EnemyType enemyType)
     {
         this.id = _id;
         this.enemyName = name;
-        this.health = health;
+        this.Stats = new(Stats);
         this.level = level;
         this.deathGold = deathGold;
         this.escapeGold = escapeGold;
@@ -109,7 +103,7 @@ public interface IAttackable
 
 public interface IDamageable
 {
-    void TakeDamage(int amount);
+    void TakeDamage(float amount);
 }
 
 public interface IPatrol

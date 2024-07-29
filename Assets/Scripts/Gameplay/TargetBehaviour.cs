@@ -16,11 +16,14 @@ public class TargetBehaviour : MonoBehaviour
     [Header("Runtime Datas")]
     public List<ActiveSourceOn> ActiveSources = new();
 
+    private bool isActive;
     private float WaitUntil = 3f;
     private int Level;
     private int ObjectID;
     public void AddLightsOn(LightPuzzleHandler.LightColor _hitLight, Transform _lightOwner)
     {
+        if (!isActive)
+            return;
         float timer = Time.time;
 #if UNITY_EDITOR
         if(!Application.isPlaying)
@@ -80,7 +83,8 @@ public class TargetBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
-        UpdateLightsOn();
+        if(!isActive)
+            UpdateLightsOn();
     }
 
     public bool IsCompleted()
@@ -200,6 +204,12 @@ public class TargetBehaviour : MonoBehaviour
         }
 
         TargetBar.InitRequirements(r,g,b);
+    }
+
+    public void Deactivate()
+    {
+        isActive = false;
+        TargetBar.gameObject.SetActive(false);
     }
 
     [System.Serializable]

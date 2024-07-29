@@ -182,9 +182,12 @@ public class LevelBehaviour : MonoBehaviour
 
     public void EndLevel()
     {
+        //Yuku azaltmak icin tum Targetleri devre disi birak. Level tamamlandi targetlerin artik puzzle sorgulamasina gerek yok.
+        foreach (Transform item in MyTargetHolder.transform)
+            item.GetComponent<TargetBehaviour>().Deactivate();
+
         //LevelObjemizin Ilk Childi EndGame Effectlerimiz icin gerekli olup, indexleri onemlidir.
         OpenExitGate();
-
 
         //EffectObjesini ac.
         StartCoroutine(PlayEffect());

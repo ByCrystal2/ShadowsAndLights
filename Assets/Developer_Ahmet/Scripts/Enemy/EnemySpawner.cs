@@ -4,6 +4,13 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public int LevelID;
-    public List<EnemyData> Enemies = new List<EnemyData>();
+    public List<Enemy> MyEnemies = new List<Enemy>();
 
+    private void FixedUpdate()
+    {
+        foreach (var item in MyEnemies)
+        {
+            item.HandleState();
+        }
+    }
 }

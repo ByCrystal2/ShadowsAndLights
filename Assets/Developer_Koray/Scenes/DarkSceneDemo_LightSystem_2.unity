@@ -20263,7 +20263,7 @@ MonoBehaviour:
     _hitDirector: {fileID: 6635828165442978084}
   BlockByMix:
     masterMixed: 1
-    blockedUntil: 9935.561
+    blockedUntil: 9273.369
     bounceAfter: 0
     OverridedDirection: {x: -0.07263398, y: -0.00000023930295, z: -0.9973587}
     Seperated: 0
@@ -30833,7 +30833,7 @@ MonoBehaviour:
     _hitDirector: {fileID: 862949125}
   BlockByMix:
     masterMixed: 0
-    blockedUntil: 9935.561
+    blockedUntil: 9273.369
     bounceAfter: 1
     OverridedDirection: {x: 0, y: 0, z: 0}
     Seperated: 0

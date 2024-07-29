@@ -334,3 +334,27 @@ public class LevelObject
         Scale = _levelObject.Scale;
     }
 }
+
+[System.Serializable]
+public struct EnemyStat
+{
+    public Stat stat;
+    public float amount;
+}
+public enum Stat
+{
+    None,
+    CurrentHealth,
+    CurrentBatary,
+    Attack,
+    Defence,
+    Health,
+    MoveSpeed,
+    EnemyDexterity,
+    SlowImmune, //Blue Light
+    BurnImmune, //Red Light
+    PoisonImmune, //Green Light
+    PatrifyImmune, //Purple Light
+    FreezeImmune, //Cyan Light
+    ShockImmune, //Yellow Light
+}

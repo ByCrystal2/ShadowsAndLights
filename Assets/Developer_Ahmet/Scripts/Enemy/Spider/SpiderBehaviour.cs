@@ -23,17 +23,7 @@ public class SpiderBehaviour : Enemy
         Debug.Log("Spider is attacking.");
     }
 
-    public override void TakeDamage(int amount)
-    {
-        enemyData.health -= amount;
-        Debug.Log("Spider took damage.");
-        if (enemyData.health <= 0)
-        {
-            Die();
-        }
-    }
-
-    public override void TakeDamage()
+    public override void TakeDamage(float amount)
     {
         
     }
